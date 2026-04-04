@@ -1,0 +1,40 @@
+# Race-morning route file — edit after judges announce the intersection directions.
+#
+# Workflow:
+#   1. Get intersection directions from judges (left/right at each split)
+#   2. SSH into Pi: ssh pi@mobot.local
+#   3. Edit this file: nano ~/mobot/config/route.yaml
+#   4. Restart controller: sudo systemctl restart mobot  (or kill & rerun main.py)
+#   Total time: < 60 seconds
+#
+# Coordinate system:
+#   Origin (0, 0) = robot start position
+#   +x = forward (direction of travel at start)
+#   +y = left
+#   All distances in meters
+
+intersections:
+  - id: 1
+    x: 4.5          # meters along course from start line
+    y: 0.0
+    direction: left  # left | right — judge-announced value
+    radius_m: 0.3    # trigger radius: robot enters INTERSECTION state within this distance
+
+  # Add more intersections as needed for the course layout:
+  # - id: 2
+  #   x: 9.2
+  #   y: 0.0
+  #   direction: right
+  #   radius_m: 0.3
+
+# Optional: gate positions for GATE_APPROACH behavior
+# Uncomment and set x values from course measurement
+# gates:
+#   - id: 1
+#     x: 2.0
+#     y: 0.0
+#     radius_m: 0.5
+#   - id: 2
+#     x: 6.5
+#     y: 0.0
+#     radius_m: 0.5
