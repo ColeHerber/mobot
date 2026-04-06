@@ -16,7 +16,8 @@ servo:
   gpiochip: 4      # lgpio chip handle: 4 for Pi 5 (RP1), 0 for Pi 4
   min_pw:   1000   # µs — full left lock (tune against TT-02R steering geometry)
   max_pw:   2000   # µs — full right lock
-  center_pw: 1500  # µs — straight ahead
+  center_pw: 1500  # µs — straight ahead (nominal mechanical center)
+  center_offset_us: 0  # µs — fine trim offset (use tune_servo_center.py to adjust)
 
 vesc:
   wheel_circumference_m: 0.204   # ~65mm diameter tire (TT-02R stock)

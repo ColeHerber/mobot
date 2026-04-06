@@ -11,7 +11,7 @@
 | Component | Part | Role |
 |---|---|---|
 | Chassis | Tamiya TT-02R 4WD Touring Car | Drive platform |
-| Compute | Raspberry Pi 4 (4GB or 8GB) | Main logic, all high-level control |
+| Compute | Raspberry Pi 5 (4GB or 8GB) | Main logic, all high-level control |
 | Sensor MCU | Teensy 4.x | Real-time sensor sampling |
 | Line sensor | QTRX-MD-16A (16-channel, 8mm pitch, analog) | Line detection |
 | IMU | BNO085 | Heading + onboard sensor fusion |
@@ -31,7 +31,7 @@ The Teensy connects to the Pi via a single USB cable, appearing as `/dev/ttyACM0
 
 ### Pi ↔ VESC: Hardware UART
 
-The VESC FlipSky 6.7 connects to the Pi via hardware UART (`/dev/serial0`, GPIO pins 14/15). This is a **bidirectional** connection: the Pi sends throttle commands (duty cycle or current setpoint) and the VESC returns real-time telemetry including motor velocity (RPM), encoder position, input voltage, and motor temperature via the standard VESC UART protocol. Use `pyvesc` or a custom implementation of the VESC serial protocol. Baud rate: 115200.
+The VESC FlipSky 6.7 connects to the Pi via hardware UART (`/dev/serial0`, GPIO pins 14/15). On the Pi 5, the Bluetooth chip connects via the RP1 southbridge (not the GPIO UART), so there is no UART/BT contention — no `disable-bt` overlay or service disable is needed. If `/dev/serial0` is not present, add `dtoverlay=uart0` to `/boot/firmware/config.txt`. This is a **bidirectional** connection: the Pi sends throttle commands (duty cycle or current setpoint) and the VESC returns real-time telemetry including motor velocity (RPM), encoder position, input voltage, and motor temperature via the standard VESC UART protocol. Use `pyvesc` or a custom implementation of the VESC serial protocol. Baud rate: 115200.
 
 The motor encoder is read **through the VESC** over this same UART link — no separate encoder wiring is needed. The VESC reads the encoder internally and reports it in the `GET_VALUES` response packet.
 
@@ -47,13 +47,13 @@ Servo center: ~1500 µs. Full lock: ~1000 / 2000 µs. Tune the exact range again
 
 ### Power: Single LiPo → VESC BEC
 
-A single LiPo (3S or 4S) powers the entire system. The VESC's integrated BEC outputs regulated 5V which powers the Raspberry Pi 4 (via USB-C or GPIO 5V pins) and the Teensy (via USB or VIN). This eliminates the need for a separate logic battery and simplifies wiring. **Ensure the BEC is rated for at least 3A continuous** — the Pi 4 can draw up to 2.5A under load.
+A single LiPo (3S or 4S) powers the entire system. The VESC's integrated BEC outputs regulated 5V which powers the Raspberry Pi 5 (via USB-C or GPIO 5V pins) and the Teensy (via USB or VIN). This eliminates the need for a separate logic battery and simplifies wiring. **Ensure the BEC is rated for at least 5A continuous** — the Pi 5 can draw up to 5A under load. Add `usb_max_current_enable=1` to `/boot/firmware/config.txt` when powering via GPIO 5V pins to suppress the low-voltage warning.
 
 ---
 
 ## Software Architecture
 
-All control logic runs on the Raspberry Pi 4 in Python. The Teensy runs minimal C++ firmware for sensor sampling only. No ROS2 is used.
+All control logic runs on the Raspberry Pi 5 in Python. The Teensy runs minimal C++ firmware for sensor sampling only. No ROS2 is used.
 
 ### Why no ROS2
 

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debug — Mobot 2026</title>
+<link rel="stylesheet" href="/static/css/mobot.css">
+<style>
+  body { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  .top-bar { display:flex; align-items:center; gap:.75rem; padding:.4rem 1rem;
+             background:var(--bg-panel); border-bottom:1px solid var(--border); flex-shrink:0; }
+  .top-bar h1 { font-size:.95rem; color:var(--green); letter-spacing:.1em; margin-right:auto; }
+  /* Tabs */
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); flex-shrink:0;
+          background:var(--bg-panel); }
+  .tab { padding:.55rem 1.1rem; font-size:.82rem; cursor:pointer; color:var(--text-dim);
+         border-right:1px solid var(--border); border-bottom:2px solid transparent;
+         transition:color .15s; user-select:none; }
+  .tab:hover { color:var(--text); }
+  .tab.active { color:var(--green); border-bottom-color:var(--green); background:var(--bg-card); }
+  /* Panels */
+  .panels { flex:1; min-height:0; overflow:hidden; }
+  .panel { display:none; height:100%; overflow-y:auto; }
+  .panel.active { display:block; }
+  /* Common layout helpers */
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; padding:1rem; }
+  .row3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; padding:1rem; }
+  .card { background:var(--bg-panel); border:1px solid var(--border); border-radius:7px; padding:.75rem 1rem; }
+  .card h4 { color:var(--green); font-size:.75rem; text-transform:uppercase; letter-spacing:.08em;
+             margin-bottom:.6rem; }
+  .big-val { font-size:2.5rem; font-family:monospace; font-weight:bold; color:var(--text-head);
+             text-align:center; margin:.3rem 0; }
+  .med-val { font-size:1.4rem; font-family:monospace; color:var(--text-head); }
+  .dim { color:var(--text-dim); font-size:.78rem; }
+
+  /* ── P1: Sensor ──────────────────────────────────────────── */
+  #sensorBarsCanvas { display:block; width:100%; height:200px; }
+  #sensorTrendCanvas{ display:block; width:100%; height:110px; }
+  .linebar-wrap { height:14px; background:var(--bg-card); border-radius:7px; overflow:hidden;
+                  position:relative; margin:.5rem 0; }
+  .linebar-center { position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--text-dim); }
+  .linebar-fill   { position:absolute;top:0;height:100%;border-radius:7px;transition:all .08s; }
+  .flags-row { display:flex; gap:2px; margin-top:.3rem; flex-wrap:wrap; }
+  .flag-led { width:14px; height:14px; border-radius:50%; background:var(--bg-card);
+              border:1px solid var(--border); font-size:.55rem; display:flex;
+              align-items:center; justify-content:center; color:var(--text-dim); }
+  .flag-led.on { background:var(--green); border-color:var(--green); color:#000; }
+  .freeze-btn { background:var(--bg-card); border:1px solid var(--border); color:var(--text);
+                border-radius:5px; padding:.25rem .7rem; cursor:pointer; font-size:.78rem; }
+  .freeze-btn.frozen { border-color:var(--orange); color:var(--orange); }
+
+  /* ── P2: IMU ─────────────────────────────────────────────── */
+  #compassCanvas { display:block; margin:0 auto; }
+  #imuTrendCanvas { display:block; width:100%; height:120px; }
+
+  /* ── P3: VESC ────────────────────────────────────────────── */
+  #voltGaugeCanvas { display:block; margin:0 auto; }
+  #rpmTrendCanvas  { display:block; width:100%; height:120px; }
+  #velTrendCanvas  { display:block; width:100%; height:100px; }
+  .err-counter { font-size:.8rem; color:var(--text-dim); margin-top:.3rem; }
+  .err-counter span { color:var(--orange); font-family:monospace; }
+
+  /* ── P4: Odometry ────────────────────────────────────────── */
+  #odoCanvas { display:block; width:100%; height:300px; }
+  .replay-row { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+  select { background:var(--bg-input); border:1px solid var(--border); color:var(--text);
+           border-radius:5px; padding:.25rem .5rem; font-size:.82rem; }
+
+  /* ── P5: State Machine ───────────────────────────────────── */
+  .giant-state { font-size:min(10vw,4rem); font-weight:900; font-family:monospace;
+                 text-align:center; padding:1rem; letter-spacing:.08em; }
+  #stateLog { height:200px; overflow-y:auto; font-size:.75rem; font-family:monospace;
+              background:var(--bg-input); border:1px solid var(--border); border-radius:5px;
+              padding:.5rem; }
+  .log-line { padding:.1rem 0; border-bottom:1px solid var(--border); }
+  #confTrendCanvas  { display:block; width:100%; height:120px; }
+  .wp-table td { padding:.2rem .5rem; font-size:.78rem; }
+  .wp-table .dist { font-family:monospace; }
+  .wp-table .triggered { color:var(--green); }
+  .wp-table .close { color:var(--orange); }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>MOBOT DEBUG</h1>
+  <div style="font-size:.78rem;color:var(--text-dim);" id="connStatus">Connecting…</div>
+  <a href="/" style="margin-left:auto;" class="btn">← Hub</a>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-panel="sensors">Sensors</div>
+  <div class="tab" data-panel="imu">IMU</div>
+  <div class="tab" data-panel="vesc">VESC &amp; Power</div>
+  <div class="tab" data-panel="odometry">Odometry</div>
+  <div class="tab" data-panel="statemachine">State Machine</div>
+</div>
+
+<div class="panels">
+
+  <!-- ══ P1: SENSORS ══════════════════════════════════════════════════════ -->
+  <div class="panel active" id="panel-sensors">
+    <div style="padding:.75rem 1rem .25rem; display:flex; align-items:center; gap:.75rem;">
+      <h3 style="color:var(--green);font-size:.8rem;text-transform:uppercase;">16-Channel Line Sensor</h3>
+      <button class="freeze-btn" id="btnFreeze">Freeze</button>
+    </div>
+    <div style="padding:0 1rem;">
+      <canvas id="sensorBarsCanvas"></canvas>
+    </div>
+    <div class="row2" style="padding:.5rem 1rem;">
+      <div class="card">
+        <h4>Line Position</h4>
+        <div class="big-val" id="s1LinePos">0.000</div>
+        <div class="linebar-wrap">
+          <div class="linebar-center"></div>
+          <div class="linebar-fill" id="s1BarFill"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Confidence</h4>
+        <div class="big-val" id="s1Conf">0</div>
+        <div class="dim">0 – 255</div>
+        <div class="flags-row" id="s1Flags"></div>
+      </div>
+    </div>
+    <div style="padding:0 1rem .5rem;">
+      <div class="card">
+        <h4>Line Position &amp; Confidence Trend (30 s)</h4>
+        <canvas id="sensorTrendCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ P2: IMU ═══════════════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-imu">
+    <div class="row2">
+      <div class="card" style="display:flex;flex-direction:column;align-items:center;">
+        <h4>Heading (Yaw)</h4>
+        <canvas id="compassCanvas" width="200" height="200"></canvas>
+        <div class="big-val" id="imuYawDeg">0.0°</div>
+      </div>
+      <div class="card">
+        <h4>Quaternion</h4>
+        <table style="font-family:monospace;font-size:.88rem;width:100%;">
+          <tr><td class="dim">w (real)</td><td id="qW">0.0000</td></tr>
+          <tr><td class="dim">x (i)</td><td id="qX">0.0000</td></tr>
+          <tr><td class="dim">y (j)</td><td id="qY">0.0000</td></tr>
+          <tr><td class="dim">z (k)</td><td id="qZ">0.0000</td></tr>
+        </table>
+        <hr style="border-color:var(--border);margin:.5rem 0;">
+        <div class="dim">Heading rate</div>
+        <div class="med-val" id="imuRate">0.0 °/s</div>
+        <div class="dim" style="margin-top:.3rem;">BNO085 fusion, no drift</div>
+      </div>
+    </div>
+    <div style="padding:0 1rem .5rem;">
+      <div class="card">
+        <h4>Yaw Trend (30 s, degrees)</h4>
+        <canvas id="imuTrendCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ P3: VESC & POWER ══════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-vesc">
+    <div class="row3">
+      <div class="card" style="text-align:center;">
+        <h4>Motor RPM</h4>
+        <div class="big-val" id="vRPM">0</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h4>Wheel Velocity</h4>
+        <div class="big-val" id="vVel">0.00</div>
+        <div class="dim">m/s</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h4>Throttle</h4>
+        <div class="big-val" id="vThrottle">0.00</div>
+        <div class="linebar-wrap" style="margin:.3rem 0;">
+          <div class="linebar-fill" id="vThrottleBar" style="left:0;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="card">
+        <h4>Battery Voltage</h4>
+        <canvas id="voltGaugeCanvas" width="220" height="130"></canvas>
+        <div class="err-counter">UART errors: <span id="vErrCount">0</span></div>
+      </div>
+      <div class="card">
+        <h4>RPM Trend (30 s)</h4>
+        <canvas id="rpmTrendCanvas"></canvas>
+        <h4 style="margin-top:.5rem;">Velocity Trend (30 s)</h4>
+        <canvas id="velTrendCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ P4: ODOMETRY ══════════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-odometry">
+    <div class="row2">
+      <div class="card" style="grid-column:1/2;">
+        <h4>Live Position</h4>
+        <table style="font-family:monospace;font-size:.9rem;width:100%;">
+          <tr><td class="dim" style="width:60px;">X</td><td class="med-val" id="odoX">0.000 m</td></tr>
+          <tr><td class="dim">Y</td><td class="med-val" id="odoY">0.000 m</td></tr>
+          <tr><td class="dim">Heading</td><td class="med-val" id="odoHdg">0.0°</td></tr>
+          <tr><td class="dim">Speed</td><td class="med-val" id="odoSpd">0.000 m/s</td></tr>
+          <tr><td class="dim">Dist</td><td class="med-val" id="odoDist">0.000 m</td></tr>
+        </table>
+        <hr style="border-color:var(--border);margin:.5rem 0;">
+        <div class="replay-row">
+          <span class="dim">Replay:</span>
+          <select id="logSelect"><option value="">— select run —</option></select>
+          <button class="btn" id="btnReplay">Replay</button>
+          <button class="btn" id="btnResetOdo">Reset Odo</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:.5rem 1rem 1rem;">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
+          <h4 style="margin:0;">Trajectory</h4>
+          <button class="btn" id="btnOdoFit">Fit View</button>
+        </div>
+        <canvas id="odoCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ P5: STATE MACHINE ════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-statemachine">
+    <div class="giant-state" id="smState">LINE_FOLLOW</div>
+    <div class="row2" style="padding-top:0;">
+      <div class="card">
+        <h4>Confidence &amp; State Transitions (30 s)</h4>
+        <canvas id="confTrendCanvas"></canvas>
+        <div class="dim" style="margin-top:.3rem;">— Red line = DEAD_RECKON threshold (30)</div>
+      </div>
+      <div class="card">
+        <h4>Waypoint Proximity</h4>
+        <table class="wp-table" id="wpTable" style="width:100%;">
+          <thead><tr>
+            <td class="dim">ID</td><td class="dim">Type</td>
+            <td class="dim">Dist</td><td class="dim">Status</td>
+          </tr></thead>
+          <tbody id="wpBody"><tr><td colspan="4" class="dim">No waypoints loaded</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:0 1rem 1rem;">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
+          <h4 style="margin:0;">State Transition Log</h4>
+          <button class="btn" id="btnClearLog">Clear</button>
+        </div>
+        <div id="stateLog"><span class="dim">Waiting for transitions…</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /panels -->
+
+<script src="/static/js/mobot.js"></script>
+<script>
+"use strict";
+
+// ── Tab switching ──────────────────────────────────────────────────────────
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab,.panel").forEach(el=>el.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("panel-"+tab.dataset.panel).classList.add("active");
+  });
+});
+
+// ── Rolling buffers ────────────────────────────────────────────────────────
+const TREND_LEN = 600;  // 30s at 20Hz
+const rLinePos  = new RingBuffer(TREND_LEN);
+const rConf     = new RingBuffer(TREND_LEN);
+const rYaw      = new RingBuffer(TREND_LEN);
+const rRpm      = new RingBuffer(TREND_LEN);
+const rVel      = new RingBuffer(TREND_LEN);
+const rVolt     = new RingBuffer(TREND_LEN);
+const rTime     = new RingBuffer(TREND_LEN);
+let prevYaw = 0, prevYawTime = 0;
+let uartErrors = 0;
+let frozen = false;
+
+// ── 16-LED flag row init ─────────────────────────────────────────────────────
+const flagsRow = document.getElementById("s1Flags");
+for (let i=0; i<16; i++) {
+  const d = document.createElement("div");
+  d.className="flag-led"; d.id=`flag_${i}`; d.title=`Ch ${i}`;
+  d.textContent=i<10?i:"";
+  flagsRow.appendChild(d);
+}
+
+// ── Sensor bars canvas ───────────────────────────────────────────────────────
+const barsCanvas = document.getElementById("sensorBarsCanvas");
+const barsCtx    = barsCanvas.getContext("2d");
+function drawBars(raw, threshold=500) {
+  const w=barsCanvas.width, h=barsCanvas.height;
+  barsCtx.clearRect(0,0,w,h);
+  const bw=w/16, pad=2;
+  raw.forEach((v,i) => {
+    const x=i*bw+pad, bh=Math.max(0,(v/1000)*(h-20));
+    const col = v >= threshold ? "#00ff88" : "#2a3a2a";
+    barsCtx.fillStyle=col;
+    barsCtx.fillRect(x, h-bh-15, bw-pad*2, bh);
+    barsCtx.fillStyle="#666"; barsCtx.font="9px monospace";
+    barsCtx.fillText(String(v).padStart(3,' '), x, h-2);
+  });
+}
+
+// ── Compass rose ─────────────────────────────────────────────────────────────
+const compCanvas = document.getElementById("compassCanvas");
+const compCtx    = compCanvas.getContext("2d");
+function drawCompass(yawDeg) {
+  const W=compCanvas.width, H=compCanvas.height, R=W/2-8;
+  compCtx.clearRect(0,0,W,H);
+  // Outer ring
+  compCtx.strokeStyle="#30363d"; compCtx.lineWidth=2;
+  compCtx.beginPath(); compCtx.arc(W/2,H/2,R,0,2*Math.PI); compCtx.stroke();
+  // Cardinal labels
+  const labels=["N","E","S","W"];
+  labels.forEach((l,i) => {
+    const a=(i*90-90)*Math.PI/180;
+    const x=W/2+Math.cos(a)*(R-12), y=H/2+Math.sin(a)*(R-12)+4;
+    compCtx.fillStyle=l==="N"?"#ff4444":"#666";
+    compCtx.font="bold 13px monospace"; compCtx.textAlign="center";
+    compCtx.fillText(l,x,y);
+  });
+  // Needle
+  const a=(yawDeg-90)*Math.PI/180;
+  const nx=W/2+Math.cos(a)*(R-20), ny=H/2+Math.sin(a)*(R-20);
+  compCtx.strokeStyle="#00ff88"; compCtx.lineWidth=3;
+  compCtx.beginPath(); compCtx.moveTo(W/2,H/2); compCtx.lineTo(nx,ny); compCtx.stroke();
+  compCtx.fillStyle="#00ff88"; compCtx.beginPath(); compCtx.arc(nx,ny,4,0,2*Math.PI); compCtx.fill();
+  // Center dot
+  compCtx.fillStyle="#fff"; compCtx.beginPath(); compCtx.arc(W/2,H/2,4,0,2*Math.PI); compCtx.fill();
+}
+
+// ── Odometry canvas ──────────────────────────────────────────────────────────
+const odoCanvas = document.getElementById("odoCanvas");
+const odoCtx    = odoCanvas.getContext("2d");
+let odoPath=[], odoLive=null;
+let odoVpX=0, odoVpY=0, odoVpS=60;
+function resizeOdoCanvas(){
+  odoCanvas.width=odoCanvas.parentElement.clientWidth-32;
+  odoCanvas.height=280;
+  drawOdo();
+}
+function worldToOdo(wx,wy){
+  const cx=odoCanvas.width/2,cy=odoCanvas.height/2;
+  return [cx+(wx-odoVpX)*odoVpS, cy-(wy-odoVpY)*odoVpS];
+}
+function drawOdo(){
+  const w=odoCanvas.width,h=odoCanvas.height;
+  odoCtx.clearRect(0,0,w,h);
+  // Grid
+  odoCtx.strokeStyle="#1e2530"; odoCtx.lineWidth=1;
+  const step=odoVpS;
+  const ox=(w/2-odoVpX*odoVpS)%step, oy=(h/2+odoVpY*odoVpS)%step;
+  for(let x=ox;x<w;x+=step){odoCtx.beginPath();odoCtx.moveTo(x,0);odoCtx.lineTo(x,h);odoCtx.stroke();}
+  for(let y=oy;y<h;y+=step){odoCtx.beginPath();odoCtx.moveTo(0,y);odoCtx.lineTo(w,y);odoCtx.stroke();}
+  // Origin
+  const [ox2,oy2]=worldToOdo(0,0);
+  odoCtx.strokeStyle="#444";odoCtx.lineWidth=1.5;
+  odoCtx.beginPath();odoCtx.moveTo(ox2-8,oy2);odoCtx.lineTo(ox2+8,oy2);odoCtx.stroke();
+  odoCtx.beginPath();odoCtx.moveTo(ox2,oy2-8);odoCtx.lineTo(ox2,oy2+8);odoCtx.stroke();
+  // Path
+  for(let i=1;i<odoPath.length;i++){
+    const [x0,y0]=worldToOdo(odoPath[i-1].x,odoPath[i-1].y);
+    const [x1,y1]=worldToOdo(odoPath[i].x,odoPath[i].y);
+    odoCtx.strokeStyle=odoPath[i].color||"#00ff88"; odoCtx.lineWidth=2;
+    odoCtx.beginPath(); odoCtx.moveTo(x0,y0); odoCtx.lineTo(x1,y1); odoCtx.stroke();
+  }
+  if(odoLive){
+    const [rx,ry]=worldToOdo(odoLive.x,odoLive.y);
+    odoCtx.fillStyle="#fff"; odoCtx.beginPath(); odoCtx.arc(rx,ry,5,0,2*Math.PI); odoCtx.fill();
+  }
+}
+function fitOdo(){
+  if(!odoPath.length)return;
+  const xs=odoPath.map(p=>p.x),ys=odoPath.map(p=>p.y);
+  const minX=Math.min(...xs,0),maxX=Math.max(...xs,0);
+  const minY=Math.min(...ys,0),maxY=Math.max(...ys,0);
+  const rx=maxX-minX||1, ry=maxY-minY||1;
+  odoVpS=Math.min((odoCanvas.width*.85)/rx,(odoCanvas.height*.85)/ry,200);
+  odoVpX=(minX+maxX)/2; odoVpY=(minY+maxY)/2;
+  drawOdo();
+}
+
+// ── Waypoints for P5 ─────────────────────────────────────────────────────────
+let routeWaypoints=[];
+async function loadRouteWaypoints(){
+  try{
+    const r=await fetch("/api/route").then(r=>r.json());
+    routeWaypoints=[
+      ...(r.intersections||[]).map(w=>({...w,type:"INT"})),
+      ...(r.gates||[]).map(g=>({...g,type:"GATE"}))
+    ];
+  }catch(e){}
+}
+
+function updateWpTable(x,y){
+  const tbody=document.getElementById("wpBody");
+  if(!routeWaypoints.length){tbody.innerHTML='<tr><td colspan="4" class="dim">No waypoints</td></tr>';return;}
+  tbody.innerHTML="";
+  routeWaypoints.forEach(wp=>{
+    const dx=wp.x-x, dy=(wp.y||0)-y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const r=wp.radius_m||0.3;
+    const cls=dist<r?"triggered":dist<r*3?"close":"";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>#${wp.id}</td>
+      <td>${wp.type}</td>
+      <td class="dist ${cls}">${fmt(dist,2)} m</td>
+      <td class="${cls}">${dist<r?"✓ IN RANGE":dist<r*3?"near":"—"}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── State log ────────────────────────────────────────────────────────────────
+const LOG_COLORS = {
+  LINE_FOLLOW:"#00ff88", DEAD_RECKON:"#666", REACQUIRE:"#ff9900",
+  GATE_APPROACH:"#4488ff", INTERSECTION:"#ff44ff"
+};
+function addLogLine(entry){
+  const el=document.getElementById("stateLog");
+  if(el.children[0]?.classList.contains("dim")) el.innerHTML="";
+  const d=new Date(entry.t*1000);
+  const ts=d.toTimeString().slice(0,8)+"."+String(d.getMilliseconds()).padStart(3,"0");
+  const div=document.createElement("div"); div.className="log-line";
+  div.innerHTML=`<span style="color:var(--text-dim)">[${ts}]</span> `+
+    `<span style="color:${LOG_COLORS[entry.from]||'#fff'}">${entry.from}</span>`+
+    ` → <span style="color:${LOG_COLORS[entry.to]||'#fff'}">${entry.to}</span>`+
+    ` <span style="color:var(--text-dim);">(${entry.trigger})</span>`;
+  el.insertBefore(div,el.firstChild);
+  while(el.children.length>200) el.removeChild(el.lastChild);
+}
+
+// Load existing state log on startup
+async function loadStateLog(){
+  try{
+    const entries=await fetch("/api/debug/state_log").then(r=>r.json());
+    entries.forEach(e=>addLogLine(e));
+  }catch(e){}
+}
+
+// ── Trend chart redraw loop (5 Hz) ───────────────────────────────────────────
+let lastDrawTime=0;
+function redrawTrends(){
+  const now=Date.now();
+  if(now-lastDrawTime<200)return;
+  lastDrawTime=now;
+  const times=rTime.toArray();
+  drawTrendChart(document.getElementById("sensorTrendCanvas"),times,rLinePos.toArray(),-1,1,"#00ff88");
+  drawTrendChart(document.getElementById("sensorTrendCanvas"),times,rConf.toArray().map(v=>v/255-1),-1,0,"#4488ff",[],true);
+  drawTrendChart(document.getElementById("imuTrendCanvas"),times,rYaw.toArray(),-180,180,"#00ff88");
+  drawTrendChart(document.getElementById("rpmTrendCanvas"),times,rRpm.toArray(),-5000,5000,"#00ff88");
+  drawTrendChart(document.getElementById("velTrendCanvas"),times,rVel.toArray(),-1,1,"#4488ff");
+  drawTrendChart(document.getElementById("confTrendCanvas"),times,rConf.toArray(),0,255,"#4488ff",
+    [{y:30,color:"#ff4444",label:"DR threshold"}]);
+  drawArcGauge(document.getElementById("voltGaugeCanvas"),
+    rVolt.toArray().slice(-1)[0]||0, 9, 13,
+    [{end:10.5,color:"#ff4444"},{end:11.0,color:"#ff9900"},{end:13,color:"#00ff88"}],
+    "Voltage");
+}
+
+// ── SSE main update ──────────────────────────────────────────────────────────
+let prevStateForLog = null;
+const sse = new MobotSSE("/api/state", d => {
+  document.getElementById("connStatus").textContent="● LIVE";
+  document.getElementById("connStatus").style.color="var(--green)";
+
+  const t = Date.now()/1000;
+  rTime.push(t);
+  rLinePos.push(d.line_pos||0);
+  rConf.push(d.confidence||0);
+
+  const yawDeg=(d.heading_rad||0)*180/Math.PI;
+  const rate = prevYawTime ? (yawDeg-prevYaw)/(t-prevYawTime) : 0;
+  prevYaw=yawDeg; prevYawTime=t;
+  rYaw.push(yawDeg);
+  rRpm.push(d.motor_rpm||0);
+  rVel.push(d.wheel_vel_ms||0);
+  rVolt.push(d.input_voltage||0);
+
+  if(!frozen){
+    // P1 sensors
+    const raw=d.sensor_raw||Array(16).fill(0);
+    drawBars(raw);
+    document.getElementById("s1LinePos").textContent=fmt(d.line_pos,3);
+    const lp=d.line_pos||0;
+    const fill=document.getElementById("s1BarFill");
+    fill.style.width=Math.abs(lp)*50+"%";
+    fill.style.left=lp<0?(50-Math.abs(lp)*50)+"%":"50%";
+    fill.style.background=lineErrorColor(Math.abs(lp),false);
+    document.getElementById("s1Conf").textContent=d.confidence;
+    const flags=d.sensor_flags||0;
+    for(let i=0;i<16;i++){
+      const el=document.getElementById(`flag_${i}`);
+      el.classList.toggle("on",(flags>>i)&1);
+    }
+
+    // P2 IMU
+    drawCompass(yawDeg);
+    document.getElementById("imuYawDeg").textContent=fmt(yawDeg,1)+"°";
+    document.getElementById("imuRate").textContent=fmt(rate,1)+" °/s";
+
+    // P3 VESC
+    document.getElementById("vRPM").textContent=Math.round(d.motor_rpm||0);
+    document.getElementById("vVel").textContent=fmt(d.wheel_vel_ms,3);
+    document.getElementById("vThrottle").textContent=fmt(d.throttle,3);
+    const tb=document.getElementById("vThrottleBar");
+    tb.style.width=(Math.abs(d.throttle||0)*100)+"%";
+    tb.style.background=d.throttle>=0?"var(--green)":"var(--red)";
+
+    // P4 Odometry
+    const speedColor = d.wheel_vel_ms>0.4?"#00ff88":d.wheel_vel_ms>0.2?"#ff9900":"#4488ff";
+    odoPath.push({x:d.x||0,y:d.y||0,color:speedColor});
+    odoLive={x:d.x||0,y:d.y||0};
+    if(odoPath.length>3000)odoPath.splice(0,300);
+    drawOdo();
+    document.getElementById("odoX").textContent=fmt(d.x,3)+" m";
+    document.getElementById("odoY").textContent=fmt(d.y,3)+" m";
+    document.getElementById("odoHdg").textContent=fmt(yawDeg,1)+"°";
+    document.getElementById("odoSpd").textContent=fmt(d.wheel_vel_ms,3)+" m/s";
+    const dist=Math.sqrt((d.x||0)**2+(d.y||0)**2);
+    document.getElementById("odoDist").textContent=fmt(dist,3)+" m";
+    updateWpTable(d.x||0,d.y||0);
+
+    // P5 State machine
+    const stEl=document.getElementById("smState");
+    stEl.textContent=d.state||"—";
+    stEl.style.color=stateColor(d.state);
+
+    // State transition logging (client-side)
+    if(d.state!==prevStateForLog&&prevStateForLog!==null){
+      addLogLine({t:t,from:prevStateForLog,to:d.state,trigger:`conf=${d.confidence}`});
+    }
+    prevStateForLog=d.state;
+  }
+
+  redrawTrends();
+});
+
+sse.connect();
+sse._listeners.push(()=>{});  // keep alive
+
+// ── Freeze button ─────────────────────────────────────────────────────────────
+document.getElementById("btnFreeze").addEventListener("click",function(){
+  frozen=!frozen;
+  this.textContent=frozen?"Unfreeze":"Freeze";
+  this.classList.toggle("frozen",frozen);
+});
+
+// ── Odometry controls ─────────────────────────────────────────────────────────
+document.getElementById("btnOdoFit").addEventListener("click",fitOdo);
+document.getElementById("btnResetOdo").addEventListener("click",async()=>{
+  if(!confirm("Reset odometry? (only for bench testing)"))return;
+  await fetch("/api/reset_odometry",{method:"POST"});
+  odoPath=[]; odoLive=null; drawOdo();
+});
+
+// Load log list
+async function loadLogs(){
+  try{
+    const logs=await fetch("/api/logs").then(r=>r.json());
+    const sel=document.getElementById("logSelect");
+    logs.forEach(f=>{
+      const o=document.createElement("option"); o.value=f; o.textContent=f; sel.appendChild(o);
+    });
+  }catch(e){}
+}
+
+document.getElementById("btnReplay").addEventListener("click",async()=>{
+  const sel=document.getElementById("logSelect").value;
+  if(!sel)return;
+  try{
+    const rows=await fetch(`/api/history?n=5000`).then(r=>r.json());
+    odoPath=[];
+    rows.forEach(r=>{
+      odoPath.push({x:parseFloat(r.x_m),y:parseFloat(r.y_m),
+                    color:lineErrorColor(Math.abs(parseFloat(r.line_pos)),parseInt(r.confidence)<30)});
+    });
+    fitOdo();
+  }catch(e){}
+});
+
+// ── Resize sensors bars canvas ─────────────────────────────────────────────────
+function resizeSensorBars(){
+  barsCanvas.width=barsCanvas.parentElement.clientWidth-32;
+  barsCanvas.height=200;
+}
+
+// ── State log controls ────────────────────────────────────────────────────────
+document.getElementById("btnClearLog").addEventListener("click",()=>{
+  document.getElementById("stateLog").innerHTML='<span class="dim">Cleared.</span>';
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+resizeSensorBars();
+resizeOdoCanvas();
+loadRouteWaypoints();
+loadStateLog();
+loadLogs();
+window.addEventListener("resize",()=>{ resizeSensorBars(); resizeOdoCanvas(); });
+</script>
+</body>
+</html>

@@ -2,12 +2,13 @@
 """Mobot main entry point.
 
 Usage:
-    python3 main.py [--dry-run] [--config PATH] [--route PATH]
+    python3 main.py [--dry-run] [--config PATH] [--route PATH] [--no-web]
 
     --dry-run   Run without actuator output (sensor display only). Useful
                 for bench testing with only Teensy + BNO085 connected.
     --config    Path to params.yaml (default: ../config/params.yaml)
     --route     Path to route.yaml  (default: ../config/route.yaml)
+    --no-web    Disable the Flask web server (default: enabled)
 
 Main loop: ~100 Hz
   1. Read shared state (set by sensor_reader + vesc_interface threads)
@@ -17,6 +18,7 @@ Main loop: ~100 Hz
   5. Command servo + VESC
   6. Log to CSV (50 Hz decimated)
   7. Update curses display
+  8. Check for params hot-reload (from web server)
 """
 
 import argparse
@@ -39,6 +41,7 @@ from odometry       import Odometry
 from pid_controller import PIDController
 from state_machine  import StateMachine
 from servo_control  import ServoControl
+from web_server     import WebServer
 
 logging.basicConfig(
     level=logging.INFO,
@@ -46,8 +49,8 @@ logging.basicConfig(
 )
 log = logging.getLogger("main")
 
-LOOP_HZ       = 100
-LOOP_DT       = 1.0 / LOOP_HZ
+LOOP_HZ        = 100
+LOOP_DT        = 1.0 / LOOP_HZ
 LOG_DECIMATION = 2   # log every Nth loop iteration → 50 Hz
 
 
@@ -127,7 +130,7 @@ def draw_display(stdscr, state: SharedState, loop_hz: float, dry_run: bool):
     stdscr.refresh()
 
 
-def run(stdscr, args, config, route):
+def run(stdscr, args, config, route, config_path, route_path, web_server):
     curses.curs_set(0)
     stdscr.nodelay(True)
 
@@ -135,6 +138,7 @@ def run(stdscr, args, config, route):
 
     # ── Init shared state ─────────────────────────────────────────────────────
     state = SharedState()
+    state.reset_odometry = False   # web API hook
 
     # ── Start background threads ──────────────────────────────────────────────
     sensor_reader = SensorReader(state, config)
@@ -148,6 +152,10 @@ def run(stdscr, args, config, route):
     pid    = PIDController(config)
     sm     = StateMachine(config, route, odo)
     servo  = ServoControl(config)
+
+    # Hand servo reference to web server (enables live nudge)
+    if web_server is not None:
+        web_server.set_servo(servo)
 
     # Reset odometry at start line
     heading0 = state.get("heading_rad")[0]
@@ -163,6 +171,7 @@ def run(stdscr, args, config, route):
     last_time   = time.monotonic()
     loop_hz     = 0.0
     hz_window   = []
+    prev_sm_state = state.get("state")[0]
 
     try:
         while True:
@@ -176,6 +185,25 @@ def run(stdscr, args, config, route):
                 if len(hz_window) > 50:
                     hz_window.pop(0)
                 loop_hz = sum(hz_window) / len(hz_window)
+
+            # ── Params hot-reload ─────────────────────────────────────────────
+            if web_server is not None and web_server.get_reload_flag():
+                try:
+                    config = load_yaml(config_path)
+                    pid    = PIDController(config)
+                    sm     = StateMachine(config, route, odo)
+                    servo  = ServoControl(config)
+                    web_server.set_servo(servo)
+                    log.info("params.yaml hot-reloaded")
+                except Exception as e:
+                    log.error("Hot-reload failed: %s", e)
+
+            # ── Odometry reset (from web API) ─────────────────────────────────
+            if getattr(state, "reset_odometry", False):
+                state.reset_odometry = False
+                heading_now = state.get("heading_rad")[0]
+                odo.reset(heading_now)
+                log.info("Odometry reset via web API")
 
             # ── Read shared state snapshot ────────────────────────────────────
             (line_pos, confidence, heading, vel, voltage) = state.get(
@@ -194,6 +222,12 @@ def run(stdscr, args, config, route):
             steering, throttle, sm_state = sm.update(
                 confidence, pid_steer, pid_throttle, heading, dt
             )
+
+            # ── Log state transitions ─────────────────────────────────────────
+            if sm_state != prev_sm_state and web_server is not None:
+                web_server.log_transition(prev_sm_state, sm_state,
+                                          f"conf={confidence}")
+                prev_sm_state = sm_state
 
             # ── Actuators ─────────────────────────────────────────────────────
             if not dry_run:
@@ -255,6 +289,8 @@ def main():
                         help="Path to params.yaml")
     parser.add_argument("--route", default=None,
                         help="Path to route.yaml")
+    parser.add_argument("--no-web", action="store_true",
+                        help="Disable the Flask web server")
     args = parser.parse_args()
 
     base = os.path.join(os.path.dirname(__file__), "..", "config")
@@ -264,7 +300,190 @@ def main():
     config = load_yaml(config_path)
     route  = load_yaml(route_path)
 
-    curses.wrapper(run, args, config, route)
+    # ── Web server ────────────────────────────────────────────────────────────
+    web_server = None
+    if not args.no_web:
+        try:
+            static_dir = os.path.join(os.path.dirname(__file__), "..", "static")
+            web_server = WebServer(
+                shared_state=None,   # will be set inside run() after state init
+                config_path=config_path,
+                route_path=route_path,
+                static_dir=static_dir,
+            )
+            # We need a real SharedState before start(); defer start to run()
+        except Exception as e:
+            log.warning("WebServer init failed (continuing without web): %s", e)
+            web_server = None
+
+    curses.wrapper(_run_with_web, args, config, route,
+                   config_path, route_path, web_server)
+
+
+def _run_with_web(stdscr, args, config, route, config_path, route_path, web_server):
+    """Thin wrapper that wires SharedState into WebServer before starting."""
+    import curses as _curses
+    _curses.curs_set(0)
+    stdscr.nodelay(True)
+
+    # Build real SharedState first
+    state = SharedState()
+    state.reset_odometry = False
+
+    # Wire state into web server and start it
+    if web_server is not None:
+        web_server._state = state
+        try:
+            web_server.start()
+        except Exception as e:
+            log.warning("WebServer start failed: %s", e)
+            web_server = None
+
+    # Delegate to main run loop (passing state implicitly via closure would be
+    # messy — instead re-enter run() with a pre-built state).
+    _run_loop(stdscr, args, config, route, config_path, route_path,
+              web_server, state)
+
+
+def _run_loop(stdscr, args, config, route, config_path, route_path,
+              web_server, state):
+    """Core 100 Hz control loop (separated so state is constructed once)."""
+    dry_run = args.dry_run
+
+    # ── Start background threads ──────────────────────────────────────────────
+    sensor_reader = SensorReader(state, config)
+    sensor_reader.start()
+
+    vesc = VESCInterface(state, config)
+    vesc.start()
+
+    # ── Init synchronous components ───────────────────────────────────────────
+    odo    = Odometry()
+    pid    = PIDController(config)
+    sm     = StateMachine(config, route, odo)
+    servo  = ServoControl(config)
+
+    if web_server is not None:
+        web_server.set_servo(servo)
+
+    heading0 = state.get("heading_rad")[0]
+    odo.reset(heading0)
+
+    # ── CSV log ───────────────────────────────────────────────────────────────
+    logs_dir = os.path.join(os.path.dirname(__file__), "..", "logs")
+    csv_writer, csv_file = open_csv_log(logs_dir)
+
+    # ── Main loop ─────────────────────────────────────────────────────────────
+    loop_count    = 0
+    log_counter   = 0
+    last_time     = time.monotonic()
+    loop_hz       = 0.0
+    hz_window     = []
+    prev_sm_state = state.get("state")[0]
+
+    try:
+        while True:
+            now = time.monotonic()
+            dt  = now - last_time
+            last_time = now
+
+            if dt > 0:
+                hz_window.append(1.0 / dt)
+                if len(hz_window) > 50:
+                    hz_window.pop(0)
+                loop_hz = sum(hz_window) / len(hz_window)
+
+            # ── Params hot-reload ─────────────────────────────────────────────
+            if web_server is not None and web_server.get_reload_flag():
+                try:
+                    config = load_yaml(config_path)
+                    pid    = PIDController(config)
+                    sm     = StateMachine(config, route, odo)
+                    servo  = ServoControl(config)
+                    web_server.set_servo(servo)
+                    log.info("params.yaml hot-reloaded")
+                except Exception as e:
+                    log.error("Hot-reload failed: %s", e)
+
+            # ── Odometry reset ────────────────────────────────────────────────
+            if getattr(state, "reset_odometry", False):
+                state.reset_odometry = False
+                heading_now = state.get("heading_rad")[0]
+                odo.reset(heading_now)
+                log.info("Odometry reset via web API")
+
+            # ── Read shared state snapshot ────────────────────────────────────
+            (line_pos, confidence, heading, vel, voltage) = state.get(
+                "line_position", "sensor_confidence",
+                "heading_rad", "wheel_velocity_ms", "input_voltage",
+            )
+
+            # ── Odometry ──────────────────────────────────────────────────────
+            odo.update(vel, heading, dt)
+            state.update_odometry(odo.x, odo.y)
+
+            # ── PID ───────────────────────────────────────────────────────────
+            pid_steer, pid_throttle = pid.compute(line_pos, dt)
+
+            # ── State machine ─────────────────────────────────────────────────
+            steering, throttle, sm_state = sm.update(
+                confidence, pid_steer, pid_throttle, heading, dt
+            )
+
+            # ── Log state transitions ─────────────────────────────────────────
+            if sm_state != prev_sm_state and web_server is not None:
+                web_server.log_transition(prev_sm_state, sm_state,
+                                          f"conf={confidence}")
+                prev_sm_state = sm_state
+
+            # ── Actuators ─────────────────────────────────────────────────────
+            if not dry_run:
+                servo.set_steering(steering)
+                vesc.set_throttle(throttle / config["speed"]["base_ms"])
+            else:
+                steering = 0.0
+                throttle = 0.0
+
+            state.update_control(steering, throttle, sm_state)
+
+            # ── CSV log (decimated) ───────────────────────────────────────────
+            log_counter += 1
+            if log_counter >= LOG_DECIMATION:
+                log_counter = 0
+                csv_writer.writerow([
+                    f"{now:.4f}", f"{line_pos:.4f}", confidence,
+                    f"{heading:.4f}", f"{odo.x:.4f}", f"{odo.y:.4f}",
+                    sm_state, f"{steering:.4f}", f"{throttle:.4f}",
+                    f"{vel:.4f}", f"{voltage:.2f}",
+                ])
+
+            # ── Curses display ────────────────────────────────────────────────
+            if loop_count % 5 == 0:
+                draw_display(stdscr, state, loop_hz, dry_run)
+
+            loop_count += 1
+
+            ch = stdscr.getch()
+            if ch == ord('q') or ch == 3:
+                break
+
+            elapsed = time.monotonic() - now
+            sleep_t = LOOP_DT - elapsed
+            if sleep_t > 0:
+                time.sleep(sleep_t)
+
+    except KeyboardInterrupt:
+        pass
+    finally:
+        log.info("Shutting down…")
+        state.set(running=False)
+        if not dry_run:
+            vesc.set_throttle(0.0)
+            time.sleep(0.1)
+            servo.stop()
+        csv_file.flush()
+        csv_file.close()
+        log.info("Clean shutdown complete.")
 
 
 if __name__ == "__main__":

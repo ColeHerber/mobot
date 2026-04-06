@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobot Diagnostics</title>
+<link rel="stylesheet" href="/static/css/mobot.css">
+<style>
+  body { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  .top-bar { display:flex; align-items:center; gap:1rem; padding:.5rem 1rem;
+             background:var(--bg-panel); border-bottom:1px solid var(--border);
+             font-size:.85rem; flex-shrink:0; }
+  .top-bar h1 { font-size:1rem; color:var(--green); letter-spacing:.1em; margin-right:auto; }
+  .live-dot { width:8px; height:8px; border-radius:50%; background:var(--green);
+              animation:pulse 1s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+  .main { display:grid; grid-template-columns:1fr 360px; flex:1; min-height:0; }
+  /* Left: path canvas */
+  .path-panel { display:flex; flex-direction:column; border-right:1px solid var(--border); }
+  .path-toolbar { display:flex; gap:.5rem; padding:.5rem; border-bottom:1px solid var(--border); flex-shrink:0; }
+  #pathCanvas { flex:1; width:100%; display:block; }
+  /* Right: telemetry + PID */
+  .right-panel { display:flex; flex-direction:column; overflow-y:auto; }
+  .section { padding:.75rem 1rem; border-bottom:1px solid var(--border); }
+  .section h3 { color:var(--green); font-size:.8rem; letter-spacing:.08em;
+                text-transform:uppercase; margin-bottom:.6rem; }
+  .telem-row { display:flex; justify-content:space-between; margin-bottom:.3rem;
+               font-size:.85rem; }
+  .telem-row .label { color:var(--text-dim); }
+  .telem-row .val   { color:var(--text-head); font-family:monospace; }
+  .state-val { padding:.1rem .4rem; border-radius:4px; font-weight:bold; }
+  /* Line pos bar */
+  .linebar-wrap { height:12px; background:var(--bg-card); border-radius:6px; overflow:hidden; position:relative; margin-bottom:.4rem; }
+  .linebar-center { position:absolute; top:0; left:50%; width:1px; height:100%; background:var(--text-dim); }
+  .linebar-fill { position:absolute; top:0; height:100%; transition:all .1s; border-radius:6px; }
+  /* Voltage */
+  .volt-good  { color:var(--green); }
+  .volt-warn  { color:var(--orange); }
+  .volt-crit  { color:var(--red); }
+  /* PID params */
+  .param-row { display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; font-size:.82rem; }
+  .param-row label { width:70px; color:var(--text-dim); flex-shrink:0; }
+  .param-row input[type=range] { flex:1; accent-color:var(--green); }
+  .param-row input[type=number] { width:60px; background:var(--bg-input); border:1px solid var(--border);
+                                   color:var(--text-head); border-radius:4px; padding:.15rem .3rem;
+                                   font-size:.82rem; text-align:right; }
+  .param-row .dot { width:7px; height:7px; border-radius:50%; background:var(--green); flex-shrink:0; }
+  .param-row .dot.dirty { background:var(--orange); }
+  .btn { background:var(--bg-card); border:1px solid var(--border); color:var(--text);
+         border-radius:5px; padding:.35rem .8rem; cursor:pointer; font-size:.82rem; }
+  .btn:hover { border-color:var(--green); color:var(--green); }
+  .btn.primary { border-color:var(--green); color:var(--green); }
+  .save-status { font-size:.75rem; color:var(--text-dim); margin-left:.5rem; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>MOBOT DIAGNOSTICS</h1>
+  <div class="live-dot" id="liveDot"></div>
+  <span id="loopHz" style="color:var(--text-dim);font-family:monospace;">—</span>
+  <a href="/" class="btn">← Hub</a>
+</div>
+
+<div class="main">
+  <!-- LEFT: Path Canvas -->
+  <div class="path-panel">
+    <div class="path-toolbar">
+      <button class="btn" id="btnFit">Fit View</button>
+      <button class="btn" id="btnClear">Clear Path</button>
+      <span style="color:var(--text-dim);font-size:.8rem;margin-left:.5rem;">
+        Color = line error: <span style="color:#00ff88">■</span>centered
+        <span style="color:#ffdd00">■</span>slight
+        <span style="color:#ff9900">■</span>off
+        <span style="color:#ff4444">■</span>far
+        <span style="color:#666">■</span>dead-reckon
+      </span>
+    </div>
+    <canvas id="pathCanvas"></canvas>
+  </div>
+
+  <!-- RIGHT: Telemetry + PID -->
+  <div class="right-panel">
+    <!-- Live telemetry -->
+    <div class="section">
+      <h3>Live Telemetry</h3>
+      <div class="telem-row">
+        <span class="label">Line Position</span>
+        <span class="val" id="tLinePos">—</span>
+      </div>
+      <div class="linebar-wrap">
+        <div class="linebar-center"></div>
+        <div class="linebar-fill" id="lineBarFill"></div>
+      </div>
+      <div class="telem-row">
+        <span class="label">Confidence</span>
+        <span class="val" id="tConf">—</span>
+      </div>
+      <div class="telem-row">
+        <span class="label">State</span>
+        <span class="val state-val" id="tState">—</span>
+      </div>
+      <div class="telem-row">
+        <span class="label">Speed</span>
+        <span class="val" id="tSpeed">—</span>
+      </div>
+      <div class="telem-row">
+        <span class="label">Heading</span>
+        <span class="val" id="tHeading">—</span>
+      </div>
+      <div class="telem-row">
+        <span class="label">Position</span>
+        <span class="val" id="tPos">—</span>
+      </div>
+      <div class="telem-row">
+        <span class="label">Battery</span>
+        <span class="val" id="tVolt">—</span>
+      </div>
+    </div>
+
+    <!-- PID Tuning -->
+    <div class="section">
+      <h3>PID Tuning</h3>
+      <div id="paramRows"></div>
+      <div style="display:flex;align-items:center;margin-top:.5rem;">
+        <button class="btn primary" id="btnSave">SAVE &amp; APPLY</button>
+        <button class="btn" id="btnReload" style="margin-left:.5rem;">Reload</button>
+        <span class="save-status" id="saveStatus"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/mobot.js"></script>
+<script>
+// ── Path canvas state ───────────────────────────────────────────────────────
+const canvas  = document.getElementById("pathCanvas");
+const ctx     = canvas.getContext("2d");
+let pathPts   = [];   // [{x,y,color}]
+let livePt    = null; // current robot position
+let gates     = [];
+let intersections = [];
+
+// View transform
+let vpX=0, vpY=0, vpScale=60;  // pixels per meter
+
+function worldToCanvas(wx, wy) {
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  return [cx + (wx - vpX) * vpScale, cy - (wy - vpY) * vpScale];
+}
+
+function fitView() {
+  if (pathPts.length === 0) return;
+  const xs = pathPts.map(p=>p.x), ys = pathPts.map(p=>p.y);
+  const minX=Math.min(...xs), maxX=Math.max(...xs);
+  const minY=Math.min(...ys), maxY=Math.max(...ys);
+  const rangeX=maxX-minX || 1, rangeY=maxY-minY || 1;
+  vpScale = Math.min((canvas.width*.85)/rangeX, (canvas.height*.85)/rangeY);
+  vpX = (minX+maxX)/2;
+  vpY = (minY+maxY)/2;
+  drawAll();
+}
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width  = rect.width;
+  canvas.height = rect.height - 38;  // subtract toolbar
+  drawAll();
+}
+
+function drawAll() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Grid
+  ctx.strokeStyle = "#1e2530";
+  ctx.lineWidth = 1;
+  const step = vpScale * 1;  // 1-meter grid
+  const ox = (canvas.width/2 - vpX*vpScale) % step;
+  const oy = (canvas.height/2 + vpY*vpScale) % step;
+  for (let x=ox; x<canvas.width; x+=step) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+  for (let y=oy; y<canvas.height; y+=step) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+
+  // Origin crosshair
+  const [ox2,oy2] = worldToCanvas(0,0);
+  ctx.strokeStyle="#333"; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(ox2-10,oy2); ctx.lineTo(ox2+10,oy2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox2,oy2-10); ctx.lineTo(ox2,oy2+10); ctx.stroke();
+
+  // Path
+  for (let i=1; i<pathPts.length; i++) {
+    const [x0,y0]=worldToCanvas(pathPts[i-1].x,pathPts[i-1].y);
+    const [x1,y1]=worldToCanvas(pathPts[i].x,pathPts[i].y);
+    ctx.strokeStyle=pathPts[i].color; ctx.lineWidth=2.5; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+  }
+
+  // Gates
+  gates.forEach(g => {
+    const [gx,gy]=worldToCanvas(g.x, g.y||0);
+    const r = (g.radius_m||0.5)*vpScale;
+    ctx.strokeStyle="#4488ff"; ctx.lineWidth=1.5; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.arc(gx,gy,r,0,2*Math.PI); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle="#4488ff"; ctx.font="10px monospace";
+    ctx.fillText("G"+g.id, gx+r+3, gy-3);
+  });
+
+  // Intersections
+  intersections.forEach(wp => {
+    const [ix,iy]=worldToCanvas(wp.x, wp.y||0);
+    ctx.strokeStyle="#ff44ff"; ctx.lineWidth=2; ctx.setLineDash([]);
+    const s=7;
+    ctx.beginPath(); ctx.moveTo(ix-s,iy-s); ctx.lineTo(ix+s,iy+s); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ix+s,iy-s); ctx.lineTo(ix-s,iy+s); ctx.stroke();
+    ctx.fillStyle="#ff44ff"; ctx.font="10px monospace";
+    ctx.fillText((wp.direction==="left"?"←":"→")+wp.id, ix+s+3, iy-3);
+  });
+
+  // Live robot position (pulsing dot)
+  if (livePt) {
+    const [rx,ry]=worldToCanvas(livePt.x,livePt.y);
+    ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(rx,ry,5,0,2*Math.PI); ctx.fill();
+    ctx.fillStyle=livePt.color; ctx.beginPath(); ctx.arc(rx,ry,4,0,2*Math.PI); ctx.fill();
+  }
+}
+
+// ── Load history on startup ──────────────────────────────────────────────────
+async function loadHistory() {
+  try {
+    const rows = await fetch("/api/history?n=2000").then(r=>r.json());
+    rows.forEach(r => {
+      const lp   = parseFloat(r.line_pos);
+      const conf = parseInt(r.confidence);
+      pathPts.push({ x:parseFloat(r.x_m), y:parseFloat(r.y_m),
+                     color: lineErrorColor(Math.abs(lp), conf<30) });
+    });
+    fitView();
+  } catch(e) { console.warn("History load:", e); }
+}
+
+// ── Load route waypoints ─────────────────────────────────────────────────────
+async function loadRoute() {
+  try {
+    const r = await fetch("/api/route").then(r=>r.json());
+    gates         = r.gates || [];
+    intersections = r.intersections || [];
+    drawAll();
+  } catch(e) {}
+}
+
+// ── SSE live updates ─────────────────────────────────────────────────────────
+const sse = new MobotSSE("/api/state", d => {
+  // Add to path
+  const color = lineErrorColor(Math.abs(d.line_pos||0), (d.confidence||0)<30);
+  pathPts.push({x:d.x||0, y:d.y||0, color});
+  livePt = {x:d.x||0, y:d.y||0, color};
+  if (pathPts.length > 5000) pathPts.splice(0, 500);
+  drawAll();
+
+  // Telemetry panel
+  document.getElementById("tLinePos").textContent = fmt(d.line_pos, 3);
+  document.getElementById("tConf").textContent    = d.confidence;
+  document.getElementById("tSpeed").textContent   = fmt(d.wheel_vel_ms,3)+" m/s";
+  document.getElementById("tHeading").textContent = fmt(d.heading_rad*180/Math.PI,1)+"°";
+  document.getElementById("tPos").textContent     = `(${fmt(d.x,2)}, ${fmt(d.y,2)}) m`;
+
+  const vEl = document.getElementById("tVolt");
+  vEl.textContent  = fmt(d.input_voltage,1)+"V";
+  vEl.className    = "val " + (d.input_voltage>11?"volt-good":d.input_voltage>10.5?"volt-warn":"volt-crit");
+
+  const sEl = document.getElementById("tState");
+  sEl.textContent = d.state||"—";
+  sEl.style.background = stateColor(d.state)+"33";
+  sEl.style.color      = stateColor(d.state);
+
+  // Line bar
+  const lp = d.line_pos||0;
+  const fill = document.getElementById("lineBarFill");
+  const pct  = Math.abs(lp)*50;
+  fill.style.width  = pct+"%";
+  fill.style.left   = lp<0 ? (50-pct)+"%" : "50%";
+  fill.style.background = lineErrorColor(Math.abs(lp), false);
+});
+sse.connect();
+
+// ── PID params panel ─────────────────────────────────────────────────────────
+const PARAMS_DEF = [
+  {key:"pid.kp",       label:"Kp",       min:0, max:3.0,  step:0.01},
+  {key:"pid.kd",       label:"Kd",       min:0, max:0.5,  step:0.001},
+  {key:"pid.speed_kp", label:"Speed Kp", min:0, max:1.5,  step:0.01},
+  {key:"speed.base_ms",label:"Base m/s", min:0.1,max:1.5, step:0.01},
+  {key:"speed.gate_ms",label:"Gate m/s", min:0.1,max:1.0, step:0.01},
+  {key:"speed.min_ms", label:"Min m/s",  min:0.05,max:0.5,step:0.01},
+];
+let paramsObj = {};
+let savedParams = {};
+
+function buildParamRows() {
+  const container = document.getElementById("paramRows");
+  container.innerHTML = "";
+  PARAMS_DEF.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "param-row";
+    div.innerHTML = `
+      <label>${p.label}</label>
+      <input type="range" id="slid_${p.key}" min="${p.min}" max="${p.max}" step="${p.step}">
+      <input type="number" id="num_${p.key}" min="${p.min}" max="${p.max}" step="${p.step}">
+      <div class="dot" id="dot_${p.key}"></div>
+    `;
+    container.appendChild(div);
+
+    const slid = div.querySelector(`#slid_${p.key}`);
+    const num  = div.querySelector(`#num_${p.key}`);
+    const dot  = div.querySelector(`#dot_${p.key}`);
+
+    slid.addEventListener("input", () => {
+      num.value = slid.value;
+      setNestedKey(paramsObj, p.key, parseFloat(slid.value));
+      dot.classList.add("dirty");
+    });
+    num.addEventListener("input", () => {
+      slid.value = num.value;
+      setNestedKey(paramsObj, p.key, parseFloat(num.value));
+      dot.classList.add("dirty");
+    });
+  });
+}
+
+function setNestedKey(obj, dotKey, val) {
+  const parts = dotKey.split(".");
+  let cur = obj;
+  for (let i=0; i<parts.length-1; i++) { cur = cur[parts[i]] = cur[parts[i]]||{}; }
+  cur[parts[parts.length-1]] = val;
+}
+function getNestedKey(obj, dotKey) {
+  return dotKey.split(".").reduce((o,k)=>o?.[k], obj);
+}
+
+function fillParamUI(params) {
+  paramsObj = JSON.parse(JSON.stringify(params));
+  PARAMS_DEF.forEach(p => {
+    const v = getNestedKey(params, p.key);
+    if (v !== undefined) {
+      document.getElementById(`slid_${p.key}`).value = v;
+      document.getElementById(`num_${p.key}`).value  = v;
+      document.getElementById(`dot_${p.key}`).classList.remove("dirty");
+    }
+  });
+  savedParams = JSON.parse(JSON.stringify(params));
+}
+
+async function loadParams() {
+  try {
+    const p = await fetch("/api/params").then(r=>r.json());
+    fillParamUI(p);
+  } catch(e) { document.getElementById("saveStatus").textContent="Load failed"; }
+}
+
+document.getElementById("btnSave").addEventListener("click", async () => {
+  document.getElementById("saveStatus").textContent="Saving…";
+  try {
+    const res = await fetch("/api/params", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(paramsObj)
+    });
+    const data = await res.json();
+    if (data.ok) {
+      savedParams = JSON.parse(JSON.stringify(paramsObj));
+      PARAMS_DEF.forEach(p => document.getElementById(`dot_${p.key}`).classList.remove("dirty"));
+      document.getElementById("saveStatus").textContent="✓ Saved & applied";
+    } else {
+      document.getElementById("saveStatus").textContent="Error: "+data.error;
+    }
+  } catch(e) { document.getElementById("saveStatus").textContent="Network error"; }
+});
+
+document.getElementById("btnReload").addEventListener("click", loadParams);
+document.getElementById("btnFit").addEventListener("click", fitView);
+document.getElementById("btnClear").addEventListener("click", () => { pathPts=[]; livePt=null; drawAll(); });
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+buildParamRows();
+loadParams();
+loadHistory();
+loadRoute();
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+</script>
+</body>
+</html>

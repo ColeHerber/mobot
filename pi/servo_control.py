@@ -40,6 +40,11 @@ class ServoControl:
         self._center   = int(servo_cfg.get("center_pw", 1500))
         self._gpiochip = int(servo_cfg.get("gpiochip", 4))  # 4 for Pi 5, 0 for Pi 4
 
+        # center_offset_us allows fine-tuning the servo center without changing
+        # center_pw. Use tune_servo_center.py to adjust interactively.
+        self._center_offset = int(servo_cfg.get("center_offset_us", 0))
+        self._effective_center = self._center + self._center_offset
+
         self._h = None  # lgpio chip handle
 
         if _LGPIO_AVAILABLE:
@@ -48,8 +53,10 @@ class ServoControl:
                 lgpio.gpio_claim_output(self._h, self._pin)
                 log.info("lgpio opened gpiochip%d, servo on GPIO %d",
                          self._gpiochip, self._pin)
+                log.info("effective center = %d µs (center_pw=%d + offset=%d)",
+                         self._effective_center, self._center, self._center_offset)
                 # Brief calibration pulse: center → wait → ready
-                lgpio.tx_servo(self._h, self._pin, self._center, _SERVO_FREQ_HZ)
+                lgpio.tx_servo(self._h, self._pin, self._effective_center, _SERVO_FREQ_HZ)
                 time.sleep(0.3)
             except lgpio.error as e:
                 log.error("lgpio init failed: %s — servo disabled", e)
@@ -64,10 +71,11 @@ class ServoControl:
             value: [-1.0, +1.0] — negative = left, positive = right
         """
         value = max(-1.0, min(1.0, value))
+        ec = self._effective_center
         if value >= 0.0:
-            pw = int(self._center + value * (self._max_pw - self._center))
+            pw = int(ec + value * (self._max_pw - ec))
         else:
-            pw = int(self._center + value * (self._center - self._min_pw))
+            pw = int(ec + value * (ec - self._min_pw))
 
         pw = max(self._min_pw, min(self._max_pw, pw))
 

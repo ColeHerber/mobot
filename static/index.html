@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobot 2026</title>
+<link rel="stylesheet" href="/static/css/mobot.css">
+<style>
+  .hub { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; max-width:800px; margin:2rem auto; }
+  .hub-card { background:var(--bg-panel); border:1px solid var(--border); border-radius:8px;
+              padding:2rem; text-decoration:none; color:var(--text); transition:border-color .2s, background .2s; }
+  .hub-card:hover { border-color:var(--green); background:var(--bg-card); }
+  .hub-card h2 { color:var(--green); font-size:1.3rem; margin-bottom:.5rem; }
+  .hub-card p  { color:var(--text-dim); font-size:.85rem; }
+  .hub-card .icon { font-size:2.5rem; margin-bottom:.75rem; }
+  header { text-align:center; padding:2rem 1rem 1rem; border-bottom:1px solid var(--border); }
+  header h1 { color:var(--green); font-size:2rem; letter-spacing:.15em; }
+  header p  { color:var(--text-dim); margin-top:.3rem; }
+  .status-bar { display:flex; justify-content:center; gap:2rem; padding:.75rem 1rem;
+                background:var(--bg-panel); border-bottom:1px solid var(--border);
+                font-size:.85rem; font-family:monospace; }
+  .status-bar .item { display:flex; gap:.4rem; align-items:center; }
+  .status-bar .label { color:var(--text-dim); }
+  .status-bar .val { color:var(--text-head); }
+  .state-badge { padding:.1rem .5rem; border-radius:4px; font-weight:bold; font-size:.8rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>MOBOT 2026</h1>
+  <p>CMU 32nd Annual Mobot Slalom Race &mdash; Control Hub</p>
+</header>
+<div class="status-bar" id="statusBar">
+  <div class="item"><span class="label">State</span><span class="val state-badge" id="hState">—</span></div>
+  <div class="item"><span class="label">Speed</span><span class="val" id="hSpeed">— m/s</span></div>
+  <div class="item"><span class="label">Battery</span><span class="val" id="hVolt">—V</span></div>
+  <div class="item"><span class="label">Conf</span><span class="val" id="hConf">—</span></div>
+</div>
+
+<div class="hub">
+  <a href="/diagnostics" class="hub-card">
+    <div class="icon">📡</div>
+    <h2>Diagnostics</h2>
+    <p>Live path visualization colored by line error. PID tuning sliders with hot-reload.</p>
+  </a>
+  <a href="/debug" class="hub-card">
+    <div class="icon">🔬</div>
+    <h2>Debug</h2>
+    <p>Sensor bars, IMU compass, VESC telemetry, odometry replay, state machine log.</p>
+  </a>
+  <a href="/route" class="hub-card">
+    <div class="icon">🗺️</div>
+    <h2>Route Editor</h2>
+    <p>Set LEFT / RIGHT at each intersection. Race-morning turn updates in &lt;30 seconds.</p>
+  </a>
+  <a href="/servo" class="hub-card">
+    <div class="icon">⚙️</div>
+    <h2>Servo Tuner</h2>
+    <p>Live servo center offset adjustment. Nudge &amp; save without SSH.</p>
+  </a>
+</div>
+
+<script src="/static/js/mobot.js"></script>
+<script>
+const sse = new MobotSSE("/api/state", d => {
+  document.getElementById("hState").textContent  = d.state || "—";
+  document.getElementById("hState").style.background = stateColor(d.state) + "33";
+  document.getElementById("hState").style.color = stateColor(d.state);
+  document.getElementById("hSpeed").textContent  = fmt(d.wheel_vel_ms, 2) + " m/s";
+  document.getElementById("hVolt").textContent   = fmt(d.input_voltage, 1) + "V";
+  document.getElementById("hVolt").style.color   = batteryColor(d.input_voltage);
+  document.getElementById("hConf").textContent   = d.confidence ?? "—";
+});
+sse.connect();
+</script>
+</body>
+</html>

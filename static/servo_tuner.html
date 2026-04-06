@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servo Tuner — Mobot 2026</title>
+<link rel="stylesheet" href="/static/css/mobot.css">
+<style>
+  body { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; }
+  .card { background:var(--bg-panel); border:1px solid var(--border); border-radius:10px;
+          padding:2.5rem; max-width:480px; width:95%; }
+  h1 { color:var(--green); font-size:1.3rem; letter-spacing:.1em; margin-bottom:.25rem; }
+  .subtitle { color:var(--text-dim); font-size:.82rem; margin-bottom:2rem; }
+  .big-num { font-size:3rem; font-weight:bold; font-family:monospace; text-align:center;
+             color:var(--text-head); margin:.5rem 0; }
+  .offset-line { display:flex; align-items:center; justify-content:center; gap:.5rem;
+                 color:var(--text-dim); font-size:.9rem; margin-bottom:1.5rem; }
+  .offset-val  { color:var(--orange); font-family:monospace; font-weight:bold; }
+  /* Bar */
+  .bar-wrap { position:relative; height:20px; background:var(--bg-card);
+              border-radius:10px; margin-bottom:1.5rem; overflow:visible; }
+  .bar-fill { position:absolute; top:0; height:100%; background:var(--green);
+              border-radius:10px; transition:width .1s; }
+  .bar-marker { position:absolute; top:-4px; width:3px; height:28px;
+                background:var(--text-dim); border-radius:2px; }
+  .bar-label { display:flex; justify-content:space-between; font-size:.72rem;
+               color:var(--text-dim); margin-top:.3rem; margin-bottom:1.2rem; }
+  /* Buttons */
+  .nudge-row { display:flex; gap:.5rem; justify-content:center; margin-bottom:.75rem; }
+  .nudge-btn { background:var(--bg-card); border:1px solid var(--border); color:var(--text-head);
+               border-radius:7px; padding:.6rem 1.2rem; font-size:1rem; cursor:pointer;
+               font-family:monospace; transition:border-color .15s, background .15s; }
+  .nudge-btn:hover { border-color:var(--green); background:var(--bg-panel); }
+  .nudge-btn:active { transform:scale(.97); }
+  .save-row { display:flex; gap:.75rem; justify-content:center; margin-top:1.5rem; }
+  .btn-save  { background:var(--green); color:#000; border:none; border-radius:7px;
+               padding:.7rem 2rem; font-size:1rem; font-weight:bold; cursor:pointer; }
+  .btn-save:hover { opacity:.85; }
+  .btn-reset { background:transparent; border:1px solid var(--border); color:var(--text-dim);
+               border-radius:7px; padding:.7rem 1.2rem; font-size:.9rem; cursor:pointer; }
+  .btn-reset:hover { border-color:var(--orange); color:var(--orange); }
+  .status { text-align:center; margin-top:.75rem; font-size:.82rem; color:var(--text-dim);
+            min-height:1.2em; }
+  .key-hint { font-size:.72rem; color:var(--text-dim); text-align:center; margin-top:1rem; }
+  .back-link { position:fixed; top:1rem; left:1rem; font-size:.85rem; color:var(--text-dim);
+               text-decoration:none; }
+  .back-link:hover { color:var(--green); }
+</style>
+</head>
+<body>
+<a href="/" class="back-link">← Hub</a>
+
+<div class="card">
+  <h1>SERVO CENTER TUNER</h1>
+  <p class="subtitle">Adjust the steering center offset without SSH. Servo moves immediately.</p>
+
+  <div class="big-num" id="effectiveCenter">1500 µs</div>
+  <div class="offset-line">
+    Offset: <span class="offset-val" id="offsetVal">+0 µs</span>
+    &nbsp;|&nbsp; center_pw: <span id="basePw">1500</span> µs
+  </div>
+
+  <div class="bar-wrap">
+    <div class="bar-fill" id="barFill"></div>
+    <div class="bar-marker" id="barMarker"></div>
+  </div>
+  <div class="bar-label"><span id="minPwLabel">1000</span><span id="maxPwLabel">2000</span></div>
+
+  <div class="nudge-row">
+    <button class="nudge-btn" data-delta="-10" title="−10 µs">◀◀ -10</button>
+    <button class="nudge-btn" data-delta="-1"  title="−1 µs">◀ -1</button>
+    <button class="nudge-btn" data-delta="1"   title="+1 µs">+1 ▶</button>
+    <button class="nudge-btn" data-delta="10"  title="+10 µs">+10 ▶▶</button>
+  </div>
+  <div class="nudge-row">
+    <button class="nudge-btn" data-delta="-50">◀◀◀ -50</button>
+    <button class="nudge-btn" data-delta="50">+50 ▶▶▶</button>
+  </div>
+
+  <div class="save-row">
+    <button class="btn-save" id="btnSave">SAVE TO PARAMS</button>
+    <button class="btn-reset" id="btnReset">Reset to 0</button>
+  </div>
+  <div class="status" id="status">Servo moves live. Press SAVE to persist across restarts.</div>
+  <div class="key-hint">Keyboard: ← → for ±1 µs &nbsp;|&nbsp; Shift+← → for ±10 µs</div>
+</div>
+
+<script src="/static/js/mobot.js"></script>
+<script>
+let centerPw  = 1500;
+let minPw     = 1000;
+let maxPw     = 2000;
+let offsetUs  = 0;
+let paramsObj = {};
+
+async function loadParams() {
+  try {
+    paramsObj = await fetch("/api/params").then(r=>r.json());
+    const s = paramsObj.servo || {};
+    centerPw = s.center_pw || 1500;
+    minPw    = s.min_pw    || 1000;
+    maxPw    = s.max_pw    || 2000;
+    offsetUs = s.center_offset_us || 0;
+    document.getElementById("basePw").textContent    = centerPw;
+    document.getElementById("minPwLabel").textContent = minPw + "µs";
+    document.getElementById("maxPwLabel").textContent = maxPw + "µs";
+    updateUI();
+  } catch(e) { document.getElementById("status").textContent = "Could not load params."; }
+}
+
+function updateUI() {
+  const eff = centerPw + offsetUs;
+  document.getElementById("effectiveCenter").textContent = eff + " µs";
+  document.getElementById("offsetVal").textContent = (offsetUs>=0?"+":"")+offsetUs+" µs";
+  document.getElementById("offsetVal").style.color = offsetUs===0?"var(--text-dim)":Math.abs(offsetUs)>30?"var(--red)":"var(--orange)";
+
+  const frac = (eff - minPw) / (maxPw - minPw);
+  document.getElementById("barFill").style.width = (frac*100).toFixed(1)+"%";
+  document.getElementById("barMarker").style.left = (frac*100).toFixed(1)+"%";
+}
+
+async function nudge(delta) {
+  // Clamp
+  const newOff = Math.max(minPw-centerPw, Math.min(maxPw-centerPw, offsetUs+delta));
+  if (newOff === offsetUs) return;
+  offsetUs = newOff;
+  updateUI();
+
+  // Move servo immediately
+  try {
+    const res = await fetch("/api/servo_nudge", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({delta_us: delta})
+    });
+    const d = await res.json();
+    if (!d.ok) document.getElementById("status").textContent = "Servo error: "+(d.error||"?");
+    else document.getElementById("status").textContent = "Servo moved. Press SAVE to persist.";
+  } catch(e) {
+    document.getElementById("status").textContent = "Network error (servo NOT moved)";
+  }
+}
+
+document.querySelectorAll(".nudge-btn").forEach(btn => {
+  btn.addEventListener("click", () => nudge(parseInt(btn.dataset.delta)));
+});
+
+document.getElementById("btnReset").addEventListener("click", async () => {
+  const diff = -offsetUs;
+  if (diff !== 0) await nudge(diff);
+});
+
+document.getElementById("btnSave").addEventListener("click", async () => {
+  document.getElementById("status").textContent = "Saving…";
+  try {
+    // Update offset in full params object
+    paramsObj.servo = paramsObj.servo || {};
+    paramsObj.servo.center_offset_us = offsetUs;
+
+    const res = await fetch("/api/params", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(paramsObj)
+    });
+    const d = await res.json();
+    document.getElementById("status").textContent = d.ok
+      ? `✓ Saved center_offset_us = ${offsetUs} µs to params.yaml`
+      : "Save failed: "+(d.error||"?");
+  } catch(e) { document.getElementById("status").textContent = "Network error"; }
+});
+
+// Keyboard
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft")  nudge(e.shiftKey ? -10 : -1);
+  if (e.key === "ArrowRight") nudge(e.shiftKey ? +10 : +1);
+});
+
+loadParams();
+</script>
+</body>
+</html>

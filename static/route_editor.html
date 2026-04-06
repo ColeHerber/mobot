@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Route Editor — Mobot 2026</title>
+<link rel="stylesheet" href="/static/css/mobot.css">
+<style>
+  body { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  .top-bar { display:flex; align-items:center; gap:.75rem; padding:.5rem 1rem;
+             background:var(--bg-panel); border-bottom:1px solid var(--border);
+             flex-shrink:0; }
+  .top-bar h1 { font-size:1rem; color:var(--green); letter-spacing:.1em; margin-right:auto; }
+  .main { display:grid; grid-template-columns:1fr 380px; flex:1; min-height:0; }
+  /* Map canvas */
+  .map-panel { display:flex; flex-direction:column; border-right:1px solid var(--border); }
+  .map-toolbar { padding:.4rem .75rem; border-bottom:1px solid var(--border); font-size:.78rem; color:var(--text-dim); flex-shrink:0; }
+  #mapCanvas { flex:1; display:block; width:100%; }
+  /* Right panel */
+  .right { display:flex; flex-direction:column; overflow-y:auto; }
+  .section { padding:.75rem 1rem; border-bottom:1px solid var(--border); }
+  .section h3 { font-size:.8rem; color:var(--green); letter-spacing:.08em;
+                text-transform:uppercase; margin-bottom:.6rem; }
+  /* Intersection row */
+  .int-row { background:var(--bg-card); border:1px solid var(--border); border-radius:7px;
+             padding:.75rem 1rem; margin-bottom:.5rem; }
+  .int-row .info { font-size:.78rem; color:var(--text-dim); margin-bottom:.5rem; }
+  .int-row .dir-row { display:flex; align-items:center; gap:.5rem; }
+  .dir-btn { flex:1; padding:.6rem .4rem; font-size:.95rem; font-weight:bold;
+             border-radius:6px; cursor:pointer; border:2px solid var(--border);
+             background:var(--bg-panel); color:var(--text-dim); transition:all .15s; }
+  .dir-btn.left.active  { border-color:var(--red);  background:var(--red)22;  color:var(--red);  }
+  .dir-btn.right.active { border-color:var(--blue); background:var(--blue)22; color:var(--blue); }
+  .dir-btn:hover { border-color:var(--text); color:var(--text); }
+  .dir-label { min-width:70px; text-align:center; font-size:.85rem; font-weight:bold; }
+  /* Gates */
+  .gate-row { display:flex; align-items:center; gap:.5rem; padding:.4rem 0;
+              border-bottom:1px solid var(--border); font-size:.82rem; }
+  .gate-row:last-of-type { border-bottom:none; }
+  .gate-row .coords { flex:1; color:var(--text-dim); font-family:monospace; }
+  .del-btn { background:transparent; border:1px solid var(--border); color:var(--red);
+             border-radius:4px; padding:.2rem .5rem; cursor:pointer; font-size:.75rem; }
+  .del-btn:hover { background:var(--red)22; }
+  .add-gate-btn { background:var(--bg-card); border:1px dashed var(--border); color:var(--green);
+                  border-radius:6px; width:100%; padding:.5rem; cursor:pointer; font-size:.82rem;
+                  margin-top:.5rem; }
+  .add-gate-btn:hover { border-color:var(--green); }
+  /* Action buttons */
+  .action-row { display:flex; gap:.75rem; padding:.75rem 1rem; }
+  .btn-save    { flex:1; background:var(--green); color:#000; border:none; border-radius:7px;
+                 padding:.65rem; font-weight:bold; font-size:.95rem; cursor:pointer; }
+  .btn-save:hover { opacity:.85; }
+  .btn-restart { background:transparent; border:1px solid var(--orange); color:var(--orange);
+                 border-radius:7px; padding:.65rem 1rem; font-size:.9rem; cursor:pointer; }
+  .btn-restart:hover { background:var(--orange)22; }
+  /* Banner */
+  .banner { position:fixed; top:3rem; left:50%; transform:translateX(-50%);
+            background:var(--green); color:#000; padding:.5rem 1.5rem;
+            border-radius:7px; font-weight:bold; font-size:.9rem;
+            opacity:0; transition:opacity .3s; pointer-events:none; z-index:100; }
+  .banner.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>ROUTE EDITOR</h1>
+  <span style="color:var(--text-dim);font-size:.8rem;">CMU Mobot 2026 — Race Day</span>
+  <a href="/" style="margin-left:auto;" class="btn">← Hub</a>
+</div>
+<div class="banner" id="banner">Route saved! Robot ready for race.</div>
+
+<div class="main">
+  <!-- Course map -->
+  <div class="map-panel">
+    <div class="map-toolbar">
+      Course map — click empty space to add a gate &nbsp;|&nbsp;
+      <span style="color:#ff44ff">✕</span> intersections &nbsp;
+      <span style="color:#4488ff">○</span> gates
+    </div>
+    <canvas id="mapCanvas"></canvas>
+  </div>
+
+  <!-- Right panel -->
+  <div class="right">
+    <div class="section">
+      <h3>Intersection Turns</h3>
+      <div id="intList"><span style="color:var(--text-dim)">Loading…</span></div>
+    </div>
+    <div class="section">
+      <h3>Gates</h3>
+      <div id="gateList"></div>
+      <button class="add-gate-btn" id="btnAddGate">+ Add Gate (click map or enter coords)</button>
+    </div>
+    <div class="action-row">
+      <button class="btn-save" id="btnSave">SAVE ROUTE</button>
+      <button class="btn-restart" id="btnRestart">RESTART BOT</button>
+    </div>
+    <div style="padding:.5rem 1rem; color:var(--text-dim); font-size:.75rem;">
+      SAVE writes route.yaml immediately. RESTART BOT sends SIGTERM — use only after saving.
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/mobot.js"></script>
+<script>
+const canvas = document.getElementById("mapCanvas");
+const ctx    = canvas.getContext("2d");
+let routeData = { intersections:[], gates:[] };
+let mapPath   = [];
+let vpX=0, vpY=0, vpScale=60;
+let addingGate = false;
+
+function worldToCanvas(wx, wy) {
+  const cx=canvas.width/2, cy=canvas.height/2;
+  return [cx+(wx-vpX)*vpScale, cy-(wy-vpY)*vpScale];
+}
+function canvasToWorld(px, py) {
+  const cx=canvas.width/2, cy=canvas.height/2;
+  return [(px-cx)/vpScale+vpX, -(py-cy)/vpScale+vpY];
+}
+
+function resizeCanvas() {
+  canvas.width  = canvas.parentElement.clientWidth;
+  canvas.height = canvas.parentElement.clientHeight - 36;
+  drawMap();
+}
+
+function drawMap() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Grid
+  ctx.strokeStyle="#1e2530"; ctx.lineWidth=1;
+  const step=vpScale;
+  const ox=(canvas.width/2-vpX*vpScale)%step, oy=(canvas.height/2+vpY*vpScale)%step;
+  for (let x=ox; x<canvas.width; x+=step) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+  for (let y=oy; y<canvas.height; y+=step) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+
+  // Mapped path
+  if (mapPath.length > 1) {
+    ctx.strokeStyle="#2a3a2a"; ctx.lineWidth=2; ctx.setLineDash([]);
+    ctx.beginPath();
+    const [x0,y0]=worldToCanvas(mapPath[0].x,mapPath[0].y);
+    ctx.moveTo(x0,y0);
+    mapPath.forEach(p => { const [x,y]=worldToCanvas(p.x,p.y); ctx.lineTo(x,y); });
+    ctx.stroke();
+  }
+
+  // Gates
+  (routeData.gates||[]).forEach((g,i) => {
+    const [gx,gy]=worldToCanvas(g.x,g.y||0);
+    const r=(g.radius_m||0.5)*vpScale;
+    ctx.strokeStyle="#4488ff"; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.arc(gx,gy,r,0,2*Math.PI); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle="#4488ff"; ctx.font="bold 11px monospace";
+    ctx.fillText("G"+(i+1), gx+r+3, gy-3);
+    ctx.fillStyle="#4488ff55";
+    ctx.beginPath(); ctx.arc(gx,gy,5,0,2*Math.PI); ctx.fill();
+  });
+
+  // Intersections
+  (routeData.intersections||[]).forEach((wp,i) => {
+    const [ix,iy]=worldToCanvas(wp.x,wp.y||0);
+    const col = wp.direction==="left"?"#ff4444":"#4488ff";
+    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.setLineDash([]);
+    const s=8;
+    ctx.beginPath(); ctx.moveTo(ix-s,iy-s); ctx.lineTo(ix+s,iy+s); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ix+s,iy-s); ctx.lineTo(ix-s,iy+s); ctx.stroke();
+    // Trigger radius
+    ctx.strokeStyle=col+"55"; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.arc(ix,iy,(wp.radius_m||0.3)*vpScale,0,2*Math.PI); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=col; ctx.font="bold 11px monospace";
+    ctx.fillText((wp.direction==="left"?"←":"→")+(i+1), ix+s+3, iy-3);
+  });
+
+  // Origin
+  const [ox2,oy2]=worldToCanvas(0,0);
+  ctx.strokeStyle="#444"; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(ox2-10,oy2); ctx.lineTo(ox2+10,oy2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox2,oy2-10); ctx.lineTo(ox2,oy2+10); ctx.stroke();
+  ctx.fillStyle="#666"; ctx.font="10px monospace"; ctx.fillText("START",ox2+4,oy2-4);
+}
+
+function fitView() {
+  const pts = [
+    ...(routeData.intersections||[]).map(p=>({x:p.x,y:p.y||0})),
+    ...(routeData.gates||[]).map(g=>({x:g.x,y:g.y||0})),
+    ...mapPath.slice(0,1000).map(p=>({x:p.x,y:p.y})),
+    {x:0,y:0}
+  ];
+  if (pts.length===0) return;
+  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  const minX=Math.min(...xs), maxX=Math.max(...xs);
+  const minY=Math.min(...ys), maxY=Math.max(...ys);
+  const rangeX=maxX-minX||2, rangeY=maxY-minY||2;
+  vpScale = Math.min((canvas.width*.8)/rangeX, (canvas.height*.8)/rangeY, 120);
+  vpX=(minX+maxX)/2; vpY=(minY+maxY)/2;
+  drawMap();
+}
+
+// ── Render intersection list ─────────────────────────────────────────────────
+function renderIntList() {
+  const el = document.getElementById("intList");
+  if (!routeData.intersections?.length) {
+    el.innerHTML = '<span style="color:var(--text-dim)">No intersections in route.yaml</span>';
+    return;
+  }
+  el.innerHTML = "";
+  routeData.intersections.forEach((wp, i) => {
+    const div = document.createElement("div");
+    div.className = "int-row";
+    const dir = wp.direction || "";
+    div.innerHTML = `
+      <div class="info">#${wp.id} &nbsp; x=${fmt(wp.x,2)}m  y=${fmt(wp.y||0,2)}m  r=${wp.radius_m||0.3}m</div>
+      <div class="dir-row">
+        <button class="dir-btn left ${dir==="left"?"active":""}" data-i="${i}" data-dir="left">◀ LEFT</button>
+        <span class="dir-label" id="dirlabel_${i}" style="color:${dir==="left"?"var(--red)":dir==="right"?"var(--blue)":"var(--text-dim)"}">
+          ${dir==="left"?"← LEFT":dir==="right"?"RIGHT →":"— NOT SET —"}
+        </span>
+        <button class="dir-btn right ${dir==="right"?"active":""}" data-i="${i}" data-dir="right">RIGHT ▶</button>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+
+  document.querySelectorAll(".dir-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = parseInt(btn.dataset.i);
+      const d = btn.dataset.dir;
+      routeData.intersections[i].direction = d;
+      renderIntList();
+      drawMap();
+    });
+  });
+}
+
+// ── Render gate list ─────────────────────────────────────────────────────────
+function renderGateList() {
+  const el = document.getElementById("gateList");
+  el.innerHTML = "";
+  (routeData.gates||[]).forEach((g,i) => {
+    const row = document.createElement("div");
+    row.className = "gate-row";
+    row.innerHTML = `
+      <span class="coords">G${i+1} &nbsp; x=${fmt(g.x,2)}m &nbsp; y=${fmt(g.y||0,2)}m &nbsp; r=${g.radius_m||0.5}m</span>
+      <button class="del-btn" data-i="${i}">DEL</button>
+    `;
+    el.appendChild(row);
+  });
+  document.querySelectorAll(".del-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      routeData.gates.splice(parseInt(btn.dataset.i), 1);
+      renderGateList(); drawMap();
+    });
+  });
+}
+
+// ── Canvas click → add gate ──────────────────────────────────────────────────
+canvas.addEventListener("click", e => {
+  if (!addingGate) return;
+  const rect = canvas.getBoundingClientRect();
+  const [wx,wy] = canvasToWorld(e.clientX-rect.left, e.clientY-rect.top);
+  const id = (routeData.gates?.length||0) + 1;
+  routeData.gates = routeData.gates || [];
+  routeData.gates.push({id, x:Math.round(wx*100)/100, y:Math.round(wy*100)/100, radius_m:0.5});
+  addingGate = false;
+  document.getElementById("btnAddGate").textContent = "+ Add Gate (click map or enter coords)";
+  canvas.style.cursor = "default";
+  renderGateList(); drawMap();
+});
+
+document.getElementById("btnAddGate").addEventListener("click", () => {
+  addingGate = !addingGate;
+  document.getElementById("btnAddGate").textContent =
+    addingGate ? "→ Click on the map to place gate" : "+ Add Gate (click map or enter coords)";
+  canvas.style.cursor = addingGate ? "crosshair" : "default";
+});
+
+// ── Save & Restart ───────────────────────────────────────────────────────────
+document.getElementById("btnSave").addEventListener("click", async () => {
+  if (!confirm("Save route.yaml?\n\n" +
+    routeData.intersections.map((w,i)=>`#${w.id}: ${w.direction||"NOT SET"}`).join("\n"))) return;
+  try {
+    const res = await fetch("/api/route", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(routeData)
+    });
+    const d = await res.json();
+    const banner = document.getElementById("banner");
+    banner.textContent = d.ok ? "✓ Route saved! Robot ready for race." : "Error: "+(d.error||"?");
+    banner.style.background = d.ok?"var(--green)":"var(--red)";
+    banner.style.color = d.ok?"#000":"#fff";
+    banner.classList.add("show");
+    setTimeout(()=>banner.classList.remove("show"), 3000);
+  } catch(e) { alert("Network error: "+e); }
+});
+
+document.getElementById("btnRestart").addEventListener("click", async () => {
+  if (!confirm("Restart the robot process? Make sure you have saved the route first.")) return;
+  await fetch("/api/restart", {method:"POST"});
+});
+
+// ── Load data ────────────────────────────────────────────────────────────────
+async function loadAll() {
+  try {
+    routeData = await fetch("/api/route").then(r=>r.json()) || {intersections:[],gates:[]};
+    routeData.intersections = routeData.intersections || [];
+    routeData.gates         = routeData.gates || [];
+    renderIntList();
+    renderGateList();
+  } catch(e) {}
+
+  try {
+    const map = await fetch("/api/map").then(r=>r.json());
+    if (map?.path) mapPath = map.path;
+  } catch(e) {}
+
+  fitView();
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+loadAll();
+</script>
+</body>
+</html>
