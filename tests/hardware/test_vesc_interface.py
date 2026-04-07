@@ -257,10 +257,10 @@ class TestVESCInterfaceInit:
         vi, _ = _make_vesc()
         assert not vi._thread.is_alive()
 
-    def test_port_hardcoded(self):
-        """VESC port is hardcoded as /dev/serial0."""
+    def test_port_default(self):
+        """VESC port defaults to /dev/ttyACM1 when not set in config."""
         vi, _ = _make_vesc()
-        assert vi._port == "/dev/serial0"
+        assert vi._port == "/dev/ttyACM1"
 
 
 # ─────────────────────────────────────────────────────────────────────────────

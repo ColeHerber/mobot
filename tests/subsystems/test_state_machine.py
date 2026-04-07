@@ -146,15 +146,21 @@ class TestReacquire:
 
     def test_reacquire_to_line_follow_after_hysteresis(self):
         """REACQUIRE → LINE_FOLLOW after REACQUIRE_HYSTERESIS_S seconds."""
-        sm, _ = _make_sm()
-        _step(sm, confidence=10)    # enter DEAD_RECKON
-        _step(sm, confidence=100)   # enter REACQUIRE
+        t = [0.0]
 
-        # Simulate time passing with many steps
-        steps_needed = int(REACQUIRE_HYSTERESIS_S / 0.01) + 5
-        state = REACQUIRE
-        for _ in range(steps_needed):
-            _, _, state = _step(sm, confidence=100, dt=0.01)
+        def fake_monotonic():
+            return t[0]
+
+        with patch("state_machine.time.monotonic", side_effect=fake_monotonic):
+            sm, _ = _make_sm()
+            _step(sm, confidence=10)    # enter DEAD_RECKON
+            _step(sm, confidence=100)   # enter REACQUIRE
+
+            steps_needed = int(REACQUIRE_HYSTERESIS_S / 0.01) + 5
+            state = REACQUIRE
+            for _ in range(steps_needed):
+                t[0] += 0.01
+                _, _, state = _step(sm, confidence=100, dt=0.01)
 
         assert state == LINE_FOLLOW
 
