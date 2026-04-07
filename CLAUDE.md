@@ -31,7 +31,7 @@ Ask yourself these questions before touching a file:
 |-----------|-----------|--------|-------|
 | Line sensor (QTRX-MD-16A) | USB serial | `/dev/ttyACM0` @ 115200 | 8-byte packets @ ~200 Hz |
 | BNO085 IMU | I2C | `/dev/i2c-1` @ 0x4A | Quaternion → yaw, drift-free |
-| VESC FlipSky 6.7 Pro | UART | `/dev/serial0` @ 115200 | pyvesc protocol, 50 Hz |
+| VESC FlipSky 6.7 Pro | USB serial | `/dev/ttyACM1` @ 115200 | pyvesc protocol, 50 Hz |
 | Steering servo | GPIO PWM | GPIO 18, gpiochip4 | lgpio, 50 Hz, 1000–2000 µs |
 | Raspberry Pi 5 | — | — | **lgpio NOT pigpio**, gpiochip=4 |
 | Teensy 4.x coprocessor | USB | `/dev/ttyACM0` | Line sensor firmware |

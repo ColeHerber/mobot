@@ -20,6 +20,8 @@ servo:
   center_offset_us: 0  # µs — fine trim offset (use tune_servo_center.py to adjust)
 
 vesc:
+  port: /dev/ttyACM1             # VESC USB serial device (ttyACM0 is Teensy)
+  baud: 115200
   wheel_circumference_m: 0.204   # ~65mm diameter tire (TT-02R stock)
   gear_ratio: 8.0                # motor rotations per wheel rotation
 

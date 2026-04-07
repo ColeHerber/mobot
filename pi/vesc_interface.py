@@ -1,4 +1,4 @@
-"""VESC interface thread — bidirectional UART over /dev/serial0.
+"""VESC interface thread — bidirectional USB serial connection.
 
 Sends throttle commands (duty cycle) to the VESC and polls GetValues
 for motor RPM and input voltage. Uses the pyvesc library for packet
@@ -33,10 +33,9 @@ class VESCInterface:
 
     def __init__(self, shared_state, config: dict):
         self._state = shared_state
-        self._port = "/dev/serial0"
-        self._baud = 115200
-
         cfg_vesc = config.get("vesc", {})
+        self._port = cfg_vesc.get("port", "/dev/ttyACM1")
+        self._baud = int(cfg_vesc.get("baud", 115200))
         self._wheel_circ = float(cfg_vesc.get("wheel_circumference_m", 0.204))
         self._gear_ratio = float(cfg_vesc.get("gear_ratio", 8.0))
 
@@ -65,7 +64,7 @@ class VESCInterface:
         while True:
             try:
                 ser = serial.Serial(self._port, self._baud, timeout=0.05)
-                log.info("VESC UART opened on %s", self._port)
+                log.info("VESC USB opened on %s", self._port)
                 return ser
             except serial.SerialException as e:
                 log.warning("Cannot open VESC port %s: %s — retrying in 2s",

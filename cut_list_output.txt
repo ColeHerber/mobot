@@ -1,0 +1,157 @@
+==================================================
+ TOTAL 6-FT BARS TO PURCHASE: 12
+==================================================
+
+--- Bar 1 ---
+  [Cut]  603.60 mm  ->  Part: Item 81 (603.6mm)
+  [Cut]  588.36 mm  ->  Part: Item 80 (588.36mm)
+  [Cut]  574.55 mm  ->  Part: Item 79 (574.55mm)
+  [Cut]   41.17 mm  ->  Part: Item 68 (41.17mm)
+-----------------------------------
+  Waste to Kerf: 19.05 mm
+  Leftover Scrap: 2.07 mm
+
+--- Bar 2 ---
+  [Cut]  566.39 mm  ->  Part: Item 78 (566.39mm)
+  [Cut]  563.56 mm  ->  Part: Item 77 (563.56mm)
+  [Cut]  556.58 mm  ->  Part: Item 76 (556.58mm)
+  [Cut]  122.15 mm  ->  Part: Item 4 (122.15mm)
+-----------------------------------
+  Waste to Kerf: 19.05 mm
+  Leftover Scrap: 1.07 mm
+
+--- Bar 3 ---
+  [Cut]  548.92 mm  ->  Part: Item 75 (548.92mm)
+  [Cut]  542.45 mm  ->  Part: Item 74 (542.45mm)
+  [Cut]  492.40 mm  ->  Part: Item 73 (492.4mm)
+  [Cut]  215.43 mm  ->  Part: Item 37 (215.43mm)
+-----------------------------------
+  Waste to Kerf: 19.05 mm
+  Leftover Scrap: 10.55 mm
+
+--- Bar 4 ---
+  [Cut]  443.89 mm  ->  Part: Item 72 (443.89mm)
+  [Cut]  439.48 mm  ->  Part: Item 71 (439.48mm)
+  [Cut]  436.97 mm  ->  Part: Item 70 (436.97mm)
+  [Cut]  422.00 mm  ->  Part: Item 69 (422mm)
+  [Cut]   39.33 mm  ->  Part: Item 67 (39.33mm)
+  [Cut]    7.01 mm  ->  Part: Item 84 (7.01mm)
+-----------------------------------
+  Waste to Kerf: 31.75 mm
+  Leftover Scrap: 8.37 mm
+
+--- Bar 5 ---
+  [Cut]  381.39 mm  ->  Part: Item 66 (381.39mm)
+  [Cut]  376.86 mm  ->  Part: Item 65 (376.86mm)
+  [Cut]  360.07 mm  ->  Part: Item 64 (360.07mm)
+  [Cut]  324.17 mm  ->  Part: Item 60 (324.17mm)
+  [Cut]  306.45 mm  ->  Part: Item 59 (306.45mm)
+  [Cut]   36.87 mm  ->  Part: Item 63 (36.87mm)
+-----------------------------------
+  Waste to Kerf: 31.75 mm
+  Leftover Scrap: 11.24 mm
+
+--- Bar 6 ---
+  [Cut]  303.70 mm  ->  Part: Item 58 (303.7mm)
+  [Cut]  302.69 mm  ->  Part: Item 57 (302.69mm)
+  [Cut]  290.56 mm  ->  Part: Item 56 (290.56mm)
+  [Cut]  285.57 mm  ->  Part: Item 55 (285.57mm)
+  [Cut]  282.18 mm  ->  Part: Item 54 (282.18mm)
+  [Cut]  278.24 mm  ->  Part: Item 53 (278.24mm)
+  [Cut]   34.82 mm  ->  Part: Item 62 (34.82mm)
+-----------------------------------
+  Waste to Kerf: 38.10 mm
+  Leftover Scrap: 12.94 mm
+
+--- Bar 7 ---
+  [Cut]  276.97 mm  ->  Part: Item 52 (276.97mm)
+  [Cut]  273.32 mm  ->  Part: Item 51 (273.32mm)
+  [Cut]  271.58 mm  ->  Part: Item 50 (271.58mm)
+  [Cut]  267.03 mm  ->  Part: Item 49 (267.03mm)
+  [Cut]  263.98 mm  ->  Part: Item 48 (263.98mm)
+  [Cut]  263.65 mm  ->  Part: Item 47 (263.65mm)
+  [Cut]  171.73 mm  ->  Part: Item 25 (171.73mm)
+-----------------------------------
+  Waste to Kerf: 38.10 mm
+  Leftover Scrap: 2.44 mm
+
+--- Bar 8 ---
+  [Cut]  261.70 mm  ->  Part: Item 46 (261.7mm)
+  [Cut]  253.41 mm  ->  Part: Item 44 (253.41mm)
+  [Cut]  251.66 mm  ->  Part: Item 43 (251.66mm)
+  [Cut]  243.42 mm  ->  Part: Item 42 (243.42mm)
+  [Cut]  243.21 mm  ->  Part: Item 41 (243.21mm)
+  [Cut]  239.59 mm  ->  Part: Item 40 (239.59mm)
+  [Cut]  230.02 mm  ->  Part: Item 39 (230.02mm)
+  [Cut]   34.57 mm  ->  Part: Item 61 (34.57mm)
+  [Cut]   17.70 mm  ->  Part: Item 22 (17.7mm)
+-----------------------------------
+  Waste to Kerf: 50.80 mm
+  Leftover Scrap: 2.72 mm
+
+--- Bar 9 ---
+  [Cut]  228.79 mm  ->  Part: Item 38 (228.79mm)
+  [Cut]  215.35 mm  ->  Part: Item 36 (215.35mm)
+  [Cut]  214.83 mm  ->  Part: Item 35 (214.83mm)
+  [Cut]  211.68 mm  ->  Part: Item 34 (211.68mm)
+  [Cut]  205.75 mm  ->  Part: Item 33 (205.75mm)
+  [Cut]  204.78 mm  ->  Part: Item 32 (204.78mm)
+  [Cut]  202.74 mm  ->  Part: Item 31 (202.74mm)
+  [Cut]  200.26 mm  ->  Part: Item 30 (200.26mm)
+  [Cut]   92.99 mm  ->  Part: Item 92 (92.99mm)
+-----------------------------------
+  Waste to Kerf: 50.80 mm
+  Leftover Scrap: 0.83 mm
+
+--- Bar 10 ---
+  [Cut]  194.26 mm  ->  Part: Item 29 (194.26mm)
+  [Cut]  192.22 mm  ->  Part: Item 28 (192.22mm)
+  [Cut]  189.00 mm  ->  Part: Item 27 (189mm)
+  [Cut]  179.36 mm  ->  Part: Item 26 (179.36mm)
+  [Cut]  171.59 mm  ->  Part: Item 24 (171.59mm)
+  [Cut]  171.11 mm  ->  Part: Item 23 (171.11mm)
+  [Cut]  168.48 mm  ->  Part: Item 21 (168.48mm)
+  [Cut]  168.38 mm  ->  Part: Item 20 (168.38mm)
+  [Cut]  166.58 mm  ->  Part: Item 19 (166.58mm)
+  [Cut]  163.66 mm  ->  Part: Item 18 (163.66mm)
+-----------------------------------
+  Waste to Kerf: 57.15 mm
+  Leftover Scrap: 7.01 mm
+
+--- Bar 11 ---
+  [Cut]  163.27 mm  ->  Part: Item 17 (163.27mm)
+  [Cut]  162.98 mm  ->  Part: Item 16 (162.98mm)
+  [Cut]  158.49 mm  ->  Part: Item 14 (158.49mm)
+  [Cut]  158.27 mm  ->  Part: Item 13 (158.27mm)
+  [Cut]  158.26 mm  ->  Part: Item 12 (158.26mm)
+  [Cut]  154.23 mm  ->  Part: Item 11 (154.23mm)
+  [Cut]  153.69 mm  ->  Part: Item 10 (153.69mm)
+  [Cut]  147.27 mm  ->  Part: Item 9 (147.27mm)
+  [Cut]  142.51 mm  ->  Part: Item 8 (142.51mm)
+  [Cut]  140.47 mm  ->  Part: Item 7 (140.47mm)
+  [Cut]  138.70 mm  ->  Part: Item 6 (138.7mm)
+  [Cut]   79.39 mm  ->  Part: Item 87 (79.39mm)
+-----------------------------------
+  Waste to Kerf: 69.85 mm
+  Leftover Scrap: 1.42 mm
+
+--- Bar 12 ---
+  [Cut]  137.81 mm  ->  Part: Item 5 (137.81mm)
+  [Cut]  118.81 mm  ->  Part: Item 3 (118.81mm)
+  [Cut]  113.96 mm  ->  Part: Item 2 (113.96mm)
+  [Cut]  100.96 mm  ->  Part: Item 1 (100.96mm)
+  [Cut]   98.63 mm  ->  Part: Item 94 (98.63mm)
+  [Cut]   94.43 mm  ->  Part: Item 93 (94.43mm)
+  [Cut]   88.60 mm  ->  Part: Item 91 (88.6mm)
+  [Cut]   85.94 mm  ->  Part: Item 90 (85.94mm)
+  [Cut]   83.93 mm  ->  Part: Item 89 (83.93mm)
+  [Cut]   82.61 mm  ->  Part: Item 88 (82.61mm)
+  [Cut]   75.15 mm  ->  Part: Item 86 (75.15mm)
+  [Cut]   72.52 mm  ->  Part: Item 85 (72.52mm)
+  [Cut]   66.12 mm  ->  Part: Item 83 (66.12mm)
+  [Cut]   64.90 mm  ->  Part: Item 82 (64.9mm)
+  [Cut]   26.58 mm  ->  Part: Item 45 (26.58mm)
+  [Cut]   16.60 mm  ->  Part: Item 15 (16.6mm)
+-----------------------------------
+  Waste to Kerf: 95.25 mm
+  Leftover Scrap: 406.00 mm
