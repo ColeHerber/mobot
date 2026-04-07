@@ -246,30 +246,36 @@ class TestIntersection:
 
     def test_left_intersection_negative_steering(self):
         """Left intersection → steering = -0.8 (after ease-in)."""
-        odo = Odometry()
-        odo.reset(0.0)
-        intersections = [{"id": 1, "x": 0.0, "y": 0.0,
-                          "direction": "left", "radius_m": 0.3}]
-        sm, _ = _make_sm(intersections=intersections, odo=odo)
-        _step(sm, confidence=200)   # enter INTERSECTION
-        # After ease-in completes, steering should be -0.8
-        steps_ease = int(0.25 / 0.01)   # past 0.2s ease-in
-        for _ in range(steps_ease):
-            steering, _, state = _step(sm, confidence=200, dt=0.01)
+        t = [0.0]
+        with patch("state_machine.time.monotonic", side_effect=lambda: t[0]):
+            odo = Odometry()
+            odo.reset(0.0)
+            intersections = [{"id": 1, "x": 0.0, "y": 0.0,
+                              "direction": "left", "radius_m": 0.3}]
+            sm, _ = _make_sm(intersections=intersections, odo=odo)
+            _step(sm, confidence=200)   # enter INTERSECTION
+            # After ease-in completes, steering should be -0.8
+            steps_ease = int(0.25 / 0.01)   # past 0.2s ease-in
+            for _ in range(steps_ease):
+                t[0] += 0.01
+                steering, _, state = _step(sm, confidence=200, dt=0.01)
         assert state == INTERSECTION
         assert steering == pytest.approx(-0.8, abs=0.05)
 
     def test_right_intersection_positive_steering(self):
         """Right intersection → steering = +0.8 (after ease-in)."""
-        odo = Odometry()
-        odo.reset(0.0)
-        intersections = [{"id": 1, "x": 0.0, "y": 0.0,
-                          "direction": "right", "radius_m": 0.3}]
-        sm, _ = _make_sm(intersections=intersections, odo=odo)
-        _step(sm, confidence=200)
-        steps_ease = int(0.25 / 0.01)
-        for _ in range(steps_ease):
-            steering, _, state = _step(sm, confidence=200, dt=0.01)
+        t = [0.0]
+        with patch("state_machine.time.monotonic", side_effect=lambda: t[0]):
+            odo = Odometry()
+            odo.reset(0.0)
+            intersections = [{"id": 1, "x": 0.0, "y": 0.0,
+                              "direction": "right", "radius_m": 0.3}]
+            sm, _ = _make_sm(intersections=intersections, odo=odo)
+            _step(sm, confidence=200)
+            steps_ease = int(0.25 / 0.01)
+            for _ in range(steps_ease):
+                t[0] += 0.01
+                steering, _, state = _step(sm, confidence=200, dt=0.01)
         assert state == INTERSECTION
         assert steering == pytest.approx(+0.8, abs=0.05)
 
@@ -299,35 +305,41 @@ class TestIntersection:
 
     def test_intersection_completes_and_returns_to_line_follow(self):
         """INTERSECTION exits to LINE_FOLLOW after INTERSECTION_TURN_S seconds."""
-        odo = Odometry()
-        odo.reset(0.0)
-        intersections = [{"id": 1, "x": 0.0, "y": 0.0,
-                          "direction": "left", "radius_m": 0.3}]
-        sm, _ = _make_sm(intersections=intersections, odo=odo)
-        _step(sm, confidence=200)   # enter INTERSECTION
+        t = [0.0]
+        with patch("state_machine.time.monotonic", side_effect=lambda: t[0]):
+            odo = Odometry()
+            odo.reset(0.0)
+            intersections = [{"id": 1, "x": 0.0, "y": 0.0,
+                              "direction": "left", "radius_m": 0.3}]
+            sm, _ = _make_sm(intersections=intersections, odo=odo)
+            _step(sm, confidence=200)   # enter INTERSECTION
 
-        steps = int(INTERSECTION_TURN_S / 0.01) + 10
-        state = INTERSECTION
-        for _ in range(steps):
-            _, _, state = _step(sm, confidence=200, dt=0.01)
+            steps = int(INTERSECTION_TURN_S / 0.01) + 10
+            state = INTERSECTION
+            for _ in range(steps):
+                t[0] += 0.01
+                _, _, state = _step(sm, confidence=200, dt=0.01)
 
         assert state == LINE_FOLLOW
 
     def test_intersection_triggered_only_once(self):
         """Once an intersection is triggered, it is not re-triggered."""
-        odo = Odometry()
-        odo.reset(0.0)
-        intersections = [{"id": 1, "x": 0.0, "y": 0.0,
-                          "direction": "left", "radius_m": 0.5}]
-        sm, _ = _make_sm(intersections=intersections, odo=odo)
+        t = [0.0]
+        with patch("state_machine.time.monotonic", side_effect=lambda: t[0]):
+            odo = Odometry()
+            odo.reset(0.0)
+            intersections = [{"id": 1, "x": 0.0, "y": 0.0,
+                              "direction": "left", "radius_m": 0.5}]
+            sm, _ = _make_sm(intersections=intersections, odo=odo)
 
-        # Trigger intersection and complete it
-        _step(sm, confidence=200)
-        for _ in range(int(INTERSECTION_TURN_S / 0.01) + 10):
-            _step(sm, confidence=200, dt=0.01)
+            # Trigger intersection and complete it
+            _step(sm, confidence=200)
+            for _ in range(int(INTERSECTION_TURN_S / 0.01) + 10):
+                t[0] += 0.01
+                _step(sm, confidence=200, dt=0.01)
 
-        # Back to LINE_FOLLOW — intersection should now be "triggered=True"
-        _, _, state = _step(sm, confidence=200)
+            # Back to LINE_FOLLOW — intersection should now be "triggered=True"
+            _, _, state = _step(sm, confidence=200)
         # Should NOT enter INTERSECTION again
         assert state != INTERSECTION
 

@@ -171,7 +171,7 @@ class WebServer:
         # Suppress Flask/Werkzeug startup banner and request logs
         logging.getLogger("werkzeug").setLevel(logging.WARNING)
         self._app.run(host="0.0.0.0", port=5000, threaded=True,
-                      use_reloader=False)
+                      use_reloader=False, debug=True)
 
     def _snapshot(self) -> dict:
         """Build a JSON-serialisable state dict. All fields default to 0 if None."""
@@ -476,7 +476,7 @@ def _standalone():
 
     # Run in foreground (blocking)
     logging.getLogger("werkzeug").setLevel(logging.WARNING)
-    ws._app.run(host="0.0.0.0", port=5000, threaded=True, use_reloader=False)
+    ws._app.run(host="0.0.0.0", port=5000, threaded=True, use_reloader=False, debug=True)
 
 
 if __name__ == "__main__":
