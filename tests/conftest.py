@@ -129,14 +129,6 @@ def mock_route():
 @pytest.fixture
 def shared_state():
     """A real SharedState instance (no hardware needed)."""
-    # Import here so the sys.modules patches above are already in place
-    import importlib, sys as _sys
-    # Ensure the mobot root is on sys.path
-    import os
-    root = os.path.dirname(os.path.dirname(__file__))
-    if root not in _sys.path:
-        _sys.path.insert(0, root)
-
     from shared_state import SharedState
     state = SharedState()
     yield state
