@@ -89,7 +89,7 @@ sensor:
   port: /dev/serial/by-id/usb-PJRC_Teensy_4.x_<serialno>-if00
 
 vesc:
-  port: /dev/serial/by-id/usb-VESC_Project_VESC_<serialno>-if00
+  port: /dev/serial/by-id/usb-STMicroelectronics_ChibiOS_RT_Virtual_COM_Port_304-if00
 ```
 
 These symlinks are stable across reboots and won't swap even if plug order changes.

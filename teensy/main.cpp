@@ -2,8 +2,16 @@
 // QTRX-MD-16A 16-channel line sensor coprocessor
 //
 // Pin assignments:
-//   LEDON:        Pin 2  (digital out) — enables all IR LEDs on QTRX
-//   Sensor ADC:   A0–A15 (analog in)  — direct wiring from QTRX outputs
+//   LEDON_ODD:    Pin 2  (digital out) — enables odd  IR LEDs on QTRX (sensors 1,3,5,…)
+//   LEDON_EVEN:   Pin 3  (digital out) — enables even IR LEDs on QTRX (sensors 2,4,6,…)
+//   CTRL_ODD:     Pin 4  (digital out) — dimming control for odd  emitters (pulse protocol)
+//   CTRL_EVEN:    Pin 5  (digital out) — dimming control for even emitters (pulse protocol)
+//   Sensor ADC:   A0–A9, A14–A19 (analog in)  — direct wiring from QTRX outputs
+//
+// Dimming protocol (CTRL pin):
+//   - Pulse low for 0.5–300 µs, then high ≥0.5 µs → advance one dimming level (32 levels)
+//   - Pulse low for >1 ms → reset to level 0 (100% current)
+//   - Level 0=100%, level 31=1.67%; wraps back to 100% after level 31
 //
 // Serial protocol (USB, 115200 baud):
 //   Commands from Pi:
@@ -22,11 +30,19 @@
 #include <EEPROM.h>
 
 // ─── Pin / hardware constants ─────────────────────────────────────────────────
-static const int LEDON_PIN = 2;
+static const int LEDON_ODD_PIN  = 2;   // digital — enables odd  emitters
+static const int LEDON_EVEN_PIN = 3;   // digital — enables even emitters
+static const int CTRL_ODD_PIN   = 4;   // dimming pulses — odd  emitters
+static const int CTRL_EVEN_PIN  = 5;   // dimming pulses — even emitters
+
+// Dimming level 0–31 (0 = 100% current, 31 = 1.67%)
+// Set both odd/even to the same level for uniform illumination
+static const uint8_t LEDON_DIM_LEVEL = 0;  // 0 = full brightness
+
 static const int NUM_SENSORS = 16;
 static const int SENSOR_PINS[NUM_SENSORS] = {
-    A0, A1, A2,  A3,  A4,  A5,  A6,  A7,
-    A8, A9, A10, A11, A12, A13, A14, A15
+    A9, A8, A7,  A6,  A5,  A4,  A3,  A2,
+    A1, A0, A19, A18, A17, A16, A15, A14
 };
 
 // ─── EEPROM layout ────────────────────────────────────────────────────────────
@@ -95,14 +111,35 @@ void reset_calibration() {
     }
 }
 
+// ─── CTRL dimming ────────────────────────────────────────────────────────────
+// Reset CTRL pin to level 0 (100%) then advance to target level.
+// Reset: hold low >1 ms. Each advance: pulse low 1 µs, high 1 µs.
+void set_dim_level(int ctrl_pin, uint8_t level) {
+    if (level > 31) level = 31;
+    // Reset to level 0
+    digitalWrite(ctrl_pin, LOW);
+    delayMicroseconds(1500);  // >1 ms reset pulse
+    digitalWrite(ctrl_pin, HIGH);
+    delayMicroseconds(1);
+    // Advance to target level
+    for (uint8_t i = 0; i < level; i++) {
+        digitalWrite(ctrl_pin, LOW);
+        delayMicroseconds(1);   // 0.5–300 µs low
+        digitalWrite(ctrl_pin, HIGH);
+        delayMicroseconds(1);   // ≥0.5 µs high
+    }
+}
+
 // ─── Sensor read ─────────────────────────────────────────────────────────────
 void read_sensors(uint16_t raw[NUM_SENSORS]) {
-    digitalWrite(LEDON_PIN, HIGH);
+    digitalWrite(LEDON_ODD_PIN,  HIGH);
+    digitalWrite(LEDON_EVEN_PIN, HIGH);
     delayMicroseconds(LEDON_SETTLE_US);
     for (int i = 0; i < NUM_SENSORS; i++) {
         raw[i] = analogRead(SENSOR_PINS[i]);
     }
-    digitalWrite(LEDON_PIN, LOW);
+    digitalWrite(LEDON_ODD_PIN,  LOW);
+    digitalWrite(LEDON_EVEN_PIN, LOW);
 }
 
 // Normalize raw ADC value to 0–1000 using per-channel calibration
@@ -180,8 +217,21 @@ void update_cal_minmax(uint16_t raw[NUM_SENSORS]) {
 void setup() {
     Serial.begin(115200);
     analogReadResolution(12); // Teensy 4.x supports 12-bit ADC
-    pinMode(LEDON_PIN, OUTPUT);
-    digitalWrite(LEDON_PIN, LOW);
+    pinMode(LEDON_ODD_PIN,  OUTPUT);
+    pinMode(LEDON_EVEN_PIN, OUTPUT);
+    pinMode(CTRL_ODD_PIN,   OUTPUT);
+    pinMode(CTRL_EVEN_PIN,  OUTPUT);
+    digitalWrite(LEDON_ODD_PIN,  LOW);
+    digitalWrite(LEDON_EVEN_PIN, LOW);
+    digitalWrite(CTRL_ODD_PIN,   HIGH);  // CTRL idle-high
+    digitalWrite(CTRL_EVEN_PIN,  HIGH);
+    // Set dimming level (LEDON must be high during CTRL pulses per datasheet)
+    digitalWrite(LEDON_ODD_PIN,  HIGH);
+    digitalWrite(LEDON_EVEN_PIN, HIGH);
+    set_dim_level(CTRL_ODD_PIN,  LEDON_DIM_LEVEL);
+    set_dim_level(CTRL_EVEN_PIN, LEDON_DIM_LEVEL);
+    digitalWrite(LEDON_ODD_PIN,  LOW);
+    digitalWrite(LEDON_EVEN_PIN, LOW);
     load_calibration();
     // Default: run mode
     current_mode = MODE_RUN;
