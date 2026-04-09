@@ -1,68 +1,93 @@
-"""Servo controller using lgpio hardware-timed PWM.
+"""Servo controller using Linux hardware PWM via sysfs.
 
 Maps steering value [-1.0, +1.0] to pulse width [min_pw, max_pw] µs.
-Positive steering = right, negative = left. Tune min_pw/max_pw against the
-TT-02R steering geometry so that +1.0 and -1.0 are full lock.
+Positive steering = right, negative = left.
 
-Pi 5 note: The Pi 5 routes GPIO through the RP1 chip on gpiochip4.
-pigpio is NOT compatible with Pi 5. This module uses lgpio instead, which
-works on both Pi 4 (gpiochip0) and Pi 5 (gpiochip4).
+Uses /sys/class/pwm/ (RP1 hardware PWM on Pi 5) — zero software jitter.
 
-Set servo.gpiochip in params.yaml:
-  Pi 4: gpiochip: 0
-  Pi 5: gpiochip: 4
+Pi 5 setup (one-time, requires reboot):
+  echo "dtoverlay=pwm,pin=12,func=4" | sudo tee -a /boot/firmware/config.txt
+  sudo reboot
 
-Install: sudo apt install python3-lgpio
-         pip3 install lgpio
+Then verify: ls /sys/class/pwm/pwmchip*/
+
+Set servo.pwmchip in params.yaml:
+  Pi 5 with GPIO 12: pwmchip: 0   (RP1 — confirmed via ls /sys/class/pwm/)
+  Pi 4 with GPIO 12: pwmchip: 0
+
+params.yaml example:
+  servo:
+    gpio_pin: 12        # only used for reference/logging now
+    pwmchip: 2          # /sys/class/pwm/pwmchip<N>
+    pwm_channel: 0      # pwm0
+    min_pw:   1000      # µs — full left
+    max_pw:   2000      # µs — full right
+    center_pw: 1500     # µs — straight ahead
+    center_offset_us: 0 # µs — fine trim
 """
 
 import logging
+import os
 import time
 
 log = logging.getLogger(__name__)
 
-try:
-    import lgpio
-    _LGPIO_AVAILABLE = True
-except ImportError:
-    log.warning("lgpio not installed — servo will run in dummy mode")
-    _LGPIO_AVAILABLE = False
+_PERIOD_NS = 20_000_000  # 50 Hz = 20 ms period in nanoseconds
 
-_SERVO_FREQ_HZ = 50  # Standard RC servo: 50 Hz (20ms period)
+
+def _us_to_ns(us: int) -> int:
+    return us * 1000
 
 
 class ServoControl:
     def __init__(self, config: dict):
         servo_cfg = config.get("servo", {})
-        self._pin      = int(servo_cfg.get("gpio_pin",  18))
-        self._min_pw   = int(servo_cfg.get("min_pw",  1000))
-        self._max_pw   = int(servo_cfg.get("max_pw",  2000))
-        self._center   = int(servo_cfg.get("center_pw", 1500))
-        self._gpiochip = int(servo_cfg.get("gpiochip", 4))  # 4 for Pi 5, 0 for Pi 4
-
-        # center_offset_us allows fine-tuning the servo center without changing
-        # center_pw. Use tune_servo_center.py to adjust interactively.
+        self._pin        = int(servo_cfg.get("gpio_pin",     12))
+        self._min_pw     = int(servo_cfg.get("min_pw",     1000))
+        self._max_pw     = int(servo_cfg.get("max_pw",     2000))
+        self._center     = int(servo_cfg.get("center_pw",  1500))
+        self._pwmchip    = int(servo_cfg.get("pwmchip",       0))
+        self._channel    = int(servo_cfg.get("pwm_channel",   0))
         self._center_offset = int(servo_cfg.get("center_offset_us", 0))
         self._effective_center = self._center + self._center_offset
 
-        self._h = None  # lgpio chip handle
+        self._pwm_dir = f"/sys/class/pwm/pwmchip{self._pwmchip}/pwm{self._channel}"
+        self._ready = False
 
-        if _LGPIO_AVAILABLE:
+        self._setup()
+
+    def _write(self, filename: str, value):
+        path = os.path.join(self._pwm_dir, filename)
+        with open(path, "w") as f:
+            f.write(str(value))
+
+    def _setup(self):
+        chip_dir = f"/sys/class/pwm/pwmchip{self._pwmchip}"
+        if not os.path.exists(chip_dir):
+            log.error("PWM chip not found: %s — is dtoverlay=pwm loaded?", chip_dir)
+            return
+
+        # Export the channel if not already exported
+        if not os.path.exists(self._pwm_dir):
             try:
-                self._h = lgpio.gpiochip_open(self._gpiochip)
-                lgpio.gpio_claim_output(self._h, self._pin)
-                log.info("lgpio opened gpiochip%d, servo on GPIO %d",
-                         self._gpiochip, self._pin)
-                log.info("effective center = %d µs (center_pw=%d + offset=%d)",
-                         self._effective_center, self._center, self._center_offset)
-                # Brief calibration pulse: center → wait → ready
-                lgpio.tx_servo(self._h, self._pin, self._effective_center, _SERVO_FREQ_HZ)
-                time.sleep(0.3)
-            except lgpio.error as e:
-                log.error("lgpio init failed: %s — servo disabled", e)
-                self._h = None
-        else:
-            log.warning("lgpio unavailable — servo in dummy mode")
+                with open(f"{chip_dir}/export", "w") as f:
+                    f.write(str(self._channel))
+                time.sleep(0.1)  # sysfs node takes a moment to appear
+            except OSError as e:
+                log.error("Failed to export PWM channel %d: %s", self._channel, e)
+                return
+
+        try:
+            self._write("period", _PERIOD_NS)
+            self._write("duty_cycle", _us_to_ns(self._effective_center))
+            self._write("enable", 1)
+            self._ready = True
+            log.info("Hardware PWM ready: pwmchip%d/pwm%d, GPIO %d",
+                     self._pwmchip, self._channel, self._pin)
+            log.info("effective center = %d µs (center_pw=%d + offset=%d)",
+                     self._effective_center, self._center, self._center_offset)
+        except OSError as e:
+            log.error("Hardware PWM init failed: %s", e)
 
     def set_steering(self, value: float):
         """Set steering position.
@@ -70,6 +95,8 @@ class ServoControl:
         Args:
             value: [-1.0, +1.0] — negative = left, positive = right
         """
+        if not self._ready:
+            return
         value = max(-1.0, min(1.0, value))
         ec = self._effective_center
         if value >= 0.0:
@@ -79,8 +106,11 @@ class ServoControl:
 
         pw = max(self._min_pw, min(self._max_pw, pw))
 
-        if self._h is not None:
-            lgpio.tx_servo(self._h, self._pin, pw, _SERVO_FREQ_HZ)
+        try:
+            self._write("duty_cycle", _us_to_ns(pw))
+        except OSError as e:
+            log.error("PWM write failed: %s", e)
+            self._ready = False
 
     def center(self):
         """Return servo to center position."""
@@ -90,8 +120,10 @@ class ServoControl:
         """Return to center, then disable PWM output."""
         self.center()
         time.sleep(0.1)
-        if self._h is not None:
-            lgpio.tx_servo(self._h, self._pin, 0)  # 0 pulse width = disable
-            lgpio.gpiochip_close(self._h)
-            self._h = None
-            log.info("lgpio closed")
+        if self._ready:
+            try:
+                self._write("enable", 0)
+            except OSError:
+                pass
+            self._ready = False
+            log.info("Hardware PWM disabled")
