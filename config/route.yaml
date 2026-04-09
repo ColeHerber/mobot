@@ -1,40 +1,100 @@
-# Race-morning route file — edit after judges announce the intersection directions.
+# April 10, 2026 Mobot Course — Wean Hall walkway, START → FINISH (Wean Hall Patio)
 #
-# Workflow:
-#   1. Get intersection directions from judges (left/right at each split)
-#   2. SSH into Pi: ssh pi@mobot.local
-#   3. Edit this file: nano ~/mobot/config/route.yaml
-#   4. Restart controller: sudo systemctl restart mobot  (or kill & rerun main.py)
-#   Total time: < 60 seconds
+# Course type: PURE SLALOM — 14 gates, no judge-announced left/right intersections.
+# The robot follows the white line through all gates; no route.yaml direction changes needed.
+#
+# Gate layout derived from MobotFinalCourse26.pdf.
+# NOTE: Actual gate x-positions are announced 48 hours before race.
+#       Update x values below once official positions are confirmed.
 #
 # Coordinate system:
 #   Origin (0, 0) = robot start position
-#   +x = forward (direction of travel at start)
-#   +y = left
+#   +x = forward (direction of travel, toward Wean Hall Patio)
+#   +y = left (toward Doherty)
 #   All distances in meters
+#
+# Course landmarks:
+#   ~10 m : 28" DROP (raised bridge section — robot passes under)
+#   ~33 m : 46" DROP (second raised bridge section)
+#   ~50 m : FINISH at Wean Hall Patio
+#
+# Gate trigger radius: robot enters GATE_APPROACH within radius_m of gate center.
+# Slow to gate_ms speed and ensure the line is tracked through the opening.
 
-intersections:
+gates:
   - id: 1
-    x: 4.5          # meters along course from start line
-    y: 0.0
-    direction: left  # left | right — judge-announced value
-    radius_m: 0.3    # trigger radius: robot enters INTERSECTION state within this distance
+    x: 3.5          # meters from start — ESTIMATE, update when official positions released
+    y: -0.8         # right of centerline
+    radius_m: 1.0
 
-  # Add more intersections as needed for the course layout:
-  # - id: 2
-  #   x: 9.2
-  #   y: 0.0
-  #   direction: right
-  #   radius_m: 0.3
+  - id: 2
+    x: 7.5
+    y: 0.8          # left of centerline
+    radius_m: 1.0
 
-# Optional: gate positions for GATE_APPROACH behavior
-# Uncomment and set x values from course measurement
-# gates:
-#   - id: 1
-#     x: 2.0
-#     y: 0.0
-#     radius_m: 0.5
-#   - id: 2
-#     x: 6.5
-#     y: 0.0
-#     radius_m: 0.5
+  # 28" DROP elevated section ~10m — no gate, robot passes underneath
+
+  - id: 3
+    x: 13.0
+    y: -0.8
+    radius_m: 1.0
+
+  - id: 4
+    x: 17.5
+    y: -0.8
+    radius_m: 1.0
+
+  - id: 5
+    x: 22.0
+    y: 0.8
+    radius_m: 1.0
+
+  - id: 6
+    x: 26.5
+    y: -0.8
+    radius_m: 1.0
+
+  - id: 7
+    x: 30.5
+    y: 0.8
+    radius_m: 1.0
+
+  # 46" DROP elevated section ~33m — no gate, robot passes underneath
+
+  - id: 8
+    x: 37.0
+    y: -1.0         # large lateral excursion visible in map
+    radius_m: 1.0
+
+  - id: 9
+    x: 40.0
+    y: 0.8
+    radius_m: 0.8
+
+  - id: 10
+    x: 42.0
+    y: 0.8
+    radius_m: 0.8
+
+  - id: 11
+    x: 44.0
+    y: -0.8
+    radius_m: 0.8
+
+  - id: 12
+    x: 46.0
+    y: 0.8
+    radius_m: 0.8
+
+  - id: 13
+    x: 48.0
+    y: 0.8
+    radius_m: 0.8
+
+  - id: 14
+    x: 50.0
+    y: 0.0          # approaches FINISH on centerline
+    radius_m: 1.0
+
+# No judge-announced intersections on this course.
+# intersections: []

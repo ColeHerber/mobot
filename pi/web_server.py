@@ -127,7 +127,7 @@ class WebServer:
         self._app         = None
 
         # Ensure the reset_odometry attribute exists on the state object
-        if not hasattr(self._state, "reset_odometry"):
+        if self._state is not None and not hasattr(self._state, "reset_odometry"):
             self._state.reset_odometry = False
 
         if _FLASK_AVAILABLE:

@@ -1,5 +1,15 @@
 # Mobot — AI Development Guide
 
+## Development Setup
+
+**Claude Code runs on Cole's laptop (macOS), not on the Pi.**
+The robot code is developed here and deployed to the Raspberry Pi 5 over the network.
+- Do not expect hardware (lgpio, sensors, VESC) to be present on the local machine
+- Flask and other Pi dependencies may not be installed locally — that is expected
+- When diagnosing runtime issues, consider whether the problem is local (laptop) or on the Pi
+
+---
+
 ## Competition Context
 
 **CMU 32nd Annual Mobot Slalom Race, Spring 2026.**

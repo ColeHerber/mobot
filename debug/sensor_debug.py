@@ -25,6 +25,19 @@ CHANNELS = 16
 ADC_MAX  = 4095
 
 
+def _default_port() -> str:
+    """Read Teensy port from config/params.yaml, falling back to /dev/ttyACM0."""
+    try:
+        import pathlib, re
+        cfg = (pathlib.Path(__file__).parent.parent / "config" / "params.yaml").read_text()
+        m = re.search(r"^\s*port:\s*(\S+)", cfg[cfg.index("sensor:"):], re.MULTILINE)
+        if m:
+            return m.group(1)
+    except Exception:
+        pass
+    return "/dev/ttyACM0"
+
+
 def normalize(raw: int, mn: int, mx: int) -> int:
     if mx <= mn:
         return 0
@@ -60,7 +73,7 @@ def bar(norm: list[int]) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="Teensy sensor stream debug")
-    parser.add_argument("--port", default="/dev/ttyACM0")
+    parser.add_argument("--port", default=_default_port())
     parser.add_argument("--baud", type=int, default=115200)
     args = parser.parse_args()
 
@@ -85,7 +98,8 @@ def main():
     CHAN_HDR = "Chan: " + " ".join(f"{i:4d}" for i in range(CHANNELS))
 
     print("Auto-calibrating from live data (min/max updates as sensors are exposed).")
-    print("Move the robot over the line and bare ground to build calibration.\n")
+    print("Move the robot over the line and bare ground to build calibration.")
+    print("Press 's' + Enter to save calibration to Teensy EEPROM.\n")
     print(CHAN_HDR)
 
     try:
