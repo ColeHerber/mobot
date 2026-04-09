@@ -79,9 +79,10 @@ def draw_display(stdscr, state: SharedState, loop_hz: float, dry_run: bool):
     stdscr.erase()
     h, w = stdscr.getmaxyx()
 
-    (lp, conf, heading, x, y, sm_state,
+    (lp, conf, heading, pitch, roll, x, y, sm_state,
      steering, throttle, vel, voltage, flags) = state.get(
         "line_position", "sensor_confidence", "heading_rad",
+        "pitch_rad", "roll_rad",
         "x", "y", "state", "steering", "throttle",
         "wheel_velocity_ms", "input_voltage", "sensor_flags",
     )
@@ -109,7 +110,11 @@ def draw_display(stdscr, state: SharedState, loop_hz: float, dry_run: bool):
     # Heading + odometry
     import math
     heading_deg = math.degrees(heading)
+    pitch_deg   = math.degrees(pitch)
+    roll_deg    = math.degrees(roll)
     safe_addstr(row, 0, f"Heading {heading_deg:+7.1f}°   X={x:+7.3f}m  Y={y:+7.3f}m")
+    row += 1
+    safe_addstr(row, 0, f"Pitch  {pitch_deg:+7.1f}°   Roll  {roll_deg:+7.1f}°")
     row += 1
 
     # State
@@ -206,9 +211,10 @@ def run(stdscr, args, config, route, config_path, route_path, web_server):
                 log.info("Odometry reset via web API")
 
             # ── Read shared state snapshot ────────────────────────────────────
-            (line_pos, confidence, heading, vel, voltage) = state.get(
+            (line_pos, confidence, heading, pitch, vel, voltage) = state.get(
                 "line_position", "sensor_confidence",
-                "heading_rad", "wheel_velocity_ms", "input_voltage",
+                "heading_rad", "pitch_rad",
+                "wheel_velocity_ms", "input_voltage",
             )
 
             # ── Odometry ──────────────────────────────────────────────────────
@@ -220,7 +226,7 @@ def run(stdscr, args, config, route, config_path, route_path, web_server):
 
             # ── State machine ─────────────────────────────────────────────────
             steering, throttle, sm_state = sm.update(
-                confidence, pid_steer, pid_throttle, heading, dt
+                confidence, pid_steer, pid_throttle, heading, pitch, dt
             )
 
             # ── Log state transitions ─────────────────────────────────────────
@@ -413,9 +419,10 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                 log.info("Odometry reset via web API")
 
             # ── Read shared state snapshot ────────────────────────────────────
-            (line_pos, confidence, heading, vel, voltage) = state.get(
+            (line_pos, confidence, heading, pitch, vel, voltage) = state.get(
                 "line_position", "sensor_confidence",
-                "heading_rad", "wheel_velocity_ms", "input_voltage",
+                "heading_rad", "pitch_rad",
+                "wheel_velocity_ms", "input_voltage",
             )
 
             # ── Odometry ──────────────────────────────────────────────────────
@@ -427,7 +434,7 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
 
             # ── State machine ─────────────────────────────────────────────────
             steering, throttle, sm_state = sm.update(
-                confidence, pid_steer, pid_throttle, heading, dt
+                confidence, pid_steer, pid_throttle, heading, pitch, dt
             )
 
             # ── Log state transitions ─────────────────────────────────────────

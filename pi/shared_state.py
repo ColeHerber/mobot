@@ -23,6 +23,8 @@ class SharedState:
 
         # ── IMU (BNO085 via I2C) ──────────────────────────────────────────────
         self.heading_rad: float = 0.0         # yaw in radians, world frame
+        self.pitch_rad: float = 0.0           # rotation around x-axis (nose up/down)
+        self.roll_rad: float = 0.0            # rotation around y-axis (lean left/right)
 
         # ── VESC (motor encoder via UART) ─────────────────────────────────────
         self.wheel_velocity_ms: float = 0.0  # m/s, positive = forward
@@ -64,9 +66,11 @@ class SharedState:
             self.sensor_flags = flags
             self.sensor_raw = raw
 
-    def update_imu(self, heading_rad: float):
+    def update_imu(self, heading_rad: float, pitch_rad: float = 0.0, roll_rad: float = 0.0):
         with self._lock:
             self.heading_rad = heading_rad
+            self.pitch_rad = pitch_rad
+            self.roll_rad = roll_rad
 
     def update_vesc(self, velocity_ms: float, rpm: float, voltage: float):
         with self._lock:

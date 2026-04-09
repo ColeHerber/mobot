@@ -9,14 +9,19 @@ REACQUIRE     Line reappeared after dead reckon — brief hysteresis.
 INTERSECTION  At a pre-loaded waypoint — execute pre-planned turn.
 CHORD         Dead-reckon toward a specific (x,y) using heading control,
               ignoring the white line. Activated by gates with type: chord.
+DROP_WATCH    Armed near a DROP ramp — monitors pitch to detect ramp
+              traversal; snaps odometry to known x when robot levels out.
 
 Transitions
 -----------
+LINE_FOLLOW   → DROP_WATCH    if odometry within watch_radius_m of a DROP landmark
 LINE_FOLLOW   → DEAD_RECKON   if confidence < LOW_THRESHOLD
 LINE_FOLLOW   → CHORD         if within chord gate radius (checked before regular gates)
 LINE_FOLLOW   → GATE_APPROACH if odometry within gate_radius of a gate wp
 LINE_FOLLOW   → INTERSECTION  if odometry within intersection radius of an
                                intersection waypoint
+DROP_WATCH    → LINE_FOLLOW   once |pitch| > entry_pitch then recovers to < level_pitch
+                               (or after DROP_WATCH_TIMEOUT_S — snap either way)
 DEAD_RECKON   → REACQUIRE     if confidence >= LOW_THRESHOLD
 REACQUIRE     → LINE_FOLLOW   after REACQUIRE_HYSTERESIS_S seconds
 GATE_APPROACH → LINE_FOLLOW   once past gate (heading stable)
@@ -27,6 +32,8 @@ Route is loaded from config/route.yaml. Each intersection entry has:
   id, x, y, direction (left|right), radius_m
 Each gate entry has:
   id, x, y, radius_m, [type: gate|chord], [arrival_radius_m]
+Each drop_landmark entry has:
+  id, x, watch_radius_m, entry_pitch_deg, level_pitch_deg
 """
 
 import time
@@ -42,10 +49,12 @@ DEAD_RECKON   = "DEAD_RECKON"
 REACQUIRE     = "REACQUIRE"
 INTERSECTION  = "INTERSECTION"
 CHORD         = "CHORD"
+DROP_WATCH    = "DROP_WATCH"
 
 REACQUIRE_HYSTERESIS_S = 0.15   # seconds to stay in REACQUIRE before → LINE_FOLLOW
 INTERSECTION_TURN_S    = 1.2    # seconds to execute a turn at an intersection
 CHORD_STEER_KP         = 1.2    # P-gain on heading error for chord navigation
+DROP_WATCH_TIMEOUT_S   = 6.0    # snap odometry and exit DROP_WATCH after this long
 
 
 class StateMachine:
@@ -94,12 +103,27 @@ class StateMachine:
                     "passed":    False,
                 })
 
+        # Parse drop landmarks from route YAML
+        self._drop_landmarks = []
+        for d in route.get("drop_landmarks", []):
+            self._drop_landmarks.append({
+                "id":              d["id"],
+                "x":               float(d["x"]),
+                "watch_radius_m":  float(d.get("watch_radius_m", 2.5)),
+                "entry_pitch_rad": math.radians(float(d.get("entry_pitch_deg", 6.0))),
+                "level_pitch_rad": math.radians(float(d.get("level_pitch_deg", 3.0))),
+                "triggered":       False,
+            })
+
         self._state = LINE_FOLLOW
         self._active_chord: dict | None = None
+        self._drop_active: dict | None = None
+        self._drop_saw_ramp: bool = False
 
         # Timing helpers
         self._reacquire_start: float = 0.0
         self._intersection_start: float = 0.0
+        self._drop_watch_start: float = 0.0
         self._current_turn_direction: str = "left"
 
     @property
@@ -133,8 +157,17 @@ class StateMachine:
                     return g
         return None
 
+    def _check_drop_landmark(self) -> dict | None:
+        """Return the first untriggered DROP landmark whose x-window contains odo.x."""
+        for d in self._drop_landmarks:
+            if not d["triggered"]:
+                if abs(self._odo.x - d["x"]) <= d["watch_radius_m"]:
+                    return d
+        return None
+
     def update(self, confidence: int, pid_steering: float,
-               pid_throttle: float, heading_rad: float, dt: float):
+               pid_throttle: float, heading_rad: float, pitch_rad: float,
+               dt: float):
         """Run one state machine step.
 
         Returns (steering, throttle, state_name) — values override PID when
@@ -153,24 +186,36 @@ class StateMachine:
                 log.info("→ INTERSECTION %s (%s)", wp["id"], wp["direction"])
                 self._state = INTERSECTION
 
-            elif confidence < self._low_threshold:
-                log.info("→ DEAD_RECKON (confidence=%d)", confidence)
-                self._state = DEAD_RECKON
-
             else:
-                # Chord gates checked before regular gates
-                chord_gate = self._check_chord_gate()
-                if chord_gate is not None:
-                    chord_gate["triggered"] = True
-                    self._active_chord = chord_gate
-                    log.info("→ CHORD gate %s → (%.2f, %.2f)",
-                             chord_gate["id"], chord_gate["x"], chord_gate["y"])
-                    self._state = CHORD
+                # DROP landmarks checked before confidence test — arm even if
+                # line sensor degrades on the raised section
+                drop = self._check_drop_landmark()
+                if drop is not None:
+                    drop["triggered"] = True
+                    self._drop_active = drop
+                    self._drop_saw_ramp = False
+                    self._drop_watch_start = now
+                    log.info("→ DROP_WATCH landmark %s (x=%.2f)", drop["id"], drop["x"])
+                    self._state = DROP_WATCH
+
+                elif confidence < self._low_threshold:
+                    log.info("→ DEAD_RECKON (confidence=%d)", confidence)
+                    self._state = DEAD_RECKON
+
                 else:
-                    gate = self._check_gate()
-                    if gate is not None:
-                        log.info("→ GATE_APPROACH gate %s", gate["id"])
-                        self._state = GATE_APPROACH
+                    # Chord gates checked before regular gates
+                    chord_gate = self._check_chord_gate()
+                    if chord_gate is not None:
+                        chord_gate["triggered"] = True
+                        self._active_chord = chord_gate
+                        log.info("→ CHORD gate %s → (%.2f, %.2f)",
+                                 chord_gate["id"], chord_gate["x"], chord_gate["y"])
+                        self._state = CHORD
+                    else:
+                        gate = self._check_gate()
+                        if gate is not None:
+                            log.info("→ GATE_APPROACH gate %s", gate["id"])
+                            self._state = GATE_APPROACH
 
         elif self._state == DEAD_RECKON:
             if confidence >= self._low_threshold:
@@ -184,6 +229,23 @@ class StateMachine:
                 self._state = DEAD_RECKON
             elif (now - self._reacquire_start) >= REACQUIRE_HYSTERESIS_S:
                 log.info("→ LINE_FOLLOW (reacquired)")
+                self._state = LINE_FOLLOW
+
+        elif self._state == DROP_WATCH:
+            d = self._drop_active
+            pitch_abs = abs(pitch_rad)
+            if pitch_abs >= d["entry_pitch_rad"]:
+                self._drop_saw_ramp = True
+            settled   = self._drop_saw_ramp and pitch_abs < d["level_pitch_rad"]
+            timed_out = (now - self._drop_watch_start) >= DROP_WATCH_TIMEOUT_S
+            if settled or timed_out:
+                if timed_out and not settled:
+                    log.warning("DROP_WATCH timeout on %s — snapping x to %.2f",
+                                d["id"], d["x"])
+                self._odo.reset_x(d["x"])
+                log.info("→ LINE_FOLLOW (drop snap x=%.2f, landmark %s)",
+                         d["x"], d["id"])
+                self._drop_active = None
                 self._state = LINE_FOLLOW
 
         elif self._state == CHORD:
@@ -231,6 +293,10 @@ class StateMachine:
             # Ease in to the turn over first 0.2s
             ease = min(1.0, elapsed / 0.2)
             return turn_steer * ease, self._gate_speed, INTERSECTION
+
+        elif self._state == DROP_WATCH:
+            # Robot still line-follows; state name signals the DROP detection window
+            return pid_steering, pid_throttle, DROP_WATCH
 
         elif self._state == CHORD:
             # Dead-reckon toward target (x, y) using IMU heading

@@ -48,3 +48,12 @@ class Odometry:
         dx = wx - self.x
         dy = wy - self.y
         return math.sqrt(dx * dx + dy * dy)
+
+    def reset_x(self, x: float, y: float = 0.0):
+        """Snap position to known landmark coordinates (odometry correction).
+
+        Called by state machine when the robot settles at the base of a DROP
+        ramp. Preserves _theta0 so heading reference is unchanged.
+        """
+        self.x = x
+        self.y = y

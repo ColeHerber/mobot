@@ -34,17 +34,28 @@
   .dir-btn:hover { border-color:var(--text); color:var(--text); }
   .dir-label { min-width:70px; text-align:center; font-size:.85rem; font-weight:bold; }
   /* Gates */
-  .gate-row { display:flex; align-items:center; gap:.5rem; padding:.4rem 0;
-              border-bottom:1px solid var(--border); font-size:.82rem; }
+  .gate-row { display:flex; align-items:center; gap:.4rem; padding:.35rem 0;
+              border-bottom:1px solid var(--border); font-size:.82rem; flex-wrap:wrap; }
   .gate-row:last-of-type { border-bottom:none; }
-  .gate-row .coords { flex:1; color:var(--text-dim); font-family:monospace; }
+  .gate-id { color:var(--text-dim); font-family:monospace; min-width:22px; flex-shrink:0; }
+  .coord-group { display:flex; align-items:center; gap:.25rem; flex:1; flex-wrap:wrap; }
+  .coord-field { display:flex; align-items:center; gap:.2rem; }
+  .coord-field label { color:var(--text-dim); font-size:.72rem; font-family:monospace; }
+  .coord-input { width:56px; background:var(--bg-input,#1a2030); border:1px solid var(--border);
+                 color:var(--text-head,#e8eaf0); border-radius:4px; padding:.15rem .3rem;
+                 font-size:.78rem; font-family:monospace; text-align:right; }
+  .coord-input:focus { outline:none; border-color:var(--green); }
   .type-btn { background:transparent; border:1px solid var(--border); color:var(--text-dim);
               border-radius:4px; padding:.2rem .45rem; cursor:pointer; font-size:.72rem;
-              white-space:nowrap; transition:all .15s; }
+              white-space:nowrap; transition:all .15s; flex-shrink:0; }
   .type-btn.chord { border-color:var(--orange); color:var(--orange); background:var(--orange)18; }
   .del-btn { background:transparent; border:1px solid var(--border); color:var(--red);
-             border-radius:4px; padding:.2rem .5rem; cursor:pointer; font-size:.75rem; }
+             border-radius:4px; padding:.2rem .5rem; cursor:pointer; font-size:.75rem; flex-shrink:0; }
   .del-btn:hover { background:var(--red)22; }
+  /* Intersection coord editing */
+  .int-coords { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.5rem; }
+  .int-coords .coord-field label { color:var(--text-dim); font-size:.72rem; font-family:monospace; }
+  .int-coords .coord-input { width:52px; }
   .add-gate-btn { background:var(--bg-card); border:1px dashed var(--border); color:var(--green);
                   border-radius:6px; width:100%; padding:.5rem; cursor:pointer; font-size:.82rem;
                   margin-top:.5rem; }
@@ -77,8 +88,8 @@
   <!-- Course map -->
   <div class="map-panel">
     <div class="map-toolbar">
-      Course map — click empty space to add a gate &nbsp;|&nbsp;
-      <span style="color:#ff44ff">✕</span> intersections &nbsp;
+      Drag gates/intersections to reposition &nbsp;|&nbsp; click empty space to add gate &nbsp;|&nbsp;
+      <span style="color:#ff44ff">✕</span> intersection &nbsp;
       <span style="color:#4488ff">○</span> gate &nbsp;
       <span style="color:#ff9900">⬦</span> chord
     </div>
@@ -226,16 +237,39 @@ function renderIntList() {
     div.className = "int-row";
     const dir = wp.direction || "";
     div.innerHTML = `
-      <div class="info">#${wp.id} &nbsp; x=${fmt(wp.x,2)}m  y=${fmt(wp.y||0,2)}m  r=${wp.radius_m||0.3}m</div>
+      <div class="info" style="margin-bottom:.35rem;">#${wp.id}</div>
+      <div class="int-coords">
+        <div class="coord-field">
+          <label>x</label>
+          <input class="coord-input int-coord" type="number" step="0.1" data-i="${i}" data-field="x" value="${fmt(wp.x,2)}">
+        </div>
+        <div class="coord-field">
+          <label>y</label>
+          <input class="coord-input int-coord" type="number" step="0.1" data-i="${i}" data-field="y" value="${fmt(wp.y||0,2)}">
+        </div>
+        <div class="coord-field">
+          <label>r</label>
+          <input class="coord-input int-coord" type="number" step="0.1" min="0.1" data-i="${i}" data-field="radius_m" value="${fmt(wp.radius_m||0.3,2)}">
+        </div>
+      </div>
       <div class="dir-row">
         <button class="dir-btn left ${dir==="left"?"active":""}" data-i="${i}" data-dir="left">◀ LEFT</button>
-        <span class="dir-label" id="dirlabel_${i}" style="color:${dir==="left"?"var(--red)":dir==="right"?"var(--blue)":"var(--text-dim)"}">
+        <span class="dir-label" style="color:${dir==="left"?"var(--red)":dir==="right"?"var(--blue)":"var(--text-dim)"}">
           ${dir==="left"?"← LEFT":dir==="right"?"RIGHT →":"— NOT SET —"}
         </span>
         <button class="dir-btn right ${dir==="right"?"active":""}" data-i="${i}" data-dir="right">RIGHT ▶</button>
       </div>
     `;
     el.appendChild(div);
+  });
+
+  document.querySelectorAll(".int-coord").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const i = parseInt(inp.dataset.i);
+      const f = inp.dataset.field;
+      const v = parseFloat(inp.value);
+      if (!isNaN(v)) { routeData.intersections[i][f] = v; drawMap(); }
+    });
   });
 
   document.querySelectorAll(".dir-btn").forEach(btn => {
@@ -258,13 +292,35 @@ function renderGateList() {
     const row = document.createElement("div");
     row.className = "gate-row";
     row.innerHTML = `
-      <span class="coords">G${i+1} &nbsp; x=${fmt(g.x,2)}m &nbsp; y=${fmt(g.y||0,2)}m &nbsp; r=${g.radius_m||0.5}m</span>
+      <span class="gate-id">G${i+1}</span>
+      <div class="coord-group">
+        <div class="coord-field">
+          <label>x</label>
+          <input class="coord-input gate-coord" type="number" step="0.1" data-i="${i}" data-field="x" value="${fmt(g.x,2)}">
+        </div>
+        <div class="coord-field">
+          <label>y</label>
+          <input class="coord-input gate-coord" type="number" step="0.1" data-i="${i}" data-field="y" value="${fmt(g.y||0,2)}">
+        </div>
+        <div class="coord-field">
+          <label>r</label>
+          <input class="coord-input gate-coord" type="number" step="0.1" min="0.1" data-i="${i}" data-field="radius_m" value="${fmt(g.radius_m||0.5,2)}">
+        </div>
+      </div>
       <button class="type-btn ${isChord?"chord":""}" data-i="${i}" title="Toggle gate type">
         ${isChord ? "⬦ Chord" : "● Gate"}
       </button>
       <button class="del-btn" data-i="${i}">DEL</button>
     `;
     el.appendChild(row);
+  });
+  document.querySelectorAll(".gate-coord").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const i = parseInt(inp.dataset.i);
+      const f = inp.dataset.field;
+      const v = parseFloat(inp.value);
+      if (!isNaN(v)) { routeData.gates[i][f] = v; drawMap(); }
+    });
   });
   document.querySelectorAll(".type-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -281,6 +337,70 @@ function renderGateList() {
     });
   });
 }
+
+// ── Canvas drag to move gates / intersections ────────────────────────────────
+let dragTarget = null;  // {type:"gate"|"int", index:int}
+
+function hitTest(wx, wy) {
+  // Test gates first
+  for (let i = routeData.gates.length - 1; i >= 0; i--) {
+    const g = routeData.gates[i];
+    const dx = g.x - wx, dy = (g.y||0) - wy;
+    if (Math.hypot(dx, dy) <= Math.max(g.radius_m||0.5, 12/vpScale))
+      return {type:"gate", index:i};
+  }
+  // Then intersections
+  for (let i = routeData.intersections.length - 1; i >= 0; i--) {
+    const wp = routeData.intersections[i];
+    const dx = wp.x - wx, dy = (wp.y||0) - wy;
+    if (Math.hypot(dx, dy) <= Math.max(wp.radius_m||0.3, 12/vpScale))
+      return {type:"int", index:i};
+  }
+  return null;
+}
+
+canvas.addEventListener("mousedown", e => {
+  if (addingGate) return;
+  const rect = canvas.getBoundingClientRect();
+  const [wx,wy] = canvasToWorld(e.clientX-rect.left, e.clientY-rect.top);
+  const hit = hitTest(wx, wy);
+  if (hit) { dragTarget = hit; canvas.style.cursor = "grabbing"; e.preventDefault(); }
+});
+
+canvas.addEventListener("mousemove", e => {
+  if (!dragTarget) {
+    // Show grab cursor when hovering a draggable item
+    if (!addingGate) {
+      const rect = canvas.getBoundingClientRect();
+      const [wx,wy] = canvasToWorld(e.clientX-rect.left, e.clientY-rect.top);
+      canvas.style.cursor = hitTest(wx, wy) ? "grab" : "default";
+    }
+    return;
+  }
+  const rect = canvas.getBoundingClientRect();
+  const [wx,wy] = canvasToWorld(e.clientX-rect.left, e.clientY-rect.top);
+  const rx = Math.round(wx*100)/100, ry = Math.round(wy*100)/100;
+  if (dragTarget.type === "gate") {
+    routeData.gates[dragTarget.index].x = rx;
+    routeData.gates[dragTarget.index].y = ry;
+  } else {
+    routeData.intersections[dragTarget.index].x = rx;
+    routeData.intersections[dragTarget.index].y = ry;
+  }
+  drawMap();
+});
+
+function endDrag() {
+  if (!dragTarget) return;
+  // Sync inputs after drag ends
+  if (dragTarget.type === "gate") renderGateList();
+  else renderIntList();
+  drawMap();
+  dragTarget = null;
+  canvas.style.cursor = addingGate ? "crosshair" : "default";
+}
+canvas.addEventListener("mouseup", endDrag);
+canvas.addEventListener("mouseleave", endDrag);
 
 // ── Canvas click → add gate ──────────────────────────────────────────────────
 canvas.addEventListener("click", e => {

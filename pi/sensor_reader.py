@@ -41,11 +41,30 @@ def _extract_yaw(quat_i, quat_j, quat_k, quat_real) -> float:
     return yaw
 
 
+def _extract_pitch_roll(quat_i, quat_j, quat_k, quat_real) -> tuple[float, float]:
+    """Extract pitch (around x-axis) and roll (around y-axis) from BNO085 quaternion.
+
+    BNO085 reports (i, j, k, real) = (x, y, z, w).
+    pitch = atan2(2*(w*x + y*z), 1 - 2*(x² + y²))  — nose up/down
+    roll  = asin(clamp(2*(w*y - z*x)))               — lean left/right
+    Returns (pitch_rad, roll_rad).
+    """
+    w, x, y, z = quat_real, quat_i, quat_j, quat_k
+    pitch = math.atan2(2.0 * (w * x + y * z),
+                       1.0 - 2.0 * (x * x + y * y))
+    roll  = math.asin(max(-1.0, min(1.0, 2.0 * (w * y - z * x))))
+    return pitch, roll
+
+
 def _open_teensy(port: str, baud: int) -> serial.Serial:
     """Open serial port, returning a Serial object. Blocks until successful."""
     while True:
         try:
             ser = serial.Serial(port, baud, timeout=0.1)
+            time.sleep(0.5)           # wait for Teensy USB reset / boot to settle
+            ser.write(b'R')           # ensure run mode (handles leftover calibration mode)
+            time.sleep(0.05)
+            ser.reset_input_buffer()  # discard startup garbage before reading packets
             log.info("Opened Teensy on %s", port)
             return ser
         except serial.SerialException as e:
@@ -126,7 +145,8 @@ class SensorReader:
                     quat = bno.quaternion  # (i, j, k, real)
                     if quat is not None:
                         yaw = _extract_yaw(*quat)
-                        self._state.update_imu(yaw)
+                        pitch, roll = _extract_pitch_roll(*quat)
+                        self._state.update_imu(yaw, pitch, roll)
                 except Exception as e:
                     log.debug("BNO085 read error: %s", e)
 

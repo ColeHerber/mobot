@@ -26,6 +26,26 @@
 # 4. SAVE ROUTE — done (<30 seconds)
 # ─────────────────────────────────────────────────────────────────────────────
 
+# DROP landmarks — used for odometry correction.
+# The robot enters DROP_WATCH when odo.x is within watch_radius_m of landmark x.
+# It monitors pitch (rotation around x-axis). When pitch exceeds entry_pitch_deg
+# (on ramp) then drops back below level_pitch_deg (leveled out), x is snapped to
+# the landmark's x coordinate and y is reset to 0.
+# x should be the position at the BASE of the ramp (where robot levels out).
+# Tune entry_pitch_deg and level_pitch_deg on the actual course.
+drop_landmarks:
+  - id: drop_28in
+    x: 11.5           # base of 28" ramp — confirm on course
+    watch_radius_m: 2.5
+    entry_pitch_deg: 6.0
+    level_pitch_deg: 3.0
+
+  - id: drop_46in
+    x: 35.0           # base of 46" ramp — confirm on course
+    watch_radius_m: 2.5
+    entry_pitch_deg: 6.0
+    level_pitch_deg: 3.0
+
 intersections:
   - id: circles
     x: 38.5         # entry of circles section, just past 46" DROP
