@@ -15,9 +15,9 @@ servo:
   gpio_pin: 12          # Pi GPIO (BCM numbering) — physical pin 32, hardware PWM0
   pwmchip: 0            # /sys/class/pwm/pwmchip<N> — Pi 5 with dtoverlay=pwm,pin=12,func=4
   pwm_channel: 0        # pwm0
-  min_pw:   1000        # µs — full left lock (tune against TT-02R steering geometry)
-  max_pw:   2000        # µs — full right lock
-  center_pw: 1500       # µs — straight ahead (nominal mechanical center)
+  min_pw:   1350        # µs — full left lock (tune against TT-02R steering geometry)
+  max_pw:   1850        # µs — full right lock
+  center_pw: 1550       # µs — straight ahead (nominal mechanical center)
   center_offset_us: 0   # µs — fine trim offset (use tune_servo_center.py to adjust)
 
 vesc:

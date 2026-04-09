@@ -174,8 +174,13 @@ python3 debug/vesc_debug.py
 # IMU heading (should see yaw in degrees):
 python3 debug/imu_debug.py
 
-# Servo sweep (visual check — robot should steer left/right):
-python3 debug/servo_debug.py
+# Servo sweep — hardware PWM (requires dtoverlay loaded, pin 32):
+python3 debug/servo_hwpwm_debug.py --pwmchip 0 --channel 0
+
+# Servo sweep — software PWM fallback (wiring check only):
+# WARNING: this reconfigures GPIO 12 as a plain output, breaking hardware PWM
+# until you run: pinctrl set 12 a0
+python3 debug/servo_debug.py --pin 12 --gpiochip 4
 ```
 
 ---
