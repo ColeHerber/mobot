@@ -41,8 +41,8 @@ static const uint8_t LEDON_DIM_LEVEL = 0;  // 0 = full brightness
 
 static const int NUM_SENSORS = 16;
 static const int SENSOR_PINS[NUM_SENSORS] = {
-    A9, A8, A7,  A6,  A5,  A4,  A3,  A2,
-    A1, A0, A19, A18, A17, A16, A15, A14
+    A9, A8, A7, A6, A5, A4, A3,  A2,
+    A1, A0, A10, A11, A12, A13, A14, A15
 };
 
 // ─── EEPROM layout ────────────────────────────────────────────────────────────
