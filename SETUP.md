@@ -17,12 +17,42 @@ dtparam=i2c_arm=on
 # Enable hardware UART on GPIO 14/15 (not needed if VESC is USB-only)
 # dtoverlay=uart0
 
+# Steering servo — hardware PWM on GPIO 12 (physical pin 32)
+dtoverlay=pwm,pin=12,func=4
+
 # Allow Pi 5 to draw full current via GPIO 5V pins (suppresses undervoltage warnings)
 usb_max_current_enable=1
 ```
 
 On Pi 5, Bluetooth uses the RP1 southbridge and does NOT contend with the GPIO UART,
 so no `disable-bt` overlay is needed.
+
+**After editing, reboot:**
+
+```bash
+sudo reboot
+```
+
+**Verify the PWM overlay loaded:**
+
+```bash
+ls /sys/class/pwm/
+# Expected: pwmchip0  pwmchip1
+```
+
+If you see both chips, the overlay is active. The steering servo uses `pwmchip0`, channel 0
+(`/sys/class/pwm/pwmchip0/pwm0/`). This is set in `config/params.yaml` under `servo.pwmchip`.
+
+**Quick sysfs smoke test (servo signal wire on physical pin 32):**
+
+```bash
+echo 0 | sudo tee /sys/class/pwm/pwmchip0/export
+echo 20000000 | sudo tee /sys/class/pwm/pwmchip0/pwm0/period
+echo 1500000 | sudo tee /sys/class/pwm/pwmchip0/pwm0/duty_cycle
+echo 1 | sudo tee /sys/class/pwm/pwmchip0/pwm0/enable
+# Servo should move to center position.
+# If it does NOT move, try pwmchip1 instead and update config/params.yaml → servo.pwmchip: 1
+```
 
 ---
 
@@ -60,7 +90,8 @@ Key packages and why:
 | `flask` | Web UI / hot-reload server |
 
 **Pi 5 critical:** Never install or import `pigpio`. The Pi 5 routes GPIO through the RP1
-chip on `gpiochip4`. `pigpio` is incompatible. Always use `lgpio`.
+chip. `pigpio` is incompatible. The servo uses Linux sysfs hardware PWM (no lgpio needed
+for the servo — lgpio is only used for other GPIO if required).
 
 ---
 
@@ -229,7 +260,8 @@ Web interface is available at `http://<pi-ip>:5000` from any browser on the same
 | Issue | Fix |
 |---|---|
 | `/dev/ttyACM*` swaps after reboot | Use `/dev/serial/by-id/` paths in config |
-| Pi 5 GPIO not working | Confirm `lgpio` installed, `gpiochip: 4` in params, never use `pigpio` |
+| Servo not moving | Confirm `dtoverlay=pwm,pin=12,func=4` in boot config and Pi rebooted; run sysfs smoke test in step 1 |
+| Wrong pwmchip number | Run `ls /sys/class/pwm/` — try `pwmchip0` then `pwmchip1`; update `config/params.yaml → servo.pwmchip` |
 | BNO085 not found at 0x4A | Check `dtparam=i2c_arm=on` in boot config, reboot |
 | VESC port won't open | Check `dialout` group membership, confirm by-id path |
 | Undervoltage warning at boot | Add `usb_max_current_enable=1` to boot config |

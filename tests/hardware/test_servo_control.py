@@ -97,7 +97,7 @@ class SysfsMock:
         """Return the last duty_cycle write, converted from ns to µs."""
         ns = self.written.get("duty_cycle")
         assert ns is not None, "duty_cycle was never written to sysfs"
-        return int(ns) // 1000
+        return int(str(ns)) // 1000
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -271,7 +271,7 @@ class TestCenterAndStop:
         with SysfsMock() as s:
             sc = s.make_servo()
             sc.stop()
-            assert s.written.get("enable") == 0
+            assert int(s.written.get("enable")) == 0
 
     def test_stop_clears_ready_flag(self):
         with SysfsMock() as s:
@@ -301,7 +301,7 @@ class TestSysfsInit:
                 "min_pw": 1000, "max_pw": 2000, "center_pw": 1500,
             }})
             # 50 Hz = 20 ms = 20_000_000 ns
-            assert s.written.get("period") == 20_000_000
+            assert int(s.written.get("period")) == 20_000_000
 
     def test_enable_written_1_on_init(self):
         with SysfsMock() as s:
@@ -309,7 +309,7 @@ class TestSysfsInit:
                 "gpio_pin": 12, "pwmchip": 2, "pwm_channel": 0,
                 "min_pw": 1000, "max_pw": 2000, "center_pw": 1500,
             }})
-            assert s.written.get("enable") == 1
+            assert int(s.written.get("enable")) == 1
 
     def test_no_chip_dir_stays_not_ready(self):
         with SysfsMock(chip_exists=False, pwm_dir_exists=False) as s:
