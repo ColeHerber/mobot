@@ -12,7 +12,7 @@ speed:
   min_ms:  0.2     # minimum speed floor (m/s)
 
 servo:
-  gpio_pin: 18     # Pi GPIO (BCM numbering) — hardware PWM0
+  gpio_pin: 12     # Pi GPIO (BCM numbering) — hardware PWM0 (physical pin 32)
   gpiochip: 4      # lgpio chip handle: 4 for Pi 5 (RP1), 0 for Pi 4
   min_pw:   1000   # µs — full left lock (tune against TT-02R steering geometry)
   max_pw:   2000   # µs — full right lock

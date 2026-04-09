@@ -168,9 +168,22 @@ def poll_once(ser: serial.Serial, circumference: float, gear_ratio: float) -> st
     return None
 
 
+def _default_port() -> str:
+    """Read VESC port from config/params.yaml, falling back to /dev/ttyACM1."""
+    try:
+        import pathlib, re
+        cfg = (pathlib.Path(__file__).parent.parent / "config" / "params.yaml").read_text()
+        m = re.search(r"^\s*port:\s*(\S+)", cfg[cfg.index("vesc:"):], re.MULTILINE)
+        if m:
+            return m.group(1)
+    except Exception:
+        pass
+    return "/dev/ttyACM1"
+
+
 def main():
     parser = argparse.ArgumentParser(description="VESC USB telemetry debug")
-    parser.add_argument("--port",          default="/dev/ttyACM1")
+    parser.add_argument("--port",          default=_default_port())
     parser.add_argument("--baud",          type=int,   default=115200)
     parser.add_argument("--circumference", type=float, default=0.204,
                         help="Wheel circumference in metres (default: 0.204)")
