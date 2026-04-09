@@ -265,6 +265,10 @@ class WebServer:
         def servo_tuner():
             return send_from_directory(static_dir, "servo_tuner.html")
 
+        @app.route("/teleop")
+        def teleop():
+            return send_from_directory(static_dir, "teleop.html")
+
         # Serve any other static asset (JS, CSS, images…)
         @app.route("/static/<path:filename>")
         def static_file(filename):
@@ -417,6 +421,21 @@ class WebServer:
                 time.sleep(0.2)
                 os.kill(os.getpid(), signal.SIGTERM)
             threading.Thread(target=_signal, daemon=True).start()
+            return jsonify({"ok": True})
+
+        # ── Teleop ────────────────────────────────────────────────────────────
+
+        @app.route("/api/teleop", methods=["POST"])
+        def teleop_cmd():
+            body = request.get_json(force=True, silent=True) or {}
+            enabled  = bool(body.get("enabled", True))
+            steering = float(body.get("steering", 0.0))
+            throttle = float(body.get("throttle", 0.0))
+            # Clamp to safe range
+            steering = max(-1.0, min(1.0, steering))
+            throttle = max(-1.0, min(1.0, throttle))
+            if hasattr(self._state, "update_teleop"):
+                self._state.update_teleop(enabled, steering, throttle)
             return jsonify({"ok": True})
 
         # ── Reset odometry ────────────────────────────────────────────────────

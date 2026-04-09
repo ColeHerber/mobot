@@ -42,6 +42,12 @@ class SharedState:
         # ── State machine ─────────────────────────────────────────────────────
         self.state: str = "LINE_FOLLOW"
 
+        # ── Teleop ────────────────────────────────────────────────────────────
+        self.teleop_enabled:  bool  = False
+        self.teleop_steering: float = 0.0   # [-1.0, +1.0]
+        self.teleop_throttle: float = 0.0   # [-1.0, +1.0] normalized
+        self.teleop_last_cmd: float = 0.0   # time.monotonic() of last command
+
         # ── Flags ─────────────────────────────────────────────────────────────
         self.running: bool = True            # cleared to trigger shutdown
 
@@ -88,3 +94,12 @@ class SharedState:
             self.steering = steering
             self.throttle = throttle
             self.state = state
+
+    def update_teleop(self, enabled: bool, steering: float, throttle: float):
+        with self._lock:
+            self.teleop_enabled  = enabled
+            self.teleop_steering = steering
+            self.teleop_throttle = throttle
+            if enabled:
+                import time
+                self.teleop_last_cmd = time.monotonic()

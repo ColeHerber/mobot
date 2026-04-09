@@ -116,6 +116,7 @@ const STATE_COLORS = {
     'REACQUIRE':     '#ff9900',
     'GATE_APPROACH': '#4488ff',
     'INTERSECTION':  '#ff44ff',
+    'TELEOP':        '#ffdd00',
 };
 
 function stateColor(state) {

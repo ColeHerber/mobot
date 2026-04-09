@@ -52,6 +52,7 @@ log = logging.getLogger("main")
 LOOP_HZ        = 100
 LOOP_DT        = 1.0 / LOOP_HZ
 LOG_DECIMATION = 2   # log every Nth loop iteration → 50 Hz
+_TELEOP_MAX_MS = 0.25  # max teleop speed (m/s) — keep slow for safety
 
 
 def load_yaml(path: str) -> dict:
@@ -442,6 +443,19 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                 web_server.log_transition(prev_sm_state, sm_state,
                                           f"conf={confidence}")
                 prev_sm_state = sm_state
+
+            # ── Teleop override ───────────────────────────────────────────────
+            teleop_en, tele_steer, tele_norm, tele_t = state.get(
+                "teleop_enabled", "teleop_steering",
+                "teleop_throttle", "teleop_last_cmd",
+            )
+            if teleop_en:
+                # Watchdog: kill throttle if no command within 300 ms
+                if (time.monotonic() - (tele_t or 0.0)) > 0.3:
+                    tele_norm = 0.0
+                steering = max(-1.0, min(1.0, tele_steer))
+                throttle = tele_norm * _TELEOP_MAX_MS
+                sm_state = "TELEOP"
 
             # ── Actuators ─────────────────────────────────────────────────────
             if not dry_run:

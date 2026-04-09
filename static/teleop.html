@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mobot Teleop</title>
+<link rel="stylesheet" href="/static/css/mobot.css">
+<style>
+  body { display:flex; flex-direction:column; height:100vh; overflow:hidden;
+         touch-action:none; user-select:none; }
+
+  .top-bar { display:flex; align-items:center; gap:.75rem; padding:.5rem 1rem;
+             background:var(--bg-panel); border-bottom:1px solid var(--border);
+             font-size:.85rem; flex-shrink:0; }
+  .top-bar h1 { font-size:1rem; color:var(--green); letter-spacing:.1em; margin-right:auto; }
+
+  .status-strip { display:flex; gap:1.5rem; padding:.4rem 1rem;
+                  background:var(--bg-card); border-bottom:1px solid var(--border);
+                  font-family:monospace; font-size:.82rem; flex-shrink:0; }
+  .status-strip .lbl { color:var(--text-dim); }
+  .status-strip .val { color:var(--text-head); margin-left:.3rem; }
+
+  .arena { flex:1; display:flex; flex-direction:column;
+           align-items:center; justify-content:center; gap:1.5rem; padding:1rem; }
+
+  /* ── Joystick ── */
+  .joy-wrap { position:relative; flex-shrink:0; }
+  #joyCanvas { display:block; touch-action:none; cursor:crosshair; border-radius:50%; }
+
+  /* ── Teleop indicator ── */
+  .tele-label { font-size:.75rem; color:var(--text-dim); text-align:center;
+                letter-spacing:.06em; }
+
+  /* ── Buttons ── */
+  .btn-row { display:flex; gap:1rem; }
+  .btn { padding:.6rem 1.4rem; border-radius:6px; font-size:.9rem; font-weight:bold;
+         border:none; cursor:pointer; letter-spacing:.05em; min-width:90px; }
+  .btn-enable  { background:#1a3a1a; color:var(--green); border:2px solid var(--green); }
+  .btn-enable.active { background:var(--green); color:#000; }
+  .btn-stop    { background:#3a1a1a; color:#ff4444; border:2px solid #ff4444;
+                 font-size:1.1rem; min-width:110px; }
+  .btn-stop:active { background:#ff4444; color:#000; }
+
+  /* ── Speed readout ── */
+  .readout { display:flex; gap:2rem; font-family:monospace; font-size:.9rem; }
+  .readout .item { display:flex; flex-direction:column; align-items:center; gap:.2rem; }
+  .readout .r-val { font-size:1.4rem; color:var(--text-head); }
+  .readout .r-lbl { font-size:.7rem; color:var(--text-dim); letter-spacing:.06em; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>TELEOP</h1>
+  <a href="/" class="btn" style="padding:.25rem .7rem;font-size:.8rem;">← Hub</a>
+</div>
+<div class="status-strip">
+  <span><span class="lbl">State</span><span class="val" id="sState">—</span></span>
+  <span><span class="lbl">Speed</span><span class="val" id="sSpeed">—</span></span>
+  <span><span class="lbl">Batt</span><span class="val" id="sBatt">—</span></span>
+</div>
+
+<div class="arena">
+  <div class="joy-wrap">
+    <canvas id="joyCanvas" width="280" height="280"></canvas>
+  </div>
+  <div class="tele-label" id="joyLabel">TELEOP OFF — tap ENABLE to drive</div>
+  <div class="btn-row">
+    <button class="btn btn-enable" id="btnEnable">ENABLE</button>
+    <button class="btn btn-stop"   id="btnStop">STOP</button>
+  </div>
+  <div class="readout">
+    <div class="item"><span class="r-val" id="rSteer">0.00</span><span class="r-lbl">STEERING</span></div>
+    <div class="item"><span class="r-val" id="rThrot">0.00</span><span class="r-lbl">THROTTLE</span></div>
+  </div>
+</div>
+
+<script src="/static/js/mobot.js"></script>
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let enabled   = false;
+let steering  = 0.0;
+let throttle  = 0.0;
+let touching  = false;
+let sendTimer = null;
+
+const canvas  = document.getElementById("joyCanvas");
+const ctx     = canvas.getContext("2d");
+const R       = canvas.width / 2;   // radius of outer ring
+const KNOB_R  = R * 0.22;
+const DEAD    = R * 0.08;           // deadzone radius
+
+let knobX = R, knobY = R;          // knob position in canvas coords
+
+// ── Draw joystick ────────────────────────────────────────────────────────────
+function drawJoy() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Outer ring
+  ctx.beginPath();
+  ctx.arc(R, R, R - 2, 0, 2 * Math.PI);
+  ctx.fillStyle = enabled ? "#0d1520" : "#0d1117";
+  ctx.fill();
+  ctx.strokeStyle = enabled ? "var(--green, #00ff88)" : "#30363d";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Crosshair
+  ctx.strokeStyle = "#30363d";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(R, 4);   ctx.lineTo(R, canvas.height - 4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(4, R);   ctx.lineTo(canvas.width - 4, R);  ctx.stroke();
+
+  // Forward arc hint
+  ctx.beginPath();
+  ctx.arc(R, R, R * 0.7, Math.PI * 1.1, Math.PI * 1.9);
+  ctx.strokeStyle = enabled ? "#00ff8833" : "#ffffff11";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Knob shadow
+  if (enabled) {
+    ctx.beginPath();
+    ctx.arc(knobX + 2, knobY + 2, KNOB_R, 0, 2 * Math.PI);
+    ctx.fillStyle = "rgba(0,0,0,0.4)";
+    ctx.fill();
+  }
+
+  // Knob
+  ctx.beginPath();
+  ctx.arc(knobX, knobY, KNOB_R, 0, 2 * Math.PI);
+  const grad = ctx.createRadialGradient(knobX - KNOB_R * 0.3, knobY - KNOB_R * 0.3,
+                                         KNOB_R * 0.1, knobX, knobY, KNOB_R);
+  grad.addColorStop(0, enabled ? "#44ff99" : "#555");
+  grad.addColorStop(1, enabled ? "#00aa55" : "#333");
+  ctx.fillStyle = grad;
+  ctx.fill();
+}
+
+// ── Touch / mouse handling ────────────────────────────────────────────────────
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const src  = e.touches ? e.touches[0] : e;
+  return {
+    x: (src.clientX - rect.left) * (canvas.width  / rect.width),
+    y: (src.clientY - rect.top)  * (canvas.height / rect.height),
+  };
+}
+
+function updateFromPos(pos) {
+  if (!enabled) return;
+  let dx = pos.x - R;
+  let dy = pos.y - R;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const maxR = R - KNOB_R - 2;
+  if (dist > maxR) { dx *= maxR / dist; dy *= maxR / dist; }
+  knobX = R + dx;
+  knobY = R + dy;
+  steering = (dist > DEAD) ? Math.max(-1, Math.min(1,  dx / maxR)) : 0;
+  throttle  = (dist > DEAD) ? Math.max(-1, Math.min(1, -dy / maxR)) : 0;
+  document.getElementById("rSteer").textContent = steering.toFixed(2);
+  document.getElementById("rThrot").textContent = throttle.toFixed(2);
+  drawJoy();
+}
+
+function resetKnob() {
+  knobX = R; knobY = R;
+  steering = 0; throttle = 0;
+  document.getElementById("rSteer").textContent = "0.00";
+  document.getElementById("rThrot").textContent = "0.00";
+  drawJoy();
+}
+
+canvas.addEventListener("touchstart",  e => { e.preventDefault(); touching = true;  updateFromPos(getPos(e)); }, { passive: false });
+canvas.addEventListener("touchmove",   e => { e.preventDefault(); if (touching) updateFromPos(getPos(e)); },    { passive: false });
+canvas.addEventListener("touchend",    e => { e.preventDefault(); touching = false; resetKnob(); sendCmd(); });
+canvas.addEventListener("touchcancel", e => { e.preventDefault(); touching = false; resetKnob(); sendCmd(); });
+canvas.addEventListener("mousedown",   e => { touching = true;  updateFromPos(getPos(e)); });
+canvas.addEventListener("mousemove",   e => { if (touching) updateFromPos(getPos(e)); });
+canvas.addEventListener("mouseup",     () => { touching = false; resetKnob(); sendCmd(); });
+canvas.addEventListener("mouseleave",  () => { if (touching) { touching = false; resetKnob(); sendCmd(); } });
+
+// ── Command sender ────────────────────────────────────────────────────────────
+async function sendCmd(overrideEnabled) {
+  const en = overrideEnabled !== undefined ? overrideEnabled : enabled;
+  try {
+    await fetch("/api/teleop", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enabled: en, steering, throttle }),
+    });
+  } catch (_) {}
+}
+
+// Send commands at 20 Hz while enabled (keeps watchdog alive)
+function startSendLoop() {
+  if (sendTimer) return;
+  sendTimer = setInterval(() => { if (enabled) sendCmd(); }, 50);
+}
+function stopSendLoop() {
+  if (sendTimer) { clearInterval(sendTimer); sendTimer = null; }
+}
+
+// ── Enable / Stop buttons ─────────────────────────────────────────────────────
+document.getElementById("btnEnable").addEventListener("click", () => {
+  enabled = !enabled;
+  const btn = document.getElementById("btnEnable");
+  const lbl = document.getElementById("joyLabel");
+  if (enabled) {
+    btn.textContent = "DISABLE";
+    btn.classList.add("active");
+    lbl.textContent = "Drag joystick to drive  ↑=forward";
+    lbl.style.color = "var(--green, #00ff88)";
+    startSendLoop();
+  } else {
+    btn.textContent = "ENABLE";
+    btn.classList.remove("active");
+    lbl.textContent = "TELEOP OFF — tap ENABLE to drive";
+    lbl.style.color = "";
+    resetKnob();
+    sendCmd(false);
+    stopSendLoop();
+  }
+  drawJoy();
+});
+
+document.getElementById("btnStop").addEventListener("click", () => {
+  enabled = false;
+  document.getElementById("btnEnable").textContent = "ENABLE";
+  document.getElementById("btnEnable").classList.remove("active");
+  document.getElementById("joyLabel").textContent = "TELEOP OFF — tap ENABLE to drive";
+  document.getElementById("joyLabel").style.color = "";
+  resetKnob();
+  sendCmd(false);
+  stopSendLoop();
+  drawJoy();
+});
+
+// Disable teleop when page unloads / hidden
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && enabled) {
+    enabled = false;
+    resetKnob();
+    sendCmd(false);
+    stopSendLoop();
+  }
+});
+
+// ── SSE status bar ────────────────────────────────────────────────────────────
+const sse = new MobotSSE("/api/state", d => {
+  document.getElementById("sState").textContent = d.state || "—";
+  document.getElementById("sState").style.color = stateColor(d.state);
+  document.getElementById("sSpeed").textContent = fmt(d.wheel_vel_ms, 2) + " m/s";
+  const batt = document.getElementById("sBatt");
+  batt.textContent = fmt(d.input_voltage, 1) + "V";
+  batt.style.color = batteryColor(d.input_voltage);
+});
+sse.connect();
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+drawJoy();
+</script>
+</body>
+</html>
