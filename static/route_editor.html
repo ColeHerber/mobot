@@ -38,6 +38,10 @@
               border-bottom:1px solid var(--border); font-size:.82rem; }
   .gate-row:last-of-type { border-bottom:none; }
   .gate-row .coords { flex:1; color:var(--text-dim); font-family:monospace; }
+  .type-btn { background:transparent; border:1px solid var(--border); color:var(--text-dim);
+              border-radius:4px; padding:.2rem .45rem; cursor:pointer; font-size:.72rem;
+              white-space:nowrap; transition:all .15s; }
+  .type-btn.chord { border-color:var(--orange); color:var(--orange); background:var(--orange)18; }
   .del-btn { background:transparent; border:1px solid var(--border); color:var(--red);
              border-radius:4px; padding:.2rem .5rem; cursor:pointer; font-size:.75rem; }
   .del-btn:hover { background:var(--red)22; }
@@ -75,7 +79,8 @@
     <div class="map-toolbar">
       Course map — click empty space to add a gate &nbsp;|&nbsp;
       <span style="color:#ff44ff">✕</span> intersections &nbsp;
-      <span style="color:#4488ff">○</span> gates
+      <span style="color:#4488ff">○</span> gate &nbsp;
+      <span style="color:#ff9900">⬦</span> chord
     </div>
     <canvas id="mapCanvas"></canvas>
   </div>
@@ -145,16 +150,25 @@ function drawMap() {
     ctx.stroke();
   }
 
-  // Gates
+  // Gates (regular = blue circle, chord = orange diamond)
   (routeData.gates||[]).forEach((g,i) => {
     const [gx,gy]=worldToCanvas(g.x,g.y||0);
     const r=(g.radius_m||0.5)*vpScale;
-    ctx.strokeStyle="#4488ff"; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
-    ctx.beginPath(); ctx.arc(gx,gy,r,0,2*Math.PI); ctx.stroke();
+    const isChord = g.type === "chord";
+    const col = isChord ? "#ff9900" : "#4488ff";
+    ctx.strokeStyle=col; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    if (isChord) {
+      // Diamond shape for chord gates
+      const d = Math.max(r, 8);
+      ctx.beginPath(); ctx.moveTo(gx,gy-d); ctx.lineTo(gx+d,gy);
+      ctx.lineTo(gx,gy+d); ctx.lineTo(gx-d,gy); ctx.closePath(); ctx.stroke();
+    } else {
+      ctx.beginPath(); ctx.arc(gx,gy,r,0,2*Math.PI); ctx.stroke();
+    }
     ctx.setLineDash([]);
-    ctx.fillStyle="#4488ff"; ctx.font="bold 11px monospace";
-    ctx.fillText("G"+(i+1), gx+r+3, gy-3);
-    ctx.fillStyle="#4488ff55";
+    ctx.fillStyle=col; ctx.font="bold 11px monospace";
+    ctx.fillText((isChord?"⬦":"G")+(i+1), gx+r+3, gy-3);
+    ctx.fillStyle=col+"55";
     ctx.beginPath(); ctx.arc(gx,gy,5,0,2*Math.PI); ctx.fill();
   });
 
@@ -240,13 +254,25 @@ function renderGateList() {
   const el = document.getElementById("gateList");
   el.innerHTML = "";
   (routeData.gates||[]).forEach((g,i) => {
+    const isChord = g.type === "chord";
     const row = document.createElement("div");
     row.className = "gate-row";
     row.innerHTML = `
       <span class="coords">G${i+1} &nbsp; x=${fmt(g.x,2)}m &nbsp; y=${fmt(g.y||0,2)}m &nbsp; r=${g.radius_m||0.5}m</span>
+      <button class="type-btn ${isChord?"chord":""}" data-i="${i}" title="Toggle gate type">
+        ${isChord ? "⬦ Chord" : "● Gate"}
+      </button>
       <button class="del-btn" data-i="${i}">DEL</button>
     `;
     el.appendChild(row);
+  });
+  document.querySelectorAll(".type-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = parseInt(btn.dataset.i);
+      const g = routeData.gates[i];
+      g.type = g.type === "chord" ? "gate" : "chord";
+      renderGateList(); drawMap();
+    });
   });
   document.querySelectorAll(".del-btn").forEach(btn => {
     btn.addEventListener("click", () => {

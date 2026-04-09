@@ -127,7 +127,7 @@ class VESCInterface:
                         del read_buf[:consumed]
                         if isinstance(msg, GetValues):
                             rpm = float(msg.rpm)
-                            voltage = float(msg.input_voltage)
+                            voltage = float(msg.v_in)
                             velocity = self._rpm_to_ms(rpm)
                             self._state.update_vesc(velocity, rpm, voltage)
                     except Exception:

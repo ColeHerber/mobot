@@ -7,10 +7,13 @@ GATE_APPROACH Near a known gate — slow to gate speed, align heading.
 DEAD_RECKON   Sensor confidence too low — use odometry arc, ignore PID.
 REACQUIRE     Line reappeared after dead reckon — brief hysteresis.
 INTERSECTION  At a pre-loaded waypoint — execute pre-planned turn.
+CHORD         Dead-reckon toward a specific (x,y) using heading control,
+              ignoring the white line. Activated by gates with type: chord.
 
 Transitions
 -----------
 LINE_FOLLOW   → DEAD_RECKON   if confidence < LOW_THRESHOLD
+LINE_FOLLOW   → CHORD         if within chord gate radius (checked before regular gates)
 LINE_FOLLOW   → GATE_APPROACH if odometry within gate_radius of a gate wp
 LINE_FOLLOW   → INTERSECTION  if odometry within intersection radius of an
                                intersection waypoint
@@ -18,9 +21,12 @@ DEAD_RECKON   → REACQUIRE     if confidence >= LOW_THRESHOLD
 REACQUIRE     → LINE_FOLLOW   after REACQUIRE_HYSTERESIS_S seconds
 GATE_APPROACH → LINE_FOLLOW   once past gate (heading stable)
 INTERSECTION  → LINE_FOLLOW   once turn is complete
+CHORD         → LINE_FOLLOW   once within arrival_radius_m of target (x,y)
 
 Route is loaded from config/route.yaml. Each intersection entry has:
   id, x, y, direction (left|right), radius_m
+Each gate entry has:
+  id, x, y, radius_m, [type: gate|chord], [arrival_radius_m]
 """
 
 import time
@@ -35,9 +41,11 @@ GATE_APPROACH = "GATE_APPROACH"
 DEAD_RECKON   = "DEAD_RECKON"
 REACQUIRE     = "REACQUIRE"
 INTERSECTION  = "INTERSECTION"
+CHORD         = "CHORD"
 
 REACQUIRE_HYSTERESIS_S = 0.15   # seconds to stay in REACQUIRE before → LINE_FOLLOW
 INTERSECTION_TURN_S    = 1.2    # seconds to execute a turn at an intersection
+CHORD_STEER_KP         = 1.2    # P-gain on heading error for chord navigation
 
 
 class StateMachine:
@@ -64,17 +72,30 @@ class StateMachine:
             })
 
         # Parse gates from route YAML (optional)
+        # Gates with type: chord go into _chord_gates; all others into _gates.
         self._gates = []
+        self._chord_gates = []
         for g in route.get("gates", []):
-            self._gates.append({
-                "id":        g["id"],
-                "x":         float(g["x"]),
-                "y":         float(g.get("y", 0.0)),
-                "radius_m":  float(g.get("radius_m", 0.5)),
-                "passed":    False,
-            })
+            if g.get("type", "gate") == "chord":
+                self._chord_gates.append({
+                    "id":               g["id"],
+                    "x":                float(g["x"]),
+                    "y":                float(g.get("y", 0.0)),
+                    "radius_m":         float(g.get("radius_m", 1.5)),
+                    "arrival_radius_m": float(g.get("arrival_radius_m", 0.4)),
+                    "triggered":        False,
+                })
+            else:
+                self._gates.append({
+                    "id":        g["id"],
+                    "x":         float(g["x"]),
+                    "y":         float(g.get("y", 0.0)),
+                    "radius_m":  float(g.get("radius_m", 0.5)),
+                    "passed":    False,
+                })
 
         self._state = LINE_FOLLOW
+        self._active_chord: dict | None = None
 
         # Timing helpers
         self._reacquire_start: float = 0.0
@@ -103,6 +124,15 @@ class StateMachine:
                     return g
         return None
 
+    def _check_chord_gate(self) -> dict | None:
+        """Return the first untriggered chord gate within its entry radius."""
+        for g in self._chord_gates:
+            if not g["triggered"]:
+                dist = self._odo.distance_to(g["x"], g["y"])
+                if dist <= g["radius_m"]:
+                    return g
+        return None
+
     def update(self, confidence: int, pid_steering: float,
                pid_throttle: float, heading_rad: float, dt: float):
         """Run one state machine step.
@@ -114,7 +144,7 @@ class StateMachine:
 
         # ── Transitions ───────────────────────────────────────────────────────
         if self._state == LINE_FOLLOW:
-            # Check intersection first (higher priority)
+            # Check intersection first (highest priority)
             wp = self._check_intersection()
             if wp is not None:
                 wp["triggered"] = True
@@ -128,10 +158,19 @@ class StateMachine:
                 self._state = DEAD_RECKON
 
             else:
-                gate = self._check_gate()
-                if gate is not None:
-                    log.info("→ GATE_APPROACH gate %s", gate["id"])
-                    self._state = GATE_APPROACH
+                # Chord gates checked before regular gates
+                chord_gate = self._check_chord_gate()
+                if chord_gate is not None:
+                    chord_gate["triggered"] = True
+                    self._active_chord = chord_gate
+                    log.info("→ CHORD gate %s → (%.2f, %.2f)",
+                             chord_gate["id"], chord_gate["x"], chord_gate["y"])
+                    self._state = CHORD
+                else:
+                    gate = self._check_gate()
+                    if gate is not None:
+                        log.info("→ GATE_APPROACH gate %s", gate["id"])
+                        self._state = GATE_APPROACH
 
         elif self._state == DEAD_RECKON:
             if confidence >= self._low_threshold:
@@ -145,6 +184,14 @@ class StateMachine:
                 self._state = DEAD_RECKON
             elif (now - self._reacquire_start) >= REACQUIRE_HYSTERESIS_S:
                 log.info("→ LINE_FOLLOW (reacquired)")
+                self._state = LINE_FOLLOW
+
+        elif self._state == CHORD:
+            tgt = self._active_chord
+            dist = self._odo.distance_to(tgt["x"], tgt["y"])
+            if dist <= tgt["arrival_radius_m"]:
+                log.info("→ LINE_FOLLOW (chord gate %s arrived)", tgt["id"])
+                self._active_chord = None
                 self._state = LINE_FOLLOW
 
         elif self._state == GATE_APPROACH:
@@ -184,5 +231,18 @@ class StateMachine:
             # Ease in to the turn over first 0.2s
             ease = min(1.0, elapsed / 0.2)
             return turn_steer * ease, self._gate_speed, INTERSECTION
+
+        elif self._state == CHORD:
+            # Dead-reckon toward target (x, y) using IMU heading
+            tgt = self._active_chord
+            dx = tgt["x"] - self._odo.x
+            dy = tgt["y"] - self._odo.y
+            desired_heading = math.atan2(dy, dx)
+            heading_err = desired_heading - heading_rad
+            # Wrap to [-π, π]
+            while heading_err >  math.pi: heading_err -= 2 * math.pi
+            while heading_err < -math.pi: heading_err += 2 * math.pi
+            steer = max(-1.0, min(1.0, CHORD_STEER_KP * heading_err))
+            return steer, self._gate_speed, CHORD
 
         return pid_steering, pid_throttle, self._state
