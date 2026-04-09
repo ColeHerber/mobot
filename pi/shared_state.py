@@ -46,7 +46,7 @@ class SharedState:
         self.teleop_enabled:  bool  = False
         self.teleop_steering: float = 0.0   # [-1.0, +1.0]
         self.teleop_throttle: float = 0.0   # [-1.0, +1.0] normalized
-        self.teleop_last_cmd: float = 0.0   # time.monotonic() of last command
+        self.teleop_last_cmd: float = -1.0  # time.monotonic() of last command (-1 = never)
 
         # ── Flags ─────────────────────────────────────────────────────────────
         self.running: bool = True            # cleared to trigger shutdown

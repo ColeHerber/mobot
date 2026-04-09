@@ -451,7 +451,7 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             )
             if teleop_en:
                 # Watchdog: kill throttle if no command within 300 ms
-                if (time.monotonic() - (tele_t or 0.0)) > 0.3:
+                if tele_t <= 0.0 or (time.monotonic() - tele_t) > 0.3:
                     tele_norm = 0.0
                 steering = max(-1.0, min(1.0, tele_steer))
                 throttle = tele_norm * _TELEOP_MAX_MS
