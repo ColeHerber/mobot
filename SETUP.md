@@ -117,7 +117,7 @@ Then set these in `config/params.yaml`:
 
 ```yaml
 sensor:
-  port: /dev/serial/by-id/usb-PJRC_Teensy_4.x_<serialno>-if00
+  port: /dev/serial/by-id/usb-Teensyduino_USB_Serial_14421340-if00
 
 vesc:
   port: /dev/serial/by-id/usb-STMicroelectronics_ChibiOS_RT_Virtual_COM_Port_304-if00
