@@ -126,7 +126,7 @@ def main():
     duty = 0.0
 
     def send(d):
-        ser.write(pyvesc.encode(SetDutyCycle(d)))
+        ser.write(pyvesc.encode(SetDutyCycle(int(d * 100000))))
 
     def redraw():
         rpm, voltage, cur_duty, vel = telem.snapshot()

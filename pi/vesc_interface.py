@@ -94,7 +94,7 @@ class VESCInterface:
                 with self._throttle_lock:
                     duty = self._throttle
                 try:
-                    msg = pyvesc.encode(SetDutyCycle(duty))
+                    msg = pyvesc.encode(SetDutyCycle(int(duty * 100000)))
                     ser.write(msg)
                     last_send = now
                 except Exception as e:
@@ -140,7 +140,7 @@ class VESCInterface:
 
         # Ensure motor is stopped on exit
         try:
-            ser.write(pyvesc.encode(SetDutyCycle(0.0)))
+            ser.write(pyvesc.encode(SetDutyCycle(0)))
         except Exception:
             pass
         ser.close()
