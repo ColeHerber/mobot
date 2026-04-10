@@ -562,7 +562,7 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                         _dx = odo.x - _hill_exit_pos[0]
                         _dy = odo.y - _hill_exit_pos[1]
                         _dist_from_exit = (_dx**2 + _dy**2) ** 0.5
-                        if _dist_from_exit < 1.0 and confidence < config.get("sensor", {}).get("low_confidence_threshold", 30):
+                        if _dist_from_exit < 2.0 and confidence < config.get("sensor", {}).get("low_confidence_threshold", 30):
                             # Reverse dead reckon bias for 1 m post-hill
                             _dr_steer = float(config.get("sensor", {}).get("dead_reckon_steer", 1.0))
                             steering = max(-1.0, min(1.0, -_dr_steer))
