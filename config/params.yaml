@@ -2,7 +2,7 @@
 # Edit and restart to tune. All values are in SI units (m, s, rad) unless noted.
 
 pid:
-  kp: 1                  # proportional gain on line position error
+  kp: 1.2                  # proportional gain on line position error
   kd: 0.1               # derivative gain (on measurement, not error)
   speed_ramp_up: 0.2     # m/s per second to accelerate when well-centered on line
   speed_ramp_down: 0.8   # m/s per second to decelerate when off line / low confidence
