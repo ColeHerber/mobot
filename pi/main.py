@@ -534,13 +534,17 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                     confidence, pid_steer, pid_throttle, heading, pitch, dt
                 )
 
-            # ── Hill compensation — drive straight on steep pitch ─────────────
-            _hill_thresh_deg = config.get("imu", {}).get("hill_pitch_threshold_deg", 0.0)
+            # ── Hill compensation — align to zero heading, dead reckon forward ──
+            _imu_cfg = config.get("imu", {})
+            _hill_thresh_deg = _imu_cfg.get("hill_pitch_threshold_deg", 0.0)
             if _hill_thresh_deg > 0.0:
                 import math as _math
                 if pitch < -_math.radians(_hill_thresh_deg):
-                    steering = 0.0
-                    sm_state = sm_state + "+HILL"
+                    # Steer toward heading=0 (zeroed on enable) using P control.
+                    # Positive heading = turned left → steer right (positive).
+                    _hill_kp = float(_imu_cfg.get("hill_heading_kp", 1.5))
+                    steering = max(-1.0, min(1.0, _hill_kp * heading))
+                    sm_state = "HILL"
 
             # ── Log state transitions ─────────────────────────────────────────
             if sm_state != prev_sm_state and web_server is not None:
