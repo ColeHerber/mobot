@@ -10,8 +10,8 @@ pid:
   speed_pos_max: 0.2     # maximum |line_pos| to count as "well centered"
 
 speed:
-  base_ms: 0.013     # nominal forward speed (m/s) — increase after straight-line test
-  gate_ms: 0.013     # speed near gates / dead-reckoning / intersection (m/s)
+  base_ms: 0.01     # nominal forward speed (m/s) — increase after straight-line test
+  gate_ms: 0.01     # speed near gates / dead-reckoning / intersection (m/s)
   min_ms:  0.005     # minimum speed floor (m/s)
 
 servo:
