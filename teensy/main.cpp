@@ -171,10 +171,9 @@ void send_packet(uint16_t raw[NUM_SENSORS]) {
     int32_t mean_val = (int32_t)(raw_sum / NUM_SENSORS);
 
     uint16_t norm[NUM_SENSORS];
+    uint32_t weighted_sum = 0;
     uint32_t total = 0;
     uint16_t flags = 0;
-    int      peak_idx = 0;
-    uint16_t peak_val = 0;
 
     for (int i = 0; i < NUM_SENSORS; i++) {
         // Positive deviation = below mean = white line candidate
@@ -183,19 +182,20 @@ void send_packet(uint16_t raw[NUM_SENSORS]) {
         norm[i] = (n <= 0) ? 0 : (n >= 1000 ? 1000 : (uint16_t)n);
         if (SENSOR_DISABLE_MASK & (1 << i)) norm[i] = 0;  // mask bad channels
 
+        // Weighted centroid: sensor positions mapped to [-7500, +7500]
+        int32_t pos_scaled = ((int32_t)i - 7) * 1000 + 500;
+        weighted_sum += (uint32_t)norm[i] * (uint32_t)(pos_scaled + 7500);
         total += norm[i];
         if (norm[i] > 500) flags |= (1 << i);
-        if (norm[i] > peak_val) { peak_val = norm[i]; peak_idx = i; }
     }
 
-    // line_pos: position of peak sensor, range [-1.0, +1.0]
+    // line_pos in range [-1.0, +1.0]
     int16_t line_pos_i16;
     if (total < 100) {
         line_pos_i16 = 0; // no line detected
     } else {
-        // Map peak sensor index to position: center of slot i → ((i-7)*1000+500)/7500
-        int32_t pos_scaled = ((int32_t)peak_idx - 7) * 1000 + 500;
-        int32_t pos = (pos_scaled * 10000) / 7500;
+        int32_t centroid = (int32_t)(weighted_sum / total) - 7500;
+        int32_t pos = (centroid * 10000) / 7500;
         if (pos > 10000)  pos = 10000;
         if (pos < -10000) pos = -10000;
         line_pos_i16 = (int16_t)pos;
