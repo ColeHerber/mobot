@@ -78,6 +78,21 @@
   .wp-table .dist { font-family:monospace; }
   .wp-table .triggered { color:var(--green); }
   .wp-table .close { color:var(--orange); }
+
+  /* ── P6: Raw Logs ────────────────────────────────────────── */
+  #rawLogWrap { height:calc(100vh - 160px); overflow-y:auto; padding:1rem;
+                display:flex; flex-direction:column; gap:.5rem; }
+  #rawLogBox { flex:1; font-family:monospace; font-size:.75rem; white-space:pre-wrap;
+               word-break:break-all; background:var(--bg-input);
+               border:1px solid var(--border); border-radius:6px;
+               padding:.6rem .8rem; overflow-y:auto; }
+  #rawLogBox .rl-error   { color:#ff5555; }
+  #rawLogBox .rl-warning { color:var(--orange); }
+  #rawLogBox .rl-info    { color:var(--text-dim); }
+  #rawLogBox .rl-debug   { color:#444; }
+  .log-controls { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+  .log-controls label { font-size:.78rem; color:var(--text-dim); }
+  #rawLogError { color:#ff5555; font-size:.78rem; display:none; }
 </style>
 </head>
 <body>
@@ -93,6 +108,7 @@
   <div class="tab" data-panel="vesc">VESC &amp; Power</div>
   <div class="tab" data-panel="odometry">Odometry</div>
   <div class="tab" data-panel="statemachine">State Machine</div>
+  <div class="tab" data-panel="logs">Logs</div>
 </div>
 
 <div class="panels">
@@ -255,6 +271,27 @@
         </div>
         <div id="stateLog"><span class="dim">Waiting for transitions…</span></div>
       </div>
+    </div>
+  </div>
+
+  <!-- ══ P6: RAW LOGS ════════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-logs">
+    <div id="rawLogWrap">
+      <div class="log-controls">
+        <span class="dim">mobot.log — last</span>
+        <select id="rawLogN" style="width:90px;">
+          <option value="100">100 lines</option>
+          <option value="200" selected>200 lines</option>
+          <option value="500">500 lines</option>
+          <option value="1000">1000 lines</option>
+        </select>
+        <label><input type="checkbox" id="rawLogErrors"> Errors/Warnings only</label>
+        <label><input type="checkbox" id="rawLogTail" checked> Auto-scroll</label>
+        <button class="btn" id="btnRawRefresh">Refresh</button>
+        <span id="rawLogAge" class="dim"></span>
+        <span id="rawLogError"></span>
+      </div>
+      <div id="rawLogBox"><span class="rl-info">Loading…</span></div>
     </div>
   </div>
 
@@ -609,6 +646,81 @@ loadRouteWaypoints();
 loadStateLog();
 loadLogs();
 window.addEventListener("resize",()=>{ resizeSensorBars(); resizeOdoCanvas(); });
+
+// ── Raw log viewer ────────────────────────────────────────────────────────────
+let rawLogTimer = null;
+
+function levelClass(level) {
+  if (level === "ERROR"    || level === "CRITICAL") return "rl-error";
+  if (level === "WARNING")                          return "rl-warning";
+  if (level === "DEBUG")                            return "rl-debug";
+  return "rl-info";
+}
+
+async function fetchRawLog() {
+  const n       = parseInt(document.getElementById("rawLogN").value);
+  const errOnly = document.getElementById("rawLogErrors").checked;
+  const doTail  = document.getElementById("rawLogTail").checked;
+  const box     = document.getElementById("rawLogBox");
+  const errEl   = document.getElementById("rawLogError");
+  const ageEl   = document.getElementById("rawLogAge");
+
+  try {
+    const data = await fetch(`/api/logs/raw?n=${n}`).then(r => r.json());
+
+    if (data.error) {
+      errEl.textContent = data.error;
+      errEl.style.display = "inline";
+      box.innerHTML = `<span class="rl-warning">${data.error}</span>`;
+      return;
+    }
+    errEl.style.display = "none";
+
+    let lines = data.lines;
+    if (errOnly) {
+      lines = lines.filter(l => l.level === "ERROR" || l.level === "CRITICAL" || l.level === "WARNING");
+    }
+
+    box.innerHTML = lines.map(l => {
+      const cls = levelClass(l.level);
+      const escaped = l.text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      return `<div class="${cls}">${escaped}</div>`;
+    }).join("") || '<span class="rl-info dim">No entries.</span>';
+
+    ageEl.textContent = `— ${data.lines.length} lines, refreshed ${new Date().toLocaleTimeString()}`;
+
+    if (doTail) box.scrollTop = box.scrollHeight;
+  } catch(e) {
+    errEl.textContent = "Fetch failed: " + e.message;
+    errEl.style.display = "inline";
+  }
+}
+
+function startRawLogPolling() {
+  fetchRawLog();
+  clearInterval(rawLogTimer);
+  rawLogTimer = setInterval(fetchRawLog, 2000);
+}
+
+function stopRawLogPolling() {
+  clearInterval(rawLogTimer);
+  rawLogTimer = null;
+}
+
+// Start/stop polling only when the Logs tab is active
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    if (tab.dataset.panel === "logs") {
+      startRawLogPolling();
+    } else {
+      stopRawLogPolling();
+    }
+  });
+});
+
+document.getElementById("btnRawRefresh").addEventListener("click", fetchRawLog);
+document.getElementById("rawLogN").addEventListener("change", fetchRawLog);
+document.getElementById("rawLogErrors").addEventListener("change", fetchRawLog);
 </script>
 </body>
 </html>

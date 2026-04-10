@@ -31,6 +31,7 @@ Endpoints:
   POST /api/reset_odometry    — set reset_odometry flag in SharedState
   GET  /api/debug/state_log   — last 500 state transitions
   GET  /api/logs              — list of log files in logs/
+  GET  /api/logs/raw?n=200   — last N lines of mobot.log as JSON
 """
 
 import argparse
@@ -479,6 +480,29 @@ class WebServer:
             except Exception as e:
                 log.error("logs listing error: %s", e)
                 return jsonify([])
+
+        # ── Raw log tail ──────────────────────────────────────────────────────
+
+        @app.route("/api/logs/raw")
+        def raw_log():
+            n = request.args.get("n", 200, type=int)
+            log_path = os.path.join(_LOGS_DIR, "mobot.log")
+            if not os.path.exists(log_path):
+                return jsonify({"lines": [], "error": "mobot.log not found — is the robot running?"})
+            try:
+                with open(log_path, "r", errors="replace") as f:
+                    lines = f.readlines()
+                tail = lines[-n:] if len(lines) > n else lines
+                result = []
+                for raw_line in tail:
+                    stripped = raw_line.rstrip("\n")
+                    # Parse level from log format: "timestamp LEVEL name: msg"
+                    parts = stripped.split(" ", 2)
+                    level = parts[1] if len(parts) >= 2 else "INFO"
+                    result.append({"level": level, "text": stripped})
+                return jsonify({"lines": result})
+            except Exception as e:
+                return jsonify({"lines": [], "error": str(e)})
 
         self._app = app
 

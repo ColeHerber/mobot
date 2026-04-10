@@ -25,6 +25,7 @@ import argparse
 import csv
 import curses
 import logging
+import logging.handlers
 import os
 import sys
 import time
@@ -47,6 +48,18 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
 )
+
+# Also log to a rotating file so errors survive curses taking over the terminal
+_LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "logs")
+os.makedirs(_LOG_DIR, exist_ok=True)
+_fh = logging.handlers.RotatingFileHandler(
+    os.path.join(_LOG_DIR, "mobot.log"),
+    maxBytes=5 * 1024 * 1024,  # 5 MB per file
+    backupCount=3,
+)
+_fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
+logging.getLogger().addHandler(_fh)
+
 log = logging.getLogger("main")
 
 LOOP_HZ        = 100
@@ -390,9 +403,10 @@ def _teleop_loop(stdscr, args, config, web_server, state):
                     tele_norm = 0.0
                 steering = max(-1.0, min(1.0, tele_steer))
                 throttle = tele_norm * _TELEOP_MAX_MS
-
-            servo.set_steering(steering)
-            vesc.set_throttle(throttle / config["speed"]["base_ms"])
+                servo.set_steering(steering)
+                vesc.set_throttle(throttle / config["speed"]["base_ms"])
+            else:
+                vesc.set_throttle(0)
             state.update_control(steering, throttle, "TELEOP" if robot_en else "IDLE")
 
             if loop_count % 5 == 0:
