@@ -39,4 +39,4 @@ sensor:
 imu:
   i2c_address: 0x4A              # BNO085 default I2C address (AD0 low)
   hill_pitch_threshold_deg: 12.0  # magnitude of downward pitch (negative degrees) to activate hill mode; always positive here
-  hill_heading_kp: -1.5           # P-gain for heading correction on hill (steer toward heading=0)
+  hill_heading_kp: -0.15           # P-gain for heading correction on hill (steer toward heading=0)
