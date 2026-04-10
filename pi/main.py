@@ -542,9 +542,10 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             if _hill_thresh_deg > 0.0:
                 import math as _math
                 if pitch < -_math.radians(_hill_thresh_deg):
-                    # On hill: P-control toward heading=0, dead reckon forward
-                    _hill_kp = float(_imu_cfg.get("hill_heading_kp", -1.5))
-                    steering = max(-1.0, min(1.0, _hill_kp * heading))
+                    # On hill: P-control toward target heading (not necessarily 0)
+                    _hill_kp     = float(_imu_cfg.get("hill_heading_kp", -1.5))
+                    _hill_target = _math.radians(float(_imu_cfg.get("hill_heading_target_deg", 5.0)))
+                    steering = max(-1.0, min(1.0, _hill_kp * (heading - _hill_target)))
                     sm_state = "HILL"
                     _hill_active = True
                 else:
