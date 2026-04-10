@@ -538,7 +538,7 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             _hill_thresh_deg = config.get("imu", {}).get("hill_pitch_threshold_deg", 0.0)
             if _hill_thresh_deg > 0.0:
                 import math as _math
-                if abs(pitch) > _math.radians(_hill_thresh_deg):
+                if pitch < -_math.radians(_hill_thresh_deg):
                     steering = 0.0
                     sm_state = sm_state + "+HILL"
 

@@ -38,4 +38,4 @@ sensor:
 
 imu:
   i2c_address: 0x4A              # BNO085 default I2C address (AD0 low)
-  hill_pitch_threshold_deg: 8.0  # degrees of downward pitch → drive straight (0 = disabled)
+  hill_pitch_threshold_deg: 12.0  # magnitude of downward pitch (negative degrees) to drive straight; always positive here
