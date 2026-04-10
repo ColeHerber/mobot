@@ -54,9 +54,9 @@ def _make_sm(intersections=None, gates=None, odo=None):
 
 
 def _step(sm, confidence=200, pid_steer=0.0, pid_throttle=0.6,
-          heading=0.0, dt=0.01):
+          heading=0.0, pitch=0.0, dt=0.01):
     """Run one update step, return (steering, throttle, state)."""
-    return sm.update(confidence, pid_steer, pid_throttle, heading, dt)
+    return sm.update(confidence, pid_steer, pid_throttle, heading, pitch, dt)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

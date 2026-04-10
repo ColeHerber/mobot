@@ -268,14 +268,16 @@ class TestVESCInterfaceInit:
 # ─────────────────────────────────────────────────────────────────────────────
 
 class TestVESCDummyMode:
-    """When pyvesc is not available the VESC thread runs as a no-op loop."""
+    """vesc_interface uses a custom protocol — no pyvesc dependency."""
 
-    def test_dummy_mode_flag(self):
-        """_PYVESC_AVAILABLE is True in test environment (pyvesc is mocked)."""
-        assert vesc_interface._PYVESC_AVAILABLE is True
+    def test_no_pyvesc_dependency(self):
+        """vesc_interface must not import pyvesc (uses custom wire protocol)."""
+        assert not hasattr(vesc_interface, "_PYVESC_AVAILABLE"), (
+            "vesc_interface should not use pyvesc"
+        )
 
-    def test_set_throttle_still_works_in_dummy(self):
-        """set_throttle() is always usable regardless of pyvesc availability."""
+    def test_set_throttle_still_works(self):
+        """set_throttle() is always usable."""
         vi, _ = _make_vesc()
         vi.set_throttle(0.42)
         with vi._throttle_lock:
