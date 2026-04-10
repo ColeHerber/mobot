@@ -496,9 +496,10 @@ class WebServer:
                 result = []
                 for raw_line in tail:
                     stripped = raw_line.rstrip("\n")
-                    # Parse level from log format: "timestamp LEVEL name: msg"
-                    parts = stripped.split(" ", 2)
-                    level = parts[1] if len(parts) >= 2 else "INFO"
+                    # Log format: "2026-04-09 20:15:30,123 LEVEL name: msg"
+                    # Token 0 = date, 1 = time, 2 = level, 3+ = rest
+                    parts = stripped.split(" ", 3)
+                    level = parts[2] if len(parts) >= 3 else "INFO"
                     result.append({"level": level, "text": stripped})
                 return jsonify({"lines": result})
             except Exception as e:

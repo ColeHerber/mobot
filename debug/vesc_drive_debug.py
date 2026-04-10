@@ -27,12 +27,17 @@ except ImportError:
     print("ERROR: pyserial not installed. Run: pip3 install pyserial")
     sys.exit(1)
 
-try:
-    import pyvesc
-    from pyvesc import SetDutyCycle, GetValues
-except ImportError:
-    print("ERROR: pyvesc not installed. Run: pip3 install pyvesc")
-    sys.exit(1)
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from vesc_debug import _make_packet, _find_packet, _parse_get_values, GET_VALUES_REQUEST  # noqa: E402
+import struct as _struct
+
+COMM_SET_DUTY = 5
+
+def _make_set_duty_packet(duty: float) -> bytes:
+    duty = max(-1.0, min(1.0, duty))
+    payload = bytes([COMM_SET_DUTY]) + _struct.pack(">i", int(duty * 100000))
+    return _make_packet(payload)
 
 
 # ── Telemetry reader thread ───────────────────────────────────────────────────
@@ -62,7 +67,7 @@ def _telem_thread(ser, telem, stop_event):
     buf = bytearray()
     while not stop_event.is_set():
         try:
-            ser.write(pyvesc.encode_request(GetValues))
+            ser.write(GET_VALUES_REQUEST)
             time.sleep(0.05)
             incoming = ser.read(ser.in_waiting or 0)
         except Exception:
@@ -71,15 +76,14 @@ def _telem_thread(ser, telem, stop_event):
         if incoming:
             buf.extend(incoming)
             while buf:
-                try:
-                    msg, consumed = pyvesc.decode(bytes(buf))
-                    del buf[:consumed]
-                    if isinstance(msg, GetValues):
-                        telem.update(float(msg.rpm), float(msg.v_in), float(msg.duty_now))
-                except Exception:
-                    if buf:
-                        del buf[:1]
+                payload, consumed = _find_packet(buf)
+                if payload is None:
                     break
+                del buf[:consumed]
+                fields = _parse_get_values(payload)
+                if fields is not None:
+                    telem.update(fields["rpm"], fields["input_voltage"],
+                                 fields["duty_cycle_now"])
         time.sleep(0.1)
 
 
@@ -126,7 +130,7 @@ def main():
     duty = 0.0
 
     def send(d):
-        ser.write(pyvesc.encode(SetDutyCycle(int(d * 100000))))
+        ser.write(_make_set_duty_packet(d))
 
     def redraw():
         rpm, voltage, cur_duty, vel = telem.snapshot()

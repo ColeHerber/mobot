@@ -285,7 +285,12 @@
           <option value="500">500 lines</option>
           <option value="1000">1000 lines</option>
         </select>
-        <label><input type="checkbox" id="rawLogErrors"> Errors/Warnings only</label>
+        <select id="rawLogLevel">
+          <option value="DEBUG">All (DEBUG+)</option>
+          <option value="INFO" selected>INFO+</option>
+          <option value="WARNING">Warnings &amp; Errors</option>
+          <option value="ERROR">Errors only</option>
+        </select>
         <label><input type="checkbox" id="rawLogTail" checked> Auto-scroll</label>
         <button class="btn" id="btnRawRefresh">Refresh</button>
         <span id="rawLogAge" class="dim"></span>
@@ -657,10 +662,12 @@ function levelClass(level) {
   return "rl-info";
 }
 
+const LEVEL_ORDER = {DEBUG:0, INFO:1, WARNING:2, ERROR:3, CRITICAL:4};
+
 async function fetchRawLog() {
-  const n       = parseInt(document.getElementById("rawLogN").value);
-  const errOnly = document.getElementById("rawLogErrors").checked;
-  const doTail  = document.getElementById("rawLogTail").checked;
+  const n        = parseInt(document.getElementById("rawLogN").value);
+  const minLevel = document.getElementById("rawLogLevel").value;
+  const doTail   = document.getElementById("rawLogTail").checked;
   const box     = document.getElementById("rawLogBox");
   const errEl   = document.getElementById("rawLogError");
   const ageEl   = document.getElementById("rawLogAge");
@@ -677,9 +684,8 @@ async function fetchRawLog() {
     errEl.style.display = "none";
 
     let lines = data.lines;
-    if (errOnly) {
-      lines = lines.filter(l => l.level === "ERROR" || l.level === "CRITICAL" || l.level === "WARNING");
-    }
+    const minOrd = LEVEL_ORDER[minLevel] ?? 1;
+    lines = lines.filter(l => (LEVEL_ORDER[l.level] ?? 1) >= minOrd);
 
     box.innerHTML = lines.map(l => {
       const cls = levelClass(l.level);
@@ -720,7 +726,7 @@ document.querySelectorAll(".tab").forEach(tab => {
 
 document.getElementById("btnRawRefresh").addEventListener("click", fetchRawLog);
 document.getElementById("rawLogN").addEventListener("change", fetchRawLog);
-document.getElementById("rawLogErrors").addEventListener("change", fetchRawLog);
+document.getElementById("rawLogLevel").addEventListener("change", fetchRawLog);
 </script>
 </body>
 </html>

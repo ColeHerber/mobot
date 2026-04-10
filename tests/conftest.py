@@ -27,26 +27,6 @@ _lgpio_mock.gpiochip_close.return_value = 0
 _lgpio_mock.error = type("lgpio_error", (Exception,), {})
 sys.modules["lgpio"] = _lgpio_mock
 
-# ── pyvesc ────────────────────────────────────────────────────────────────────
-_pyvesc_mock = MagicMock()
-
-class _SetDutyCycle:
-    """Minimal stand-in for pyvesc.SetDutyCycle."""
-    def __init__(self, duty):
-        self.duty = duty
-
-class _GetValues:
-    """Minimal stand-in for pyvesc.GetValues."""
-    rpm = 0.0
-    input_voltage = 0.0
-
-_pyvesc_mock.SetDutyCycle = _SetDutyCycle
-_pyvesc_mock.GetValues    = _GetValues
-_pyvesc_mock.encode.return_value = b"\x00"
-_pyvesc_mock.encode_request.return_value = b"\x00"
-_pyvesc_mock.decode.return_value = (_GetValues(), 1)
-sys.modules["pyvesc"] = _pyvesc_mock
-
 # ── adafruit / board / busio ──────────────────────────────────────────────────
 _board_mock  = MagicMock()
 _busio_mock  = MagicMock()

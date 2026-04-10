@@ -108,6 +108,7 @@ class ServoControl:
 
         try:
             self._write("duty_cycle", _us_to_ns(pw))
+            log.debug("servo steer=%.3f pw=%d µs", value, pw)
         except OSError as e:
             log.error("PWM write failed: %s", e)
             self._ready = False

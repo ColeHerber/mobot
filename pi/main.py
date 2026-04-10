@@ -60,6 +60,10 @@ _fh = logging.handlers.RotatingFileHandler(
 _fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
 logging.getLogger().addHandler(_fh)
 
+# Enable DEBUG for actuator modules so per-command logs reach the file
+logging.getLogger("servo_control").setLevel(logging.DEBUG)
+logging.getLogger("vesc_interface").setLevel(logging.DEBUG)
+
 log = logging.getLogger("main")
 
 LOOP_HZ        = 100
@@ -398,15 +402,22 @@ def _teleop_loop(stdscr, args, config, web_server, state):
             steering = 0.0
             throttle = 0.0
 
+            duty = 0.0
             if robot_en and teleop_en:
                 if tele_t <= 0.0 or (time.monotonic() - tele_t) > 0.3:
                     tele_norm = 0.0
                 steering = max(-1.0, min(1.0, tele_steer))
                 throttle = tele_norm * _TELEOP_MAX_MS
+                duty = throttle / config["speed"]["base_ms"]
                 servo.set_steering(steering)
-                vesc.set_throttle(throttle / config["speed"]["base_ms"])
+                vesc.set_throttle(duty)
             else:
                 vesc.set_throttle(0)
+
+            if loop_count % 20 == 0:
+                log.info("CMD en=%s/%s steer=%.3f throttle=%.3f m/s duty=%.3f",
+                         robot_en, teleop_en, steering, throttle, duty)
+
             state.update_control(steering, throttle, "TELEOP" if robot_en else "IDLE")
 
             if loop_count % 5 == 0:
@@ -539,14 +550,21 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
 
             # ── Actuators ─────────────────────────────────────────────────────
             robot_en = state.get("robot_enabled")[0]
+            duty = throttle / config["speed"]["base_ms"]
             if not dry_run and robot_en:
                 servo.set_steering(steering)
-                vesc.set_throttle(throttle / config["speed"]["base_ms"])
+                vesc.set_throttle(duty)
             else:
                 if not robot_en:
                     vesc.set_throttle(0)
                 steering = 0.0 if not robot_en else steering
                 throttle = 0.0 if not robot_en else throttle
+                duty     = 0.0 if not robot_en else duty
+
+            # 5 Hz summary log of what's actually being commanded
+            if loop_count % 20 == 0:
+                log.info("CMD en=%s steer=%.3f throttle=%.3f m/s duty=%.3f  [%s]",
+                         robot_en, steering, throttle, duty, sm_state)
 
             state.update_control(steering, throttle, sm_state)
 
