@@ -70,7 +70,7 @@ def _make_packet(payload: bytes) -> bytes:
 def _make_set_duty_packet(duty: float) -> bytes:
     """Build a COMM_SET_DUTY packet. duty is clamped to [-1.0, +1.0]."""
     duty = max(-1.0, min(1.0, duty))
-    raw = int(duty * 100000)
+    raw = int(duty * -100000)
     payload = bytes([COMM_SET_DUTY]) + struct.pack(">i", raw)
     return _make_packet(payload)
 
@@ -271,7 +271,7 @@ class VESCInterface:
                     if fields is not None:
                         rpm      = fields["rpm"]
                         voltage  = fields["input_voltage"]
-                        velocity = self._rpm_to_ms(rpm)
+                        velocity = self._rpm_to_ms(-rpm)
                         self._state.update_vesc(velocity, rpm, voltage)
                         log.debug("vesc telem rpm=%.0f vel=%.3f volt=%.1fV duty_live=%.3f",
                                   rpm, velocity, voltage, fields["duty_cycle_now"])

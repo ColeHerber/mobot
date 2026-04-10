@@ -60,16 +60,14 @@ _fh = logging.handlers.RotatingFileHandler(
 _fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
 logging.getLogger().addHandler(_fh)
 
-# Enable DEBUG for actuator modules so per-command logs reach the file
 logging.getLogger("servo_control").setLevel(logging.DEBUG)
-logging.getLogger("vesc_interface").setLevel(logging.DEBUG)
 
 log = logging.getLogger("main")
 
 LOOP_HZ        = 100
 LOOP_DT        = 1.0 / LOOP_HZ
 LOG_DECIMATION = 2   # log every Nth loop iteration → 50 Hz
-_TELEOP_MAX_MS = 0.25  # max teleop speed (m/s) — keep slow for safety
+_TELEOP_MAX_MS = 0.1   # max teleop speed (m/s) — keep slow for safety
 
 
 def load_yaml(path: str) -> dict:
