@@ -90,19 +90,14 @@ def main():
     time.sleep(0.5)
     ser.write(b'C')   # calibration mode → raw CSV
 
-    # Auto-calibration: track min/max seen so far
-    cal_min = [ADC_MAX] * CHANNELS
-    cal_max = [0]       * CHANNELS
-
     packets_ok  = 0
     packets_bad = 0
     last_print  = time.monotonic()
 
     CHAN_HDR = "Chan: " + " ".join(f"{i:4d}" for i in range(CHANNELS))
 
-    print("Auto-calibrating from live data (min/max updates as sensors are exposed).")
-    print("Move the robot over the line and bare ground to build calibration.")
-    print("Press 's' + Enter to save calibration to Teensy EEPROM.\n")
+    print("Mean-relative mode — no calibration needed.")
+    print("White line shows as dip below array mean → high Norm value.")
     print(CHAN_HDR)
 
     try:
@@ -117,7 +112,6 @@ def main():
             if not line:
                 continue
             if line.startswith("CAL"):
-                print(f"\n[info] {line}")
                 continue
 
             parts = line.split(",")
@@ -133,17 +127,11 @@ def main():
 
             packets_ok += 1
 
-            # Update auto-cal
-            for i in range(CHANNELS):
-                if raw[i] < cal_min[i]:
-                    cal_min[i] = raw[i]
-                if raw[i] > cal_max[i]:
-                    cal_max[i] = raw[i]
-
             now = time.monotonic()
             if now - last_print >= 0.05:   # ~20 Hz display
                 last_print = now
-                norm, line_pos, conf, flags = compute(raw, cal_min, cal_max)
+                norm, line_pos, conf, flags = compute(raw)
+                mean_val = int(sum(raw) / CHANNELS)
 
                 raw_row  = " ".join(f"{v:4d}" for v in raw)
                 norm_row = " ".join(f"{v:4d}" for v in norm)
@@ -154,9 +142,9 @@ def main():
                     f"\rRaw:  {raw_row}\n"
                     f"\rNorm: {norm_row}\n"
                     f"\r[{intensity}]\n"
-                    f"\rPos: {line_pos:+.4f}  Conf: {conf:3d}  "
+                    f"\rPos: {line_pos:+.4f}  Conf: {conf:3d}  Mean: {mean_val}  "
                     f"ok:{packets_ok} bad:{packets_bad}   "
-                    f"\033[4A"   # move cursor up 4 lines for next refresh
+                    f"\033[5A"   # move cursor up 5 lines for next refresh
                 )
                 sys.stdout.flush()
 

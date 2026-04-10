@@ -23,7 +23,7 @@ import serial
 
 log = logging.getLogger(__name__)
 
-PACKET_LEN = 8
+PACKET_LEN = 24   # [0xAA][pos×2][flags×2][conf][norm×16][chk][0x55]
 PACKET_START = 0xAA
 PACKET_END   = 0x55
 
@@ -108,17 +108,24 @@ class SensorReader:
         self._thread.start()
 
     def _parse_packet(self, buf: bytes):
-        """Parse a validated 8-byte packet into (line_pos, flags, confidence).
+        """Parse a validated 24-byte packet.
 
+        Format: [0xAA][pos_hi][pos_lo][fl_hi][fl_lo][conf][norm×16][chk][0x55]
+        norm bytes are 0–255 (firmware scales 0–1000 → 0–255).
         Returns None if checksum fails.
         """
-        if buf[0] != PACKET_START or buf[7] != PACKET_END:
+        if buf[0] != PACKET_START or buf[23] != PACKET_END:
             return None
 
-        pos_hi, pos_lo, fl_hi, fl_lo, confidence, checksum = \
-            buf[1], buf[2], buf[3], buf[4], buf[5], buf[6]
+        pos_hi, pos_lo = buf[1], buf[2]
+        fl_hi,  fl_lo  = buf[3], buf[4]
+        confidence     = buf[5]
+        norm_bytes     = buf[6:22]
+        checksum       = buf[22]
 
         expected_chk = pos_hi ^ pos_lo ^ fl_hi ^ fl_lo ^ confidence
+        for b in norm_bytes:
+            expected_chk ^= b
         if checksum != expected_chk:
             return None
 
@@ -126,9 +133,8 @@ class SensorReader:
         line_pos = line_pos_i16 / 10000.0
         flags    = (fl_hi << 8) | fl_lo
 
-        # Decode per-channel normalized values from flags bitmask
-        # (flags give threshold-crossed status; full raw values not in packet)
-        raw = [(1000 if (flags >> i) & 1 else 0) for i in range(16)]
+        # Scale 0–255 → 0–1000 for consistency with existing SharedState consumers
+        raw = [min(1000, int(b * 1000 / 255)) for b in norm_bytes]
 
         return line_pos, flags, confidence, raw
 

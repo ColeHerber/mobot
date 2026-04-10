@@ -208,10 +208,24 @@ void send_packet(uint16_t raw[NUM_SENSORS]) {
     uint8_t pos_lo  = (uint8_t)(line_pos_i16 & 0xFF);
     uint8_t fl_hi   = (uint8_t)((flags >> 8) & 0xFF);
     uint8_t fl_lo   = (uint8_t)(flags & 0xFF);
-    uint8_t chk     = pos_hi ^ pos_lo ^ fl_hi ^ fl_lo ^ confidence;
 
-    uint8_t pkt[8] = {0xAA, pos_hi, pos_lo, fl_hi, fl_lo, confidence, chk, 0x55};
-    Serial.write(pkt, 8);
+    // Scale norm 0–1000 → 0–255 for per-channel transmission
+    uint8_t norm_bytes[NUM_SENSORS];
+    for (int i = 0; i < NUM_SENSORS; i++)
+        norm_bytes[i] = (uint8_t)(norm[i] * 255 / 1000);
+
+    // Checksum covers all payload bytes (bytes 1–22)
+    uint8_t chk = pos_hi ^ pos_lo ^ fl_hi ^ fl_lo ^ confidence;
+    for (int i = 0; i < NUM_SENSORS; i++) chk ^= norm_bytes[i];
+
+    // 24-byte packet: [0xAA][pos×2][flags×2][conf][norm×16][chk][0x55]
+    uint8_t pkt[24] = {0xAA, pos_hi, pos_lo, fl_hi, fl_lo, confidence,
+                       norm_bytes[0],  norm_bytes[1],  norm_bytes[2],  norm_bytes[3],
+                       norm_bytes[4],  norm_bytes[5],  norm_bytes[6],  norm_bytes[7],
+                       norm_bytes[8],  norm_bytes[9],  norm_bytes[10], norm_bytes[11],
+                       norm_bytes[12], norm_bytes[13], norm_bytes[14], norm_bytes[15],
+                       chk, 0x55};
+    Serial.write(pkt, 24);
 }
 
 // ─── Calibration stream ──────────────────────────────────────────────────────
