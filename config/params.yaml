@@ -26,7 +26,7 @@ servo:
 vesc:
   port: /dev/serial/by-id/usb-STMicroelectronics_ChibiOS_RT_Virtual_COM_Port_304-if00       # VESC USB serial device (ttyACM0 is Teensy)
   baud: 115200
-  wheel_circumference_m: 0.28   # ~65mm diameter tire (TT-02R stock)
+  wheel_circumference_m: 0.265   # ~65mm diameter tire (TT-02R stock)
   gear_ratio: 8.0                # motor rotations per wheel rotation
   max_duty: 0.15                 # hard duty-cycle cap (0.0–1.0); 0.25 = 25%
 
@@ -40,4 +40,4 @@ imu:
   i2c_address: 0x4A              # BNO085 default I2C address (AD0 low)
   hill_pitch_threshold_deg: 10.0  # magnitude of downward pitch (negative degrees) to activate hill mode; always positive here
   hill_heading_kp: 0.15            # P-gain for heading correction on hill (steer toward heading=0)
-  hill_exit_x: 11             # uncomment + set to known odometry x at hill exit for snap
+  # hill_exit_x: 11             # uncomment + set to known odometry x at hill exit for snap
