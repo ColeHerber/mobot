@@ -39,7 +39,7 @@ def _default_port() -> str:
 
 
 MEAN_SCALE = 7   # must match firmware constant
-DISABLE_MASK = (1<<13)|(1<<14)|(1<<15)  # must match firmware SENSOR_DISABLE_MASK
+DISABLE_MASK = 0  # must match firmware SENSOR_DISABLE_MASK
 
 
 def compute(raw: list[int], _cal_min=None, _cal_max=None):
