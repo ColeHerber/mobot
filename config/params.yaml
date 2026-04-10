@@ -2,7 +2,7 @@
 # Edit and restart to tune. All values are in SI units (m, s, rad) unless noted.
 
 pid:
-  kp: 0.2        # proportional gain on line position error
+  kp: 1        # proportional gain on line position error
   kd: 0.08         # derivative gain (on measurement, not error)
   speed_kp: 0.1    # speed reduction factor: throttle -= speed_kp * |line_pos| * base
 
