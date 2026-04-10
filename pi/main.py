@@ -60,8 +60,6 @@ _fh = logging.handlers.RotatingFileHandler(
 _fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
 logging.getLogger().addHandler(_fh)
 
-logging.getLogger("servo_control").setLevel(logging.DEBUG)
-
 log = logging.getLogger("main")
 
 LOOP_HZ        = 100

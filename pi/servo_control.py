@@ -97,7 +97,7 @@ class ServoControl:
         """
         if not self._ready:
             return
-        value = max(-1.0, min(1.0, value))
+        value = max(-1.0, min(1.0, -value))  # linkage is physically reversed
         ec = self._effective_center
         if value >= 0.0:
             pw = int(ec + value * (self._max_pw - ec))
