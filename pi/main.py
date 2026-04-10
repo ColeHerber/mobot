@@ -479,6 +479,8 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
     hz_window     = []
     prev_sm_state  = state.get("state")[0]
     prev_robot_en  = False
+    _hill_active    = False          # True while pitch below threshold
+    _hill_exit_pos  = None           # (x, y) where hill pitch recovered
 
     try:
         while True:
@@ -540,11 +542,26 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             if _hill_thresh_deg > 0.0:
                 import math as _math
                 if pitch < -_math.radians(_hill_thresh_deg):
-                    # Steer toward heading=0 (zeroed on enable) using P control.
-                    # Positive heading = turned left → steer right (positive).
-                    _hill_kp = float(_imu_cfg.get("hill_heading_kp", 1.5))
+                    # On hill: P-control toward heading=0, dead reckon forward
+                    _hill_kp = float(_imu_cfg.get("hill_heading_kp", -1.5))
                     steering = max(-1.0, min(1.0, _hill_kp * heading))
                     sm_state = "HILL"
+                    _hill_active = True
+                else:
+                    if _hill_active:
+                        # Just levelled out — record exit position (once)
+                        _hill_exit_pos = (odo.x, odo.y)
+                        _hill_active = False
+                        log.info("Hill exited at x=%.2f y=%.2f", odo.x, odo.y)
+                    if _hill_exit_pos is not None:
+                        _dx = odo.x - _hill_exit_pos[0]
+                        _dy = odo.y - _hill_exit_pos[1]
+                        _dist_from_exit = (_dx**2 + _dy**2) ** 0.5
+                        if _dist_from_exit < 1.0:
+                            # Reverse the normal dead reckon bias for 1 m post-hill
+                            _dr_steer = float(config.get("sensor", {}).get("dead_reckon_steer", 1.0))
+                            steering = max(-1.0, min(1.0, -_dr_steer))
+                            sm_state = "POST_HILL"
 
             # ── Log state transitions ─────────────────────────────────────────
             if sm_state != prev_sm_state and web_server is not None:
