@@ -181,11 +181,12 @@ class WebServer:
         try:
             (line_pos, conf, heading, x, y, sm_state,
              steering, throttle, vel, voltage, flags,
-             raw, rpm, robot_en, vesc_ok) = s.get(
+             raw, rpm, robot_en, vesc_ok, steer_test) = s.get(
                 "line_position", "sensor_confidence", "heading_rad",
                 "x", "y", "state", "steering", "throttle",
                 "wheel_velocity_ms", "input_voltage", "sensor_flags",
                 "sensor_raw", "motor_rpm", "robot_enabled", "vesc_connected",
+                "steering_test",
             )
         except Exception:
             return {}
@@ -204,8 +205,9 @@ class WebServer:
             "sensor_raw":    raw if raw is not None else [0] * 16,
             "sensor_flags":  _safe(flags),
             "motor_rpm":     _safe(rpm),
-            "robot_enabled": bool(robot_en),
+            "robot_enabled":  bool(robot_en),
             "vesc_connected": bool(vesc_ok),
+            "steering_test":  bool(steer_test),
         }
 
     def _read_yaml_as_dict(self, path: str) -> dict:
@@ -436,6 +438,14 @@ class WebServer:
             self._state.set(robot_enabled=enabled)
             log.info("Robot %s via web API", "ENABLED" if enabled else "DISABLED")
             return jsonify({"ok": True, "enabled": enabled})
+
+        @app.route("/api/steering_test", methods=["POST"])
+        def steering_test():
+            body = request.get_json(force=True, silent=True) or {}
+            active = bool(body.get("active", True))
+            self._state.set(steering_test=active)
+            log.info("Steering test %s via web API", "ON" if active else "OFF")
+            return jsonify({"ok": True, "active": active})
 
         # ── Teleop ────────────────────────────────────────────────────────────
 

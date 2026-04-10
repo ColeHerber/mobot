@@ -473,7 +473,8 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
     last_time     = time.monotonic()
     loop_hz       = 0.0
     hz_window     = []
-    prev_sm_state = state.get("state")[0]
+    prev_sm_state  = state.get("state")[0]
+    prev_robot_en  = False
 
     try:
         while True:
@@ -546,6 +547,10 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
 
             # ── Actuators ─────────────────────────────────────────────────────
             robot_en = state.get("robot_enabled")[0]
+            if robot_en and not prev_robot_en:
+                state.zero_heading()
+                log.info("Heading zeroed on enable")
+            prev_robot_en = robot_en
             duty = throttle / config["speed"]["base_ms"]
             if not dry_run and robot_en:
                 servo.set_steering(steering)

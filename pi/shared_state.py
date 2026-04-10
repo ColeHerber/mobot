@@ -1,6 +1,12 @@
 """Thread-safe shared state for the Mobot control stack."""
 
+import math
 import threading
+
+
+def _wrap_pi(a: float) -> float:
+    """Wrap angle to (-π, π]."""
+    return (a + math.pi) % (2 * math.pi) - math.pi
 
 
 class SharedState:
@@ -22,9 +28,11 @@ class SharedState:
         self.sensor_raw: list[int] = [0] * 16 # normalized 0–1000 per channel
 
         # ── IMU (BNO085 via I2C) ──────────────────────────────────────────────
-        self.heading_rad: float = 0.0         # yaw in radians, world frame
+        self.heading_rad: float = 0.0         # yaw in radians, relative to zero-on-enable
         self.pitch_rad: float = 0.0           # rotation around x-axis (nose up/down)
         self.roll_rad: float = 0.0            # rotation around y-axis (lean left/right)
+        self._heading_raw: float = 0.0        # raw IMU yaw (compass-absolute)
+        self._heading_offset: float = 0.0     # subtracted to zero on enable
 
         # ── VESC (motor encoder via UART) ─────────────────────────────────────
         self.wheel_velocity_ms: float = 0.0  # m/s, positive = forward
@@ -45,6 +53,7 @@ class SharedState:
 
         # ── Robot enable ──────────────────────────────────────────────────────
         self.robot_enabled: bool = False     # must be set True via web before actuators run
+        self.steering_test: bool = False     # servo runs PID, VESC locked to 0
 
         # ── Teleop ────────────────────────────────────────────────────────────
         self.teleop_enabled:  bool  = False
@@ -78,9 +87,16 @@ class SharedState:
 
     def update_imu(self, heading_rad: float, pitch_rad: float = 0.0, roll_rad: float = 0.0):
         with self._lock:
-            self.heading_rad = heading_rad
+            self._heading_raw = heading_rad
+            self.heading_rad = _wrap_pi(heading_rad - self._heading_offset)
             self.pitch_rad = pitch_rad
             self.roll_rad = roll_rad
+
+    def zero_heading(self):
+        """Capture current heading as the zero reference (call on enable)."""
+        with self._lock:
+            self._heading_offset = self._heading_raw
+            self.heading_rad = 0.0
 
     def update_vesc(self, velocity_ms: float, rpm: float, voltage: float):
         with self._lock:
