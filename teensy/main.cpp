@@ -75,7 +75,7 @@ Mode current_mode = MODE_RUN;
 // ─── Timing ──────────────────────────────────────────────────────────────────
 static const uint32_t RUN_INTERVAL_US    = 5000;  // 200 Hz
 static const uint32_t CAL_INTERVAL_US    = 10000; // 100 Hz during calibration
-static const uint32_t LEDON_SETTLE_US    = 50;    // µs for phototransistor settle
+static const uint32_t LEDON_SETTLE_US    = 200;   // µs for phototransistor settle
 
 // ─── EEPROM helpers ──────────────────────────────────────────────────────────
 void eeprom_write_u16(int addr, uint16_t val) {
