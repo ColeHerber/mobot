@@ -558,7 +558,8 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             if robot_en and not prev_robot_en:
                 state.zero_heading()
                 state.set(steering_test=True)
-                log.info("Heading zeroed on enable; steering test auto-armed")
+                sm.reset()
+                log.info("Heading zeroed, SM reset to LINE_FOLLOW on enable")
             prev_robot_en = robot_en
             duty = throttle / config["speed"]["base_ms"]
             if not dry_run and robot_en:

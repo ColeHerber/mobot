@@ -126,6 +126,16 @@ class StateMachine:
         self._drop_watch_start: float = 0.0
         self._current_turn_direction: str = "left"
 
+    def reset(self):
+        """Reset to LINE_FOLLOW — call on robot enable to avoid startup DEAD_RECKON."""
+        self._state = LINE_FOLLOW
+        self._active_chord = None
+        self._drop_active  = None
+        self._drop_saw_ramp = False
+        self._reacquire_start    = 0.0
+        self._intersection_start = 0.0
+        self._drop_watch_start   = 0.0
+
     @property
     def state(self) -> str:
         return self._state
