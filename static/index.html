@@ -34,6 +34,10 @@
   #btnEnable.armed:hover { background:var(--green); color:#000; }
   #btnEnable.live   { border-color:var(--green); background:var(--green); color:#000; }
   #enableStatus { font-size:.8rem; color:var(--text-dim); font-family:monospace; }
+  #btnSteerTest { font-size:.9rem; font-weight:bold; padding:.5rem 1.4rem;
+                  border-radius:8px; border:2px solid #555; background:#1a1a1a;
+                  color:#555; cursor:pointer; transition:all .15s; }
+  #btnSteerTest.active { border-color:var(--orange); color:var(--orange); background:#1f1200; }
 
   .sensor-strip { padding:.5rem 1rem; background:var(--bg-card); border-bottom:1px solid var(--border); }
   .sensor-strip canvas { display:block; width:100%; height:60px; }
@@ -62,6 +66,7 @@
 
 <div class="enable-bar">
   <button id="btnEnable" onclick="toggleEnable()">ENABLE ROBOT</button>
+  <button id="btnSteerTest" onclick="toggleSteerTest()">STEER TEST</button>
   <span id="enableStatus">waiting for connection…</span>
 </div>
 
@@ -108,7 +113,29 @@
 
 <script src="/static/js/mobot.js"></script>
 <script>
-let robotEnabled = false;
+let robotEnabled  = false;
+let steerTestActive = false;
+
+function updateSteerTestUI(active) {
+  steerTestActive = active;
+  const btn = document.getElementById("btnSteerTest");
+  btn.classList.toggle("active", active);
+  btn.textContent = active ? "STEER TEST ON" : "STEER TEST";
+}
+
+async function toggleSteerTest() {
+  const want = !steerTestActive;
+  try {
+    await fetch("/api/steering_test", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ active: want }),
+    });
+    updateSteerTestUI(want);
+  } catch(e) {
+    document.getElementById("enableStatus").textContent = "error — check connection";
+  }
+}
 
 function updateEnableUI(enabled) {
   robotEnabled = enabled;
@@ -179,7 +206,8 @@ const sse = new MobotSSE("/api/state", d => {
   document.getElementById("hVolt").textContent   = fmt(d.input_voltage, 1) + "V";
   document.getElementById("hVolt").style.color   = batteryColor(d.input_voltage);
   document.getElementById("hConf").textContent   = d.confidence ?? "—";
-  if (d.robot_enabled !== undefined) updateEnableUI(d.robot_enabled);
+  if (d.robot_enabled  !== undefined) updateEnableUI(d.robot_enabled);
+  if (d.steering_test !== undefined) updateSteerTestUI(d.steering_test);
   // Sensor strip
   const raw = d.sensor_raw || Array(16).fill(0);
   drawSensorBars(raw);

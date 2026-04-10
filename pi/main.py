@@ -546,7 +546,7 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                 sm_state = "TELEOP"
 
             # ── Actuators ─────────────────────────────────────────────────────
-            robot_en = state.get("robot_enabled")[0]
+            robot_en, steer_test = state.get("robot_enabled", "steering_test")
             if robot_en and not prev_robot_en:
                 state.zero_heading()
                 log.info("Heading zeroed on enable")
@@ -554,7 +554,7 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             duty = throttle / config["speed"]["base_ms"]
             if not dry_run and robot_en:
                 servo.set_steering(steering)
-                vesc.set_throttle(duty)
+                vesc.set_throttle(0.0 if steer_test else duty)
             else:
                 if not robot_en:
                     vesc.set_throttle(0)
