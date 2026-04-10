@@ -2,7 +2,7 @@
 # Edit and restart to tune. All values are in SI units (m, s, rad) unless noted.
 
 pid:
-  kp: 1                  # proportional gain on line position error
+  kp: 1.3                  # proportional gain on line position error
   kd: 0.08               # derivative gain (on measurement, not error)
   speed_ramp_up: 0.2     # m/s per second to accelerate when well-centered on line
   speed_ramp_down: 0.8   # m/s per second to decelerate when off line / low confidence
@@ -28,7 +28,7 @@ vesc:
   baud: 115200
   wheel_circumference_m: 0.26   # ~65mm diameter tire (TT-02R stock)
   gear_ratio: 8.0                # motor rotations per wheel rotation
-  max_duty: 0.2                # hard duty-cycle cap (0.0–1.0); 0.25 = 25%
+  max_duty: 0.1                # hard duty-cycle cap (0.0–1.0); 0.25 = 25%
 
 sensor:
   low_confidence_threshold: 30   # below this → DEAD_RECKON state (0–255 scale)
