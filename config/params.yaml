@@ -23,7 +23,7 @@ servo:
 vesc:
   port: /dev/serial/by-id/usb-STMicroelectronics_ChibiOS_RT_Virtual_COM_Port_304-if00       # VESC USB serial device (ttyACM0 is Teensy)
   baud: 115200
-  wheel_circumference_m: 0.204   # ~65mm diameter tire (TT-02R stock)
+  wheel_circumference_m: 0.26   # ~65mm diameter tire (TT-02R stock)
   gear_ratio: 8.0                # motor rotations per wheel rotation
 
 sensor:
