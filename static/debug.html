@@ -122,6 +122,8 @@
     <div style="padding:0 1rem;">
       <canvas id="sensorBarsCanvas"></canvas>
     </div>
+    <div style="padding:.1rem 1rem .4rem; font-family:monospace; font-size:.8rem; line-height:1.6; overflow-x:auto; white-space:pre;"><span style="color:var(--text-dim)">Ch:  </span><span id="sChLabels" style="color:var(--text-dim)"></span>
+<span style="color:var(--text-dim)">Val: </span><span id="sChValues" style="color:var(--text)"></span></div>
     <div class="row2" style="padding:.5rem 1rem;">
       <div class="card">
         <h4>Line Position</h4>
@@ -337,6 +339,10 @@ for (let i=0; i<16; i++) {
   flagsRow.appendChild(d);
 }
 
+// ── Channel label row (static) ───────────────────────────────────────────────
+document.getElementById("sChLabels").textContent =
+  Array.from({length:16}, (_, i) => String(i).padStart(4,' ')).join('');
+
 // ── Sensor bars canvas ───────────────────────────────────────────────────────
 const barsCanvas = document.getElementById("sensorBarsCanvas");
 const barsCtx    = barsCanvas.getContext("2d");
@@ -535,6 +541,8 @@ const sse = new MobotSSE("/api/state", d => {
     // P1 sensors
     const raw=d.sensor_raw||Array(16).fill(0);
     drawBars(raw);
+    document.getElementById("sChValues").textContent =
+      raw.map(v => String(v).padStart(4,' ')).join('');
     document.getElementById("s1LinePos").textContent=fmt(d.line_pos,3);
     const lp=d.line_pos||0;
     const fill=document.getElementById("s1BarFill");
