@@ -38,19 +38,22 @@ def _default_port() -> str:
     return "/dev/ttyACM0"
 
 
-def normalize(raw: int, mn: int, mx: int) -> int:
-    if mx <= mn:
-        return 0
-    if raw <= mn:
-        return 0
-    if raw >= mx:
-        return 1000
-    return int((raw - mn) * 1000 / (mx - mn))
+MEAN_SCALE = 7   # must match firmware constant
 
 
-def compute(raw: list[int], cal_min: list[int], cal_max: list[int]):
-    """Compute line_pos and confidence from raw ADC values."""
-    norm = [1000 - normalize(raw[i], cal_min[i], cal_max[i]) for i in range(CHANNELS)]
+def compute(raw: list[int], _cal_min=None, _cal_max=None):
+    """Compute line_pos and confidence using mean-relative normalization.
+
+    Matches firmware send_packet(): white line = dip below array mean.
+    Immune to global illumination shifts (sun/shade).
+    """
+    mean_val = sum(raw) / CHANNELS
+    norm = []
+    for v in raw:
+        dev = mean_val - v          # positive = below mean = white line
+        n   = int(dev * MEAN_SCALE)
+        norm.append(max(0, min(1000, n)))
+
     total = sum(norm)
     flags = sum(1 << i for i in range(CHANNELS) if norm[i] > 500)
 
