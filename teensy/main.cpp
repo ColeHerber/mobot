@@ -56,6 +56,19 @@ static const uint16_t EEPROM_MAGIC = 0xAB12;
 uint16_t cal_min[NUM_SENSORS];
 uint16_t cal_max[NUM_SENSORS];
 
+// ─── Adaptive calibration ─────────────────────────────────────────────────────
+// In run mode the sensor boundaries track the live signal automatically.
+//   • New extreme → snap immediately (catches a new brighter/darker surface at once)
+//   • Otherwise   → relax inward by ADAPT_RELAX counts each sample so stale
+//                   extremes from a previous surface are gradually forgotten.
+//
+// At 200 Hz: ADAPT_RELAX=1 → ~200 counts/s drift.
+// ADAPT_MIN_SPAN prevents the window from collapsing when the line is absent.
+static const uint16_t ADAPT_RELAX    = 1;    // counts per sample to relax each bound
+static const uint16_t ADAPT_MIN_SPAN = 200;  // never let span shrink below this
+
+static bool adapt_seeded = false;
+
 // ─── Mode ────────────────────────────────────────────────────────────────────
 enum Mode { MODE_RUN, MODE_CALIBRATE };
 Mode current_mode = MODE_RUN;
@@ -111,6 +124,35 @@ void reset_calibration() {
     }
 }
 
+// Seed cal_min/cal_max from the first live reading when no valid EEPROM exists.
+// Only acts when cal still holds the "no calibration" defaults (0 / 4095).
+void seed_cal_from_raw(uint16_t raw[NUM_SENSORS]) {
+    for (int i = 0; i < NUM_SENSORS; i++) {
+        if (cal_min[i] == 0 && cal_max[i] == 4095) {
+            uint16_t v = raw[i];
+            cal_min[i] = (v > 400)  ? v - 400 : 0;
+            cal_max[i] = (v + 400 < 4095) ? v + 400 : 4095;
+        }
+    }
+}
+
+// Adaptive update called every run-mode packet.
+// Snaps outward instantly; relaxes inward slowly so old surface extremes fade.
+void adapt_cal(uint16_t raw[NUM_SENSORS]) {
+    for (int i = 0; i < NUM_SENSORS; i++) {
+        if (raw[i] < cal_min[i]) {
+            cal_min[i] = raw[i];                          // new low — snap
+        } else if (cal_max[i] - cal_min[i] > ADAPT_MIN_SPAN + ADAPT_RELAX) {
+            cal_min[i] += ADAPT_RELAX;                    // relax min upward
+        }
+        if (raw[i] > cal_max[i]) {
+            cal_max[i] = raw[i];                          // new high — snap
+        } else if (cal_max[i] - cal_min[i] > ADAPT_MIN_SPAN + ADAPT_RELAX) {
+            cal_max[i] -= ADAPT_RELAX;                    // relax max downward
+        }
+    }
+}
+
 // ─── CTRL dimming ────────────────────────────────────────────────────────────
 // Reset CTRL pin to level 0 (100%) then advance to target level.
 // Reset: hold low >1 ms. Each advance: pulse low 1 µs, high 1 µs.
@@ -152,6 +194,11 @@ uint16_t normalize(uint16_t raw, int ch) {
 
 // ─── Packet build & send ─────────────────────────────────────────────────────
 void send_packet(uint16_t raw[NUM_SENSORS]) {
+    // Seed on first packet (only fires when EEPROM was blank)
+    if (!adapt_seeded) { seed_cal_from_raw(raw); adapt_seeded = true; }
+    // Adapt calibration bounds to current surface every packet
+    adapt_cal(raw);
+
     uint16_t norm[NUM_SENSORS];
     uint32_t weighted_sum = 0;
     uint32_t total = 0;
@@ -247,6 +294,7 @@ void loop() {
         if (cmd == 'C' || cmd == 'c') {
             current_mode = MODE_CALIBRATE;
             reset_calibration();
+            adapt_seeded = false;   // re-seed from live data when run mode resumes
             Serial.println("CAL_START");
         } else if (cmd == 'R' || cmd == 'r') {
             current_mode = MODE_RUN;
