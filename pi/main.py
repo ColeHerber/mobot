@@ -298,6 +298,8 @@ def main():
                         help="Path to route.yaml")
     parser.add_argument("--no-web", action="store_true",
                         help="Disable the Flask web server")
+    parser.add_argument("--teleop-only", action="store_true",
+                        help="Teleop mode: VESC + servo + web only, no PID/sensors")
     args = parser.parse_args()
 
     base = os.path.join(os.path.dirname(__file__), "..", "config")
@@ -323,11 +325,16 @@ def main():
             log.warning("WebServer init failed (continuing without web): %s", e)
             web_server = None
 
-    curses.wrapper(_run_with_web, args, config, route,
-                   config_path, route_path, web_server)
+    if args.teleop_only:
+        curses.wrapper(_run_with_web, args, config, route,
+                       config_path, route_path, web_server, teleop_only=True)
+    else:
+        curses.wrapper(_run_with_web, args, config, route,
+                       config_path, route_path, web_server)
 
 
-def _run_with_web(stdscr, args, config, route, config_path, route_path, web_server):
+def _run_with_web(stdscr, args, config, route, config_path, route_path,
+                  web_server, teleop_only=False):
     """Thin wrapper that wires SharedState into WebServer before starting."""
     import curses as _curses
     _curses.curs_set(0)
@@ -346,10 +353,69 @@ def _run_with_web(stdscr, args, config, route, config_path, route_path, web_serv
             log.warning("WebServer start failed: %s", e)
             web_server = None
 
-    # Delegate to main run loop (passing state implicitly via closure would be
-    # messy — instead re-enter run() with a pre-built state).
-    _run_loop(stdscr, args, config, route, config_path, route_path,
-              web_server, state)
+    if teleop_only:
+        _teleop_loop(stdscr, args, config, web_server, state)
+    else:
+        _run_loop(stdscr, args, config, route, config_path, route_path,
+                  web_server, state)
+
+
+def _teleop_loop(stdscr, args, config, web_server, state):
+    """Minimal loop: VESC + servo + teleop only. No sensors, no PID."""
+    vesc  = VESCInterface(state, config)
+    vesc.start()
+    servo = ServoControl(config)
+    if web_server is not None:
+        web_server.set_servo(servo)
+
+    loop_count = 0
+    last_time  = time.monotonic()
+
+    try:
+        while True:
+            now = time.monotonic()
+            dt  = now - last_time
+            last_time = now
+
+            robot_en, teleop_en, tele_steer, tele_norm, tele_t = state.get(
+                "robot_enabled", "teleop_enabled", "teleop_steering",
+                "teleop_throttle", "teleop_last_cmd",
+            )
+
+            steering = 0.0
+            throttle = 0.0
+
+            if robot_en and teleop_en:
+                if tele_t <= 0.0 or (time.monotonic() - tele_t) > 0.3:
+                    tele_norm = 0.0
+                steering = max(-1.0, min(1.0, tele_steer))
+                throttle = tele_norm * _TELEOP_MAX_MS
+
+            servo.set_steering(steering)
+            vesc.set_throttle(throttle / config["speed"]["base_ms"])
+            state.update_control(steering, throttle, "TELEOP" if robot_en else "IDLE")
+
+            if loop_count % 5 == 0:
+                draw_display(stdscr, state, 1.0 / max(dt, 1e-6), False)
+
+            loop_count += 1
+            ch = stdscr.getch()
+            if ch in (ord('q'), 3):
+                break
+
+            elapsed = time.monotonic() - now
+            sleep_t = LOOP_DT - elapsed
+            if sleep_t > 0:
+                time.sleep(sleep_t)
+
+    except KeyboardInterrupt:
+        pass
+    finally:
+        log.info("Teleop shutdown")
+        state.set(running=False)
+        vesc.set_throttle(0)
+        time.sleep(0.1)
+        servo.stop()
 
 
 def _run_loop(stdscr, args, config, route, config_path, route_path,
@@ -458,12 +524,15 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                 sm_state = "TELEOP"
 
             # ── Actuators ─────────────────────────────────────────────────────
-            if not dry_run:
+            robot_en = state.get("robot_enabled")[0]
+            if not dry_run and robot_en:
                 servo.set_steering(steering)
                 vesc.set_throttle(throttle / config["speed"]["base_ms"])
             else:
-                steering = 0.0
-                throttle = 0.0
+                if not robot_en:
+                    vesc.set_throttle(0)
+                steering = 0.0 if not robot_en else steering
+                throttle = 0.0 if not robot_en else throttle
 
             state.update_control(steering, throttle, sm_state)
 

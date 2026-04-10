@@ -42,6 +42,9 @@ class SharedState:
         # ── State machine ─────────────────────────────────────────────────────
         self.state: str = "LINE_FOLLOW"
 
+        # ── Robot enable ──────────────────────────────────────────────────────
+        self.robot_enabled: bool = False     # must be set True via web before actuators run
+
         # ── Teleop ────────────────────────────────────────────────────────────
         self.teleop_enabled:  bool  = False
         self.teleop_steering: float = 0.0   # [-1.0, +1.0]

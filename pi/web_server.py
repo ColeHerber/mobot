@@ -179,11 +179,11 @@ class WebServer:
         try:
             (line_pos, conf, heading, x, y, sm_state,
              steering, throttle, vel, voltage, flags,
-             raw, rpm) = s.get(
+             raw, rpm, robot_en) = s.get(
                 "line_position", "sensor_confidence", "heading_rad",
                 "x", "y", "state", "steering", "throttle",
                 "wheel_velocity_ms", "input_voltage", "sensor_flags",
-                "sensor_raw", "motor_rpm",
+                "sensor_raw", "motor_rpm", "robot_enabled",
             )
         except Exception:
             return {}
@@ -202,6 +202,7 @@ class WebServer:
             "sensor_raw":   raw if raw is not None else [0] * 16,
             "sensor_flags": _safe(flags),
             "motor_rpm":    _safe(rpm),
+            "robot_enabled": bool(robot_en),
         }
 
     def _read_yaml_as_dict(self, path: str) -> dict:
@@ -422,6 +423,16 @@ class WebServer:
                 os.kill(os.getpid(), signal.SIGTERM)
             threading.Thread(target=_signal, daemon=True).start()
             return jsonify({"ok": True})
+
+        # ── Robot enable / disable ───────────────────────────────────────────
+
+        @app.route("/api/enable", methods=["POST"])
+        def enable():
+            body = request.get_json(force=True, silent=True) or {}
+            enabled = bool(body.get("enabled", True))
+            self._state.set(robot_enabled=enabled)
+            log.info("Robot %s via web API", "ENABLED" if enabled else "DISABLED")
+            return jsonify({"ok": True, "enabled": enabled})
 
         # ── Teleop ────────────────────────────────────────────────────────────
 

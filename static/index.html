@@ -23,6 +23,17 @@
   .status-bar .label { color:var(--text-dim); }
   .status-bar .val { color:var(--text-head); }
   .state-badge { padding:.1rem .5rem; border-radius:4px; font-weight:bold; font-size:.8rem; }
+
+  .enable-bar { display:flex; justify-content:center; align-items:center; gap:1.5rem;
+                padding:1rem; border-bottom:1px solid var(--border);
+                background:var(--bg-card); }
+  #btnEnable { font-size:1.4rem; font-weight:bold; letter-spacing:.1em;
+               padding:.75rem 3rem; border-radius:8px; border:3px solid #555;
+               background:#1a1a1a; color:#555; cursor:pointer; transition:all .15s; }
+  #btnEnable.armed  { border-color:var(--green); color:var(--green); background:#0a1f0a; }
+  #btnEnable.armed:hover { background:var(--green); color:#000; }
+  #btnEnable.live   { border-color:var(--green); background:var(--green); color:#000; }
+  #enableStatus { font-size:.8rem; color:var(--text-dim); font-family:monospace; }
 </style>
 </head>
 <body>
@@ -35,6 +46,11 @@
   <div class="item"><span class="label">Speed</span><span class="val" id="hSpeed">— m/s</span></div>
   <div class="item"><span class="label">Battery</span><span class="val" id="hVolt">—V</span></div>
   <div class="item"><span class="label">Conf</span><span class="val" id="hConf">—</span></div>
+</div>
+
+<div class="enable-bar">
+  <button id="btnEnable" onclick="toggleEnable()">ENABLE ROBOT</button>
+  <span id="enableStatus">waiting for connection…</span>
 </div>
 
 <div class="hub">
@@ -67,6 +83,39 @@
 
 <script src="/static/js/mobot.js"></script>
 <script>
+let robotEnabled = false;
+
+function updateEnableUI(enabled) {
+  robotEnabled = enabled;
+  const btn = document.getElementById("btnEnable");
+  const sta = document.getElementById("enableStatus");
+  if (enabled) {
+    btn.textContent = "DISABLE ROBOT";
+    btn.className   = "live";
+    sta.textContent = "ROBOT ENABLED — actuators live";
+    sta.style.color = "var(--green)";
+  } else {
+    btn.textContent = "ENABLE ROBOT";
+    btn.className   = "armed";
+    sta.textContent = "disabled — actuators off";
+    sta.style.color = "";
+  }
+}
+
+async function toggleEnable() {
+  const want = !robotEnabled;
+  try {
+    await fetch("/api/enable", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enabled: want }),
+    });
+    updateEnableUI(want);
+  } catch(e) {
+    document.getElementById("enableStatus").textContent = "error — check connection";
+  }
+}
+
 const sse = new MobotSSE("/api/state", d => {
   document.getElementById("hState").textContent  = d.state || "—";
   document.getElementById("hState").style.background = stateColor(d.state) + "33";
@@ -75,8 +124,13 @@ const sse = new MobotSSE("/api/state", d => {
   document.getElementById("hVolt").textContent   = fmt(d.input_voltage, 1) + "V";
   document.getElementById("hVolt").style.color   = batteryColor(d.input_voltage);
   document.getElementById("hConf").textContent   = d.confidence ?? "—";
+  if (d.robot_enabled !== undefined) updateEnableUI(d.robot_enabled);
 });
 sse.connect();
+
+// Show armed state once connected (robot not yet enabled)
+document.getElementById("btnEnable").className = "armed";
+document.getElementById("enableStatus").textContent = "connecting…";
 </script>
 </body>
 </html>
