@@ -32,7 +32,7 @@ vesc:
 
 sensor:
   low_confidence_threshold: 30   # below this → DEAD_RECKON state (0–255 scale)
-  dead_reckon_steer: 0.5         # steering bias when line lost; positive = away from sensors 13-15 (left)
+  dead_reckon_steer: 1         # steering bias when line lost; positive = away from sensors 13-15 (left)
   port: /dev/serial/by-id/usb-Teensyduino_USB_Serial_14421340-if00             # Teensy USB serial device
   baud: 115200
 
