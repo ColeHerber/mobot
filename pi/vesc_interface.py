@@ -155,6 +155,7 @@ class VESCInterface:
         self._baud       = int(cfg_vesc.get("baud", 115200))
         self._wheel_circ = float(cfg_vesc.get("wheel_circumference_m", 0.204))
         self._gear_ratio = float(cfg_vesc.get("gear_ratio", 8.0))
+        self._max_duty   = float(cfg_vesc.get("max_duty", 1.0))
 
         self._throttle      = 0.0   # commanded duty cycle [-1.0, +1.0]
         self._throttle_lock = threading.Lock()
@@ -167,8 +168,8 @@ class VESCInterface:
         self._thread.start()
 
     def set_throttle(self, duty: float):
-        """Set commanded duty cycle. Thread-safe. duty in [-1.0, +1.0]."""
-        duty = max(-1.0, min(1.0, duty))
+        """Set commanded duty cycle. Thread-safe. duty in [-max_duty, +max_duty]."""
+        duty = max(-self._max_duty, min(self._max_duty, duty))
         with self._throttle_lock:
             self._throttle = duty
 
