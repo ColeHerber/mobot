@@ -158,7 +158,7 @@ void send_packet(uint16_t raw[NUM_SENSORS]) {
     uint16_t flags = 0;
 
     for (int i = 0; i < NUM_SENSORS; i++) {
-        norm[i] = normalize(raw[i], i);
+        norm[i] = 1000 - normalize(raw[i], i);  // invert: white line (low ADC) → high norm
         // Weighted centroid: sensor positions mapped to [-7500, +7500] in units of 1000/step
         // Position of sensor i (0-indexed): maps to -7.5 to +7.5 (in steps of 1.0)
         // Scaled by 1000 to keep integer math: -7500 to +7500
