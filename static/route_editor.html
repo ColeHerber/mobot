@@ -60,6 +60,12 @@
                   border-radius:6px; width:100%; padding:.5rem; cursor:pointer; font-size:.82rem;
                   margin-top:.5rem; }
   .add-gate-btn:hover { border-color:var(--green); }
+  /* Drop landmark rows */
+  .drop-row { background:var(--bg-card); border:1px solid #9966004d; border-radius:7px;
+              padding:.6rem 1rem; margin-bottom:.5rem; }
+  .drop-row .drop-label { font-size:.78rem; color:#cc8800; font-family:monospace;
+                          margin-bottom:.4rem; display:flex; align-items:center; gap:.5rem; }
+  .drop-coords { display:flex; gap:.5rem; flex-wrap:wrap; }
   /* Action buttons */
   .action-row { display:flex; gap:.75rem; padding:.75rem 1rem; }
   .btn-save    { flex:1; background:var(--green); color:#000; border:none; border-radius:7px;
@@ -88,10 +94,11 @@
   <!-- Course map -->
   <div class="map-panel">
     <div class="map-toolbar">
-      Drag gates/intersections to reposition &nbsp;|&nbsp; click empty space to add gate &nbsp;|&nbsp;
+      Drag gates/intersections/drops to reposition &nbsp;|&nbsp; click empty space to add gate &nbsp;|&nbsp;
       <span style="color:#ff44ff">✕</span> intersection &nbsp;
       <span style="color:#4488ff">○</span> gate &nbsp;
-      <span style="color:#ff9900">⬦</span> chord
+      <span style="color:#ff9900">⬦</span> chord &nbsp;
+      <span style="color:#cc8800">▭</span> drop zone
     </div>
     <canvas id="mapCanvas"></canvas>
   </div>
@@ -101,6 +108,10 @@
     <div class="section">
       <h3>Intersection Turns</h3>
       <div id="intList"><span style="color:var(--text-dim)">Loading…</span></div>
+    </div>
+    <div class="section">
+      <h3>Drop Zones</h3>
+      <div id="dropList"><span style="color:var(--text-dim)">Loading…</span></div>
     </div>
     <div class="section">
       <h3>Gates</h3>
@@ -121,7 +132,7 @@
 <script>
 const canvas = document.getElementById("mapCanvas");
 const ctx    = canvas.getContext("2d");
-let routeData = { intersections:[], gates:[] };
+let routeData = { intersections:[], gates:[], drop_landmarks:[] };
 let mapPath   = [];
 let vpX=0, vpY=0, vpScale=60;
 let addingGate = false;
@@ -160,6 +171,37 @@ function drawMap() {
     mapPath.forEach(p => { const [x,y]=worldToCanvas(p.x,p.y); ctx.lineTo(x,y); });
     ctx.stroke();
   }
+
+  // Drop zones — amber bands spanning the watch window
+  (routeData.drop_landmarks||[]).forEach((d, i) => {
+    const r = d.watch_radius_m || 2.5;
+    const [x0] = worldToCanvas(d.x - r, 0);
+    const [x1] = worldToCanvas(d.x + r, 0);
+    const [cx, cy] = worldToCanvas(d.x, d.y || 0);
+    // Zone band (full canvas height)
+    ctx.fillStyle = "#99660018";
+    ctx.fillRect(x0, 0, x1 - x0, canvas.height);
+    // Side boundary lines
+    ctx.strokeStyle = "#cc8800aa"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, canvas.height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, 0); ctx.lineTo(x1, canvas.height); ctx.stroke();
+    ctx.setLineDash([]);
+    // Center drag handle — small diamond
+    const hs = 8;
+    ctx.strokeStyle = "#cc8800"; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - hs); ctx.lineTo(cx + hs, cy);
+    ctx.lineTo(cx, cy + hs); ctx.lineTo(cx - hs, cy);
+    ctx.closePath(); ctx.stroke();
+    ctx.fillStyle = "#cc880033";
+    ctx.fill();
+    // Label
+    ctx.fillStyle = "#cc8800"; ctx.font = "bold 10px monospace";
+    ctx.fillText("▲ " + d.id, cx + hs + 4, cy + 4);
+    // Entry pitch annotation
+    ctx.fillStyle = "#996600"; ctx.font = "9px monospace";
+    ctx.fillText(`±${r.toFixed(1)}m  entry:${(d.entry_pitch_deg||6)}°`, x0 + 4, cy + hs + 14);
+  });
 
   // Gates (regular = blue circle, chord = orange diamond)
   (routeData.gates||[]).forEach((g,i) => {
@@ -211,6 +253,7 @@ function fitView() {
   const pts = [
     ...(routeData.intersections||[]).map(p=>({x:p.x,y:p.y||0})),
     ...(routeData.gates||[]).map(g=>({x:g.x,y:g.y||0})),
+    ...(routeData.drop_landmarks||[]).map(d=>({x:d.x,y:d.y||0})),
     ...mapPath.slice(0,1000).map(p=>({x:p.x,y:p.y})),
     {x:0,y:0}
   ];
@@ -283,6 +326,55 @@ function renderIntList() {
   });
 }
 
+// ── Render drop landmark list ────────────────────────────────────────────────
+function renderDropList() {
+  const el = document.getElementById("dropList");
+  const drops = routeData.drop_landmarks || [];
+  if (!drops.length) {
+    el.innerHTML = '<span style="color:var(--text-dim)">No drop_landmarks in route.yaml</span>';
+    return;
+  }
+  el.innerHTML = "";
+  drops.forEach((d, i) => {
+    const div = document.createElement("div");
+    div.className = "drop-row";
+    div.innerHTML = `
+      <div class="drop-label">▲ ${d.id}</div>
+      <div class="drop-coords">
+        <div class="coord-field">
+          <label>x</label>
+          <input class="coord-input drop-coord" type="number" step="0.1"
+                 data-i="${i}" data-field="x" value="${fmt(d.x,2)}" title="Snap position (m from start)">
+        </div>
+        <div class="coord-field">
+          <label>watch±</label>
+          <input class="coord-input drop-coord" type="number" step="0.1" min="0.2"
+                 data-i="${i}" data-field="watch_radius_m" value="${fmt(d.watch_radius_m||2.5,2)}" title="Arm window radius (m)">
+        </div>
+        <div class="coord-field">
+          <label>entry°</label>
+          <input class="coord-input drop-coord" type="number" step="0.5" min="1"
+                 data-i="${i}" data-field="entry_pitch_deg" value="${fmt(d.entry_pitch_deg||6,1)}" title="Pitch threshold to detect ramp (deg)">
+        </div>
+        <div class="coord-field">
+          <label>level°</label>
+          <input class="coord-input drop-coord" type="number" step="0.5" min="0.5"
+                 data-i="${i}" data-field="level_pitch_deg" value="${fmt(d.level_pitch_deg||3,1)}" title="Pitch to declare leveled out (deg)">
+        </div>
+      </div>
+    `;
+    el.appendChild(div);
+  });
+  document.querySelectorAll(".drop-coord").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const i = parseInt(inp.dataset.i);
+      const f = inp.dataset.field;
+      const v = parseFloat(inp.value);
+      if (!isNaN(v)) { routeData.drop_landmarks[i][f] = v; drawMap(); }
+    });
+  });
+}
+
 // ── Render gate list ─────────────────────────────────────────────────────────
 function renderGateList() {
   const el = document.getElementById("gateList");
@@ -342,19 +434,23 @@ function renderGateList() {
 let dragTarget = null;  // {type:"gate"|"int", index:int}
 
 function hitTest(wx, wy) {
-  // Test gates first
+  // Gates
   for (let i = routeData.gates.length - 1; i >= 0; i--) {
     const g = routeData.gates[i];
-    const dx = g.x - wx, dy = (g.y||0) - wy;
-    if (Math.hypot(dx, dy) <= Math.max(g.radius_m||0.5, 12/vpScale))
+    if (Math.hypot(g.x - wx, (g.y||0) - wy) <= Math.max(g.radius_m||0.5, 12/vpScale))
       return {type:"gate", index:i};
   }
-  // Then intersections
+  // Intersections
   for (let i = routeData.intersections.length - 1; i >= 0; i--) {
     const wp = routeData.intersections[i];
-    const dx = wp.x - wx, dy = (wp.y||0) - wy;
-    if (Math.hypot(dx, dy) <= Math.max(wp.radius_m||0.3, 12/vpScale))
+    if (Math.hypot(wp.x - wx, (wp.y||0) - wy) <= Math.max(wp.radius_m||0.3, 12/vpScale))
       return {type:"int", index:i};
+  }
+  // Drop landmark center handles
+  for (let i = (routeData.drop_landmarks||[]).length - 1; i >= 0; i--) {
+    const d = routeData.drop_landmarks[i];
+    if (Math.hypot(d.x - wx, (d.y||0) - wy) <= Math.max(16/vpScale, 0.3))
+      return {type:"drop", index:i};
   }
   return null;
 }
@@ -383,6 +479,9 @@ canvas.addEventListener("mousemove", e => {
   if (dragTarget.type === "gate") {
     routeData.gates[dragTarget.index].x = rx;
     routeData.gates[dragTarget.index].y = ry;
+  } else if (dragTarget.type === "drop") {
+    routeData.drop_landmarks[dragTarget.index].x = rx;
+    // y stays 0 — drops are always on the course centerline
   } else {
     routeData.intersections[dragTarget.index].x = rx;
     routeData.intersections[dragTarget.index].y = ry;
@@ -394,6 +493,7 @@ function endDrag() {
   if (!dragTarget) return;
   // Sync inputs after drag ends
   if (dragTarget.type === "gate") renderGateList();
+  else if (dragTarget.type === "drop") renderDropList();
   else renderIntList();
   drawMap();
   dragTarget = null;
@@ -450,10 +550,12 @@ document.getElementById("btnRestart").addEventListener("click", async () => {
 // ── Load data ────────────────────────────────────────────────────────────────
 async function loadAll() {
   try {
-    routeData = await fetch("/api/route").then(r=>r.json()) || {intersections:[],gates:[]};
-    routeData.intersections = routeData.intersections || [];
-    routeData.gates         = routeData.gates || [];
+    routeData = await fetch("/api/route").then(r=>r.json()) || {intersections:[],gates:[],drop_landmarks:[]};
+    routeData.intersections   = routeData.intersections   || [];
+    routeData.gates           = routeData.gates           || [];
+    routeData.drop_landmarks  = routeData.drop_landmarks  || [];
     renderIntList();
+    renderDropList();
     renderGateList();
   } catch(e) {}
 

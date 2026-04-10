@@ -44,10 +44,19 @@ POLL_DT = 1.0 / POLL_HZ
 
 def quat_to_yaw(w: float, x: float, y: float, z: float) -> float:
     """Extract yaw (rotation about Z axis) from a quaternion, in degrees."""
-    # yaw = atan2(2*(w*z + x*y), 1 - 2*(y² + z²))
-    siny_cosp = 2.0 * (w * z + x * y)
-    cosy_cosp = 1.0 - 2.0 * (y * y + z * z)
-    return math.degrees(math.atan2(siny_cosp, cosy_cosp))
+    return math.degrees(math.atan2(2.0 * (w * z + x * y),
+                                   1.0 - 2.0 * (y * y + z * z)))
+
+
+def quat_to_pitch(w: float, x: float, y: float, z: float) -> float:
+    """Extract pitch (rotation about X axis, nose up/down) in degrees."""
+    return math.degrees(math.atan2(2.0 * (w * x + y * z),
+                                   1.0 - 2.0 * (x * x + y * y)))
+
+
+def quat_to_roll(w: float, x: float, y: float, z: float) -> float:
+    """Extract roll (rotation about Y axis, lean left/right) in degrees."""
+    return math.degrees(math.asin(max(-1.0, min(1.0, 2.0 * (w * y - z * x)))))
 
 
 def main():
@@ -80,8 +89,10 @@ def main():
                 qi, qj, qk, qr = quat
                 # Adafruit returns (i, j, k, real) = (x, y, z, w)
                 w, x, y, z = qr, qi, qj, qk
-                yaw = quat_to_yaw(w, x, y, z)
-                print(f"\rYaw: {yaw:+7.2f}°  | "
+                yaw   = quat_to_yaw(w, x, y, z)
+                pitch = quat_to_pitch(w, x, y, z)
+                roll  = quat_to_roll(w, x, y, z)
+                print(f"\rYaw: {yaw:+7.2f}°  Pitch: {pitch:+7.2f}°  Roll: {roll:+7.2f}°  | "
                       f"w: {w:+.4f}  x: {x:+.4f}  y: {y:+.4f}  z: {z:+.4f}   ",
                       end="", flush=True)
             except Exception as e:
