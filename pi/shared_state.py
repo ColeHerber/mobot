@@ -30,6 +30,7 @@ class SharedState:
         self.wheel_velocity_ms: float = 0.0  # m/s, positive = forward
         self.motor_rpm: float = 0.0
         self.input_voltage: float = 0.0      # LiPo voltage for monitoring
+        self.vesc_connected: bool = False    # True when VESC USB is open and writing
 
         # ── Odometry ──────────────────────────────────────────────────────────
         self.x: float = 0.0                  # meters from start

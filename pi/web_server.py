@@ -92,6 +92,7 @@ class _StubSharedState:
         self.state              = "IDLE"
         self.running            = True
         self.reset_odometry     = False
+        self.vesc_connected     = False
         self._lock              = threading.Lock()
 
     def get(self, *fields):
@@ -179,30 +180,31 @@ class WebServer:
         try:
             (line_pos, conf, heading, x, y, sm_state,
              steering, throttle, vel, voltage, flags,
-             raw, rpm, robot_en) = s.get(
+             raw, rpm, robot_en, vesc_ok) = s.get(
                 "line_position", "sensor_confidence", "heading_rad",
                 "x", "y", "state", "steering", "throttle",
                 "wheel_velocity_ms", "input_voltage", "sensor_flags",
-                "sensor_raw", "motor_rpm", "robot_enabled",
+                "sensor_raw", "motor_rpm", "robot_enabled", "vesc_connected",
             )
         except Exception:
             return {}
 
         return {
-            "line_pos":     _safe(line_pos),
-            "confidence":   _safe(conf),
-            "heading_rad":  _safe(heading),
-            "x":            _safe(x),
-            "y":            _safe(y),
-            "state":        _safe(sm_state, "UNKNOWN"),
-            "steering":     _safe(steering),
-            "throttle":     _safe(throttle),
-            "wheel_vel_ms": _safe(vel),
-            "input_voltage":_safe(voltage),
-            "sensor_raw":   raw if raw is not None else [0] * 16,
-            "sensor_flags": _safe(flags),
-            "motor_rpm":    _safe(rpm),
+            "line_pos":      _safe(line_pos),
+            "confidence":    _safe(conf),
+            "heading_rad":   _safe(heading),
+            "x":             _safe(x),
+            "y":             _safe(y),
+            "state":         _safe(sm_state, "UNKNOWN"),
+            "steering":      _safe(steering),
+            "throttle":      _safe(throttle),
+            "wheel_vel_ms":  _safe(vel),
+            "input_voltage": _safe(voltage),
+            "sensor_raw":    raw if raw is not None else [0] * 16,
+            "sensor_flags":  _safe(flags),
+            "motor_rpm":     _safe(rpm),
             "robot_enabled": bool(robot_en),
+            "vesc_connected": bool(vesc_ok),
         }
 
     def _read_yaml_as_dict(self, path: str) -> dict:

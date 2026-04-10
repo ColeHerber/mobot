@@ -25,8 +25,9 @@ except ImportError:
 
 
 class VESCInterface:
-    """Background thread that manages the VESC UART connection.
+    """Background thread that manages the VESC USB-CDC serial connection.
 
+    Physical interface: USB (ttyACM*). pyvesc handles packet framing.
     Thread safety: set_throttle() is called from the main loop;
     the thread reads throttle and writes velocity/voltage into shared state.
     """
@@ -41,6 +42,7 @@ class VESCInterface:
 
         self._throttle = 0.0          # commanded duty cycle [-1.0, +1.0]
         self._throttle_lock = threading.Lock()
+        self._connected = False       # True when port is open and write succeeds
 
         self._thread = threading.Thread(target=self._run, name="vesc_interface",
                                         daemon=True)
@@ -60,11 +62,19 @@ class VESCInterface:
         # velocity  = wheel_rpm / 60 * circumference
         return (rpm / self._gear_ratio / 60.0) * self._wheel_circ
 
+    @property
+    def connected(self) -> bool:
+        return self._connected
+
     def _open_port(self) -> serial.Serial:
+        self._connected = False
+        self._state.set(vesc_connected=False)
         while True:
             try:
                 ser = serial.Serial(self._port, self._baud, timeout=0.05)
                 log.info("VESC USB opened on %s", self._port)
+                self._connected = True
+                self._state.set(vesc_connected=True)
                 return ser
             except serial.SerialException as e:
                 log.warning("Cannot open VESC port %s: %s — retrying in 2s",
@@ -82,9 +92,11 @@ class VESCInterface:
 
         SEND_INTERVAL  = 0.02   # 50 Hz throttle send
         POLL_INTERVAL  = 0.02   # 50 Hz GetValues poll
+        MAX_WRITE_FAILS = 3
         last_send = 0.0
         last_poll = 0.0
         read_buf  = bytearray()
+        write_fail_count = 0
 
         while self._state.running:
             now = time.monotonic()
@@ -95,13 +107,31 @@ class VESCInterface:
                     duty = self._throttle
                 try:
                     raw = int(duty * 100000)
-                    if abs(duty) > 0.01:
+                    if abs(duty) > 0.001:
                         log.info("VESC duty=%.4f raw=%d", duty, raw)
                     msg = pyvesc.encode(SetDutyCycle(raw))
                     ser.write(msg)
                     last_send = now
+                    write_fail_count = 0
+                    if not self._connected:
+                        self._connected = True
+                        self._state.set(vesc_connected=True)
                 except Exception as e:
-                    log.warning("VESC write error: %s", e)
+                    write_fail_count += 1
+                    log.warning("VESC write error (%d/%d): %s",
+                                write_fail_count, MAX_WRITE_FAILS, e)
+                    last_send = now  # reset timer to avoid hammering on failure
+                    if write_fail_count >= MAX_WRITE_FAILS:
+                        log.warning("VESC: too many write failures — reconnecting")
+                        self._connected = False
+                        self._state.set(vesc_connected=False)
+                        write_fail_count = 0
+                        try:
+                            ser.close()
+                        except Exception:
+                            pass
+                        ser = self._open_port()
+                        read_buf.clear()
 
             # ── Request telemetry ─────────────────────────────────────────────
             if now - last_poll >= POLL_INTERVAL:
@@ -117,6 +147,9 @@ class VESCInterface:
                 incoming = ser.read(ser.in_waiting or 0)
             except serial.SerialException as e:
                 log.warning("VESC disconnect: %s — reconnecting", e)
+                self._connected = False
+                self._state.set(vesc_connected=False)
+                write_fail_count = 0
                 ser.close()
                 ser = self._open_port()
                 read_buf.clear()
