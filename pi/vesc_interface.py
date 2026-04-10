@@ -94,11 +94,14 @@ class VESCInterface:
                 with self._throttle_lock:
                     duty = self._throttle
                 try:
-                    msg = pyvesc.encode(SetDutyCycle(int(duty * 100000)))
+                    raw = int(duty * 100000)
+                    if abs(duty) > 0.01:
+                        log.info("VESC duty=%.4f raw=%d", duty, raw)
+                    msg = pyvesc.encode(SetDutyCycle(raw))
                     ser.write(msg)
                     last_send = now
                 except Exception as e:
-                    log.debug("VESC write error: %s", e)
+                    log.warning("VESC write error: %s", e)
 
             # ── Request telemetry ─────────────────────────────────────────────
             if now - last_poll >= POLL_INTERVAL:
