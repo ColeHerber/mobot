@@ -541,12 +541,10 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             _hill_thresh_deg = _imu_cfg.get("hill_pitch_threshold_deg", 0.0)
             if _hill_thresh_deg > 0.0:
                 import math as _math
-                _hill_speed = float(_imu_cfg.get("hill_speed_ms", config.get("speed", {}).get("gate_ms", 0.01)))
                 if pitch < -_math.radians(_hill_thresh_deg):
                     # On hill: P-control toward heading=0, dead reckon forward
                     _hill_kp = float(_imu_cfg.get("hill_heading_kp", -1.5))
                     steering = max(-1.0, min(1.0, _hill_kp * heading))
-                    throttle = _hill_speed
                     sm_state = "HILL"
                     _hill_active = True
                 else:
@@ -568,7 +566,6 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                             # Reverse dead reckon bias for 1 m post-hill
                             _dr_steer = float(config.get("sensor", {}).get("dead_reckon_steer", 1.0))
                             steering = max(-1.0, min(1.0, -_dr_steer))
-                            throttle = _hill_speed
                             sm_state = "POST_HILL"
 
             # ── Log state transitions ─────────────────────────────────────────
