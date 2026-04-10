@@ -592,7 +592,11 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             if robot_en and not prev_robot_en:
                 state.zero_heading()
                 sm.reset()
-                log.info("Heading zeroed, SM reset to LINE_FOLLOW on enable")
+                odo.reset(state.get("heading_rad")[0])
+                state.update_odometry(0.0, 0.0)
+                _hill_active   = False
+                _hill_exit_pos = None
+                log.info("Enable: heading zeroed, SM reset, odometry reset")
             prev_robot_en = robot_en
             duty = throttle / config["speed"]["base_ms"]
             if not dry_run and robot_en:
