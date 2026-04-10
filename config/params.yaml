@@ -9,7 +9,7 @@ pid:
 speed:
   base_ms: 0.1     # nominal forward speed (m/s) — increase after straight-line test
   gate_ms: 0.1     # speed near gates / dead-reckoning / intersection (m/s)
-  min_ms:  0.1     # minimum speed floor (m/s)
+  min_ms:  0.005     # minimum speed floor (m/s)
 
 servo:
   gpio_pin: 12          # Pi GPIO (BCM numbering) — physical pin 32, hardware PWM0
