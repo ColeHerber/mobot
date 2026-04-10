@@ -167,6 +167,9 @@
         <hr style="border-color:var(--border);margin:.5rem 0;">
         <div class="dim">Heading rate</div>
         <div class="med-val" id="imuRate">0.0 °/s</div>
+        <hr style="border-color:var(--border);margin:.5rem 0;">
+        <div class="dim">Pitch</div>
+        <div class="med-val" id="imuPitch">0.0°</div>
         <div class="dim" style="margin-top:.3rem;">BNO085 fusion, no drift</div>
       </div>
     </div>
@@ -560,6 +563,7 @@ const sse = new MobotSSE("/api/state", d => {
     drawCompass(yawDeg);
     document.getElementById("imuYawDeg").textContent=fmt(yawDeg,1)+"°";
     document.getElementById("imuRate").textContent=fmt(rate,1)+" °/s";
+    document.getElementById("imuPitch").textContent=fmt((d.pitch_rad||0)*180/Math.PI,1)+"°";
 
     // P3 VESC
     document.getElementById("vRPM").textContent=Math.round(d.motor_rpm||0);

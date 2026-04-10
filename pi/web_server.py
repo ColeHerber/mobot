@@ -179,10 +179,10 @@ class WebServer:
         """Build a JSON-serialisable state dict. All fields default to 0 if None."""
         s = self._state
         try:
-            (line_pos, conf, heading, x, y, sm_state,
+            (line_pos, conf, heading, pitch, x, y, sm_state,
              steering, throttle, vel, voltage, flags,
              raw, rpm, robot_en, vesc_ok, raw_pid) = s.get(
-                "line_position", "sensor_confidence", "heading_rad",
+                "line_position", "sensor_confidence", "heading_rad", "pitch_rad",
                 "x", "y", "state", "steering", "throttle",
                 "wheel_velocity_ms", "input_voltage", "sensor_flags",
                 "sensor_raw", "motor_rpm", "robot_enabled", "vesc_connected",
@@ -195,6 +195,7 @@ class WebServer:
             "line_pos":      _safe(line_pos),
             "confidence":    _safe(conf),
             "heading_rad":   _safe(heading),
+            "pitch_rad":     _safe(pitch),
             "x":             _safe(x),
             "y":             _safe(y),
             "state":         _safe(sm_state, "UNKNOWN"),
