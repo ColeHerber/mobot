@@ -2,9 +2,12 @@
 # Edit and restart to tune. All values are in SI units (m, s, rad) unless noted.
 
 pid:
-  kp: 1        # proportional gain on line position error
-  kd: 0.08         # derivative gain (on measurement, not error)
-  speed_kp: 0.5    # speed reduction factor: throttle -= speed_kp * |line_pos| * base
+  kp: 1                  # proportional gain on line position error
+  kd: 0.08               # derivative gain (on measurement, not error)
+  speed_ramp_up: 0.2     # m/s per second to accelerate when well-centered on line
+  speed_ramp_down: 0.8   # m/s per second to decelerate when off line / low confidence
+  speed_conf_min: 80     # minimum confidence (0–255) to count as "on line"
+  speed_pos_max: 0.3     # maximum |line_pos| to count as "well centered"
 
 speed:
   base_ms: 0.01     # nominal forward speed (m/s) — increase after straight-line test
@@ -25,7 +28,7 @@ vesc:
   baud: 115200
   wheel_circumference_m: 0.26   # ~65mm diameter tire (TT-02R stock)
   gear_ratio: 8.0                # motor rotations per wheel rotation
-  max_duty: 0.1                # hard duty-cycle cap (0.0–1.0); 0.25 = 25%
+  max_duty: 0.05                # hard duty-cycle cap (0.0–1.0); 0.25 = 25%
 
 sensor:
   low_confidence_threshold: 30   # below this → DEAD_RECKON state (0–255 scale)

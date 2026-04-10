@@ -236,7 +236,7 @@ def run(stdscr, args, config, route, config_path, route_path, web_server):
             state.update_odometry(odo.x, odo.y)
 
             # ── PID ───────────────────────────────────────────────────────────
-            pid_steer, pid_throttle = pid.compute(line_pos, dt)
+            pid_steer, pid_throttle = pid.compute(line_pos, confidence, dt)
 
             # ── State machine ─────────────────────────────────────────────────
             steering, throttle, sm_state = sm.update(
@@ -519,7 +519,7 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             state.update_odometry(odo.x, odo.y)
 
             # ── PID ───────────────────────────────────────────────────────────
-            pid_steer, pid_throttle = pid.compute(line_pos, dt)
+            pid_steer, pid_throttle = pid.compute(line_pos, confidence, dt)
 
             # ── State machine ─────────────────────────────────────────────────
             steering, throttle, sm_state = sm.update(
