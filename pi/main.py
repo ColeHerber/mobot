@@ -549,19 +549,37 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                     _hill_active = True
                 else:
                     if _hill_active:
-                        # Just levelled out — record exit position (once)
+                        # Just levelled out — snap odometry to known exit x if configured
+                        _snap_x = _imu_cfg.get("hill_exit_x")
+                        if _snap_x is not None:
+                            odo.reset_x(float(_snap_x))
+                            log.info("Hill exit: snapped odo x → %.2f", float(_snap_x))
                         _hill_exit_pos = (odo.x, odo.y)
                         _hill_active = False
                         log.info("Hill exited at x=%.2f y=%.2f", odo.x, odo.y)
+
                     if _hill_exit_pos is not None:
                         _dx = odo.x - _hill_exit_pos[0]
                         _dy = odo.y - _hill_exit_pos[1]
                         _dist_from_exit = (_dx**2 + _dy**2) ** 0.5
-                        if _dist_from_exit < 1.0:
-                            # Reverse the normal dead reckon bias for 1 m post-hill
-                            _dr_steer = float(config.get("sensor", {}).get("dead_reckon_steer", 1.0))
-                            steering = max(-1.0, min(1.0, -_dr_steer))
-                            sm_state = "POST_HILL"
+                        if _dist_from_exit < 1.0 and confidence < config.get("sensor", {}).get("low_confidence_threshold", 30):
+                            _max_hdg_deg = float(_imu_cfg.get("hill_max_heading_deg", 30.0))
+                            _recov_x = _imu_cfg.get("hill_recovery_x")
+                            _recov_y = float(_imu_cfg.get("hill_recovery_y", 0.0))
+                            if _recov_x is not None and abs(heading) > _math.radians(_max_hdg_deg):
+                                # Heading has drifted too far — steer toward recovery waypoint
+                                _rdx = float(_recov_x) - odo.x
+                                _rdy = _recov_y - odo.y
+                                _desired = _math.atan2(_rdy, _rdx)
+                                _herr = (_desired - heading + _math.pi) % (2 * _math.pi) - _math.pi
+                                _chord_kp = float(_imu_cfg.get("hill_chord_kp", 1.2))
+                                steering = max(-1.0, min(1.0, _chord_kp * _herr))
+                                sm_state = "HILL_RECOV"
+                            else:
+                                # Within heading tolerance — use reverse bias
+                                _dr_steer = float(config.get("sensor", {}).get("dead_reckon_steer", 1.0))
+                                steering = max(-1.0, min(1.0, -_dr_steer))
+                                sm_state = "POST_HILL"
 
             # ── Log state transitions ─────────────────────────────────────────
             if sm_state != prev_sm_state and web_server is not None:
