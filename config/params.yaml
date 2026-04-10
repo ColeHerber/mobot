@@ -32,7 +32,7 @@ vesc:
 
 sensor:
   low_confidence_threshold: 30   # below this → DEAD_RECKON state (0–255 scale)
-  dead_reckon_steer: 0.5         # steering bias when line lost; positive = away from sensors 13-15 (left)
+  dead_reckon_steer: -0.5        # steering bias when line lost
   port: /dev/serial/by-id/usb-Teensyduino_USB_Serial_14421340-if00             # Teensy USB serial device
   baud: 115200
 
@@ -40,8 +40,4 @@ imu:
   i2c_address: 0x4A              # BNO085 default I2C address (AD0 low)
   hill_pitch_threshold_deg: 10.0  # magnitude of downward pitch (negative degrees) to activate hill mode; always positive here
   hill_heading_kp: -0.15          # P-gain for heading correction on hill (steer toward heading=0)
-  hill_max_heading_deg: 30.0      # if post-hill heading exceeds this, switch to waypoint recovery
-  hill_chord_kp: 1.2              # P-gain for waypoint steering in HILL_RECOV
   # hill_exit_x: 0.0             # uncomment + set to known odometry x at hill exit for snap
-  # hill_recovery_x: 0.0         # uncomment + set to waypoint x to steer toward in HILL_RECOV
-  # hill_recovery_y: 0.0         # waypoint y for HILL_RECOV (default 0)

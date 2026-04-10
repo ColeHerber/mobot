@@ -563,23 +563,10 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                         _dy = odo.y - _hill_exit_pos[1]
                         _dist_from_exit = (_dx**2 + _dy**2) ** 0.5
                         if _dist_from_exit < 1.0 and confidence < config.get("sensor", {}).get("low_confidence_threshold", 30):
-                            _max_hdg_deg = float(_imu_cfg.get("hill_max_heading_deg", 30.0))
-                            _recov_x = _imu_cfg.get("hill_recovery_x")
-                            _recov_y = float(_imu_cfg.get("hill_recovery_y", 0.0))
-                            if _recov_x is not None and abs(heading) > _math.radians(_max_hdg_deg):
-                                # Heading has drifted too far — steer toward recovery waypoint
-                                _rdx = float(_recov_x) - odo.x
-                                _rdy = _recov_y - odo.y
-                                _desired = _math.atan2(_rdy, _rdx)
-                                _herr = (_desired - heading + _math.pi) % (2 * _math.pi) - _math.pi
-                                _chord_kp = float(_imu_cfg.get("hill_chord_kp", 1.2))
-                                steering = max(-1.0, min(1.0, _chord_kp * _herr))
-                                sm_state = "HILL_RECOV"
-                            else:
-                                # Within heading tolerance — use reverse bias
-                                _dr_steer = float(config.get("sensor", {}).get("dead_reckon_steer", 1.0))
-                                steering = max(-1.0, min(1.0, -_dr_steer))
-                                sm_state = "POST_HILL"
+                            # Reverse dead reckon bias for 1 m post-hill
+                            _dr_steer = float(config.get("sensor", {}).get("dead_reckon_steer", 1.0))
+                            steering = max(-1.0, min(1.0, -_dr_steer))
+                            sm_state = "POST_HILL"
 
             # ── Log state transitions ─────────────────────────────────────────
             if sm_state != prev_sm_state and web_server is not None:
