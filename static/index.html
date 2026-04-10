@@ -34,6 +34,18 @@
   #btnEnable.armed:hover { background:var(--green); color:#000; }
   #btnEnable.live   { border-color:var(--green); background:var(--green); color:#000; }
   #enableStatus { font-size:.8rem; color:var(--text-dim); font-family:monospace; }
+
+  .sensor-strip { padding:.5rem 1rem; background:var(--bg-card); border-bottom:1px solid var(--border); }
+  .sensor-strip canvas { display:block; width:100%; height:60px; }
+  .sensor-meta { display:flex; gap:1.5rem; font-family:monospace; font-size:.78rem;
+                 color:var(--text-dim); margin-top:.3rem; }
+  .sensor-meta .sv { color:var(--text-head); }
+  .linebar-wrap { height:8px; background:var(--bg-panel); border-radius:4px;
+                  position:relative; margin:.3rem 0; overflow:hidden; }
+  .linebar-center { position:absolute; top:0; left:50%; width:1px; height:100%;
+                    background:var(--border); }
+  .linebar-fill { position:absolute; top:0; height:100%; border-radius:4px;
+                  background:var(--green); transition:all .08s; }
 </style>
 </head>
 <body>
@@ -51,6 +63,19 @@
 <div class="enable-bar">
   <button id="btnEnable" onclick="toggleEnable()">ENABLE ROBOT</button>
   <span id="enableStatus">waiting for connection…</span>
+</div>
+
+<div class="sensor-strip">
+  <canvas id="sensorCanvas"></canvas>
+  <div class="linebar-wrap">
+    <div class="linebar-center"></div>
+    <div class="linebar-fill" id="lineBar"></div>
+  </div>
+  <div class="sensor-meta">
+    <span>Pos <span class="sv" id="sPos">—</span></span>
+    <span>Conf <span class="sv" id="sConf">—</span></span>
+    <span>Line sensor (16ch)</span>
+  </div>
 </div>
 
 <div class="hub">
@@ -116,6 +141,36 @@ async function toggleEnable() {
   }
 }
 
+// ── Sensor bar canvas ────────────────────────────────────────────────────────
+const sensorCanvas = document.getElementById("sensorCanvas");
+const sensorCtx    = sensorCanvas.getContext("2d");
+function resizeSensorCanvas() {
+  sensorCanvas.width  = sensorCanvas.parentElement.clientWidth - 32;
+  sensorCanvas.height = 60;
+}
+function drawSensorBars(raw) {
+  const w = sensorCanvas.width, h = sensorCanvas.height;
+  sensorCtx.clearRect(0, 0, w, h);
+  const bw = w / 16, pad = 1;
+  raw.forEach((v, i) => {
+    const bh = Math.max(0, (v / 1000) * (h - 14));
+    sensorCtx.fillStyle = v >= 500 ? "#00ff88" : "#1e3a2a";
+    sensorCtx.fillRect(i * bw + pad, h - bh - 12, bw - pad * 2, bh);
+    sensorCtx.fillStyle = "#555";
+    sensorCtx.font = "8px monospace";
+    sensorCtx.fillText(i, i * bw + pad + 1, h - 1);
+  });
+}
+resizeSensorCanvas();
+window.addEventListener("resize", resizeSensorCanvas);
+
+function updateLineBar(pos) {
+  const bar = document.getElementById("lineBar");
+  const pct = (pos + 1) / 2 * 100;  // [-1,+1] → [0%,100%]
+  bar.style.left  = pos >= 0 ? "50%" : (pct + "%");
+  bar.style.width = Math.abs(pos) * 50 + "%";
+}
+
 const sse = new MobotSSE("/api/state", d => {
   document.getElementById("hState").textContent  = d.state || "—";
   document.getElementById("hState").style.background = stateColor(d.state) + "33";
@@ -125,6 +180,13 @@ const sse = new MobotSSE("/api/state", d => {
   document.getElementById("hVolt").style.color   = batteryColor(d.input_voltage);
   document.getElementById("hConf").textContent   = d.confidence ?? "—";
   if (d.robot_enabled !== undefined) updateEnableUI(d.robot_enabled);
+  // Sensor strip
+  const raw = d.sensor_raw || Array(16).fill(0);
+  drawSensorBars(raw);
+  const pos = d.line_pos ?? 0;
+  updateLineBar(pos);
+  document.getElementById("sPos").textContent  = (pos >= 0 ? "+" : "") + pos.toFixed(3);
+  document.getElementById("sConf").textContent = d.confidence ?? "—";
 });
 sse.connect();
 

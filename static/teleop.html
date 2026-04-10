@@ -46,6 +46,19 @@
   .readout .item { display:flex; flex-direction:column; align-items:center; gap:.2rem; }
   .readout .r-val { font-size:1.4rem; color:var(--text-head); }
   .readout .r-lbl { font-size:.7rem; color:var(--text-dim); letter-spacing:.06em; }
+
+  .sensor-strip { padding:.4rem 1rem; background:var(--bg-card);
+                  border-bottom:1px solid var(--border); flex-shrink:0; }
+  .sensor-strip canvas { display:block; width:100%; height:50px; }
+  .linebar-wrap { height:6px; background:var(--bg-panel); border-radius:3px;
+                  position:relative; margin:.25rem 0; overflow:hidden; }
+  .linebar-center { position:absolute; top:0; left:50%; width:1px; height:100%;
+                    background:var(--border); }
+  .linebar-fill { position:absolute; top:0; height:100%; border-radius:3px;
+                  background:var(--green); transition:all .08s; }
+  .sensor-meta { display:flex; gap:1rem; font-family:monospace; font-size:.75rem;
+                 color:var(--text-dim); }
+  .sensor-meta .sv { color:var(--text-head); }
 </style>
 </head>
 <body>
@@ -57,6 +70,18 @@
   <span><span class="lbl">State</span><span class="val" id="sState">—</span></span>
   <span><span class="lbl">Speed</span><span class="val" id="sSpeed">—</span></span>
   <span><span class="lbl">Batt</span><span class="val" id="sBatt">—</span></span>
+</div>
+
+<div class="sensor-strip">
+  <canvas id="sensorCanvas"></canvas>
+  <div class="linebar-wrap">
+    <div class="linebar-center"></div>
+    <div class="linebar-fill" id="lineBar"></div>
+  </div>
+  <div class="sensor-meta">
+    <span>Pos <span class="sv" id="sPos">—</span></span>
+    <span>Conf <span class="sv" id="sConf">—</span></span>
+  </div>
 </div>
 
 <div class="arena">
@@ -245,6 +270,35 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+// ── Sensor bar canvas ─────────────────────────────────────────────────────────
+const sensorCanvas = document.getElementById("sensorCanvas");
+const sensorCtx    = sensorCanvas.getContext("2d");
+function resizeSensorCanvas() {
+  sensorCanvas.width  = sensorCanvas.parentElement.clientWidth - 32;
+  sensorCanvas.height = 50;
+}
+function drawSensorBars(raw) {
+  const w = sensorCanvas.width, h = sensorCanvas.height;
+  sensorCtx.clearRect(0, 0, w, h);
+  const bw = w / 16, pad = 1;
+  raw.forEach((v, i) => {
+    const bh = Math.max(0, (v / 1000) * (h - 12));
+    sensorCtx.fillStyle = v >= 500 ? "#00ff88" : "#1e3a2a";
+    sensorCtx.fillRect(i * bw + pad, h - bh - 10, bw - pad * 2, bh);
+    sensorCtx.fillStyle = "#555";
+    sensorCtx.font = "8px monospace";
+    sensorCtx.fillText(i, i * bw + pad + 1, h - 1);
+  });
+}
+resizeSensorCanvas();
+window.addEventListener("resize", resizeSensorCanvas);
+
+function updateLineBar(pos) {
+  const bar = document.getElementById("lineBar");
+  bar.style.left  = pos >= 0 ? "50%" : ((pos + 1) / 2 * 100 + "%");
+  bar.style.width = Math.abs(pos) * 50 + "%";
+}
+
 // ── SSE status bar ────────────────────────────────────────────────────────────
 const sse = new MobotSSE("/api/state", d => {
   document.getElementById("sState").textContent = d.state || "—";
@@ -253,6 +307,13 @@ const sse = new MobotSSE("/api/state", d => {
   const batt = document.getElementById("sBatt");
   batt.textContent = fmt(d.input_voltage, 1) + "V";
   batt.style.color = batteryColor(d.input_voltage);
+  // Sensor strip
+  const raw = d.sensor_raw || Array(16).fill(0);
+  drawSensorBars(raw);
+  const pos = d.line_pos ?? 0;
+  updateLineBar(pos);
+  document.getElementById("sPos").textContent  = (pos >= 0 ? "+" : "") + pos.toFixed(3);
+  document.getElementById("sConf").textContent = d.confidence ?? "—";
 });
 sse.connect();
 
