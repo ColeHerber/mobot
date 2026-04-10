@@ -54,6 +54,7 @@ class SharedState:
         # ── Robot enable ──────────────────────────────────────────────────────
         self.robot_enabled: bool = False     # must be set True via web before actuators run
         self.steering_test: bool = False     # servo runs PID, VESC locked to 0
+        self.raw_pid_mode: bool = False      # bypass state machine, pure PID output
 
         # ── Teleop ────────────────────────────────────────────────────────────
         self.teleop_enabled:  bool  = False

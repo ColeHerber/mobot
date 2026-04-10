@@ -239,9 +239,13 @@ def run(stdscr, args, config, route, config_path, route_path, web_server):
             pid_steer, pid_throttle = pid.compute(line_pos, confidence, dt)
 
             # ── State machine ─────────────────────────────────────────────────
-            steering, throttle, sm_state = sm.update(
-                confidence, pid_steer, pid_throttle, heading, pitch, dt
-            )
+            raw_pid = state.get("raw_pid_mode")[0]
+            if raw_pid:
+                steering, throttle, sm_state = pid_steer, pid_throttle, "RAW_PID"
+            else:
+                steering, throttle, sm_state = sm.update(
+                    confidence, pid_steer, pid_throttle, heading, pitch, dt
+                )
 
             # ── Log state transitions ─────────────────────────────────────────
             if sm_state != prev_sm_state and web_server is not None:
@@ -522,9 +526,13 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
             pid_steer, pid_throttle = pid.compute(line_pos, confidence, dt)
 
             # ── State machine ─────────────────────────────────────────────────
-            steering, throttle, sm_state = sm.update(
-                confidence, pid_steer, pid_throttle, heading, pitch, dt
-            )
+            raw_pid = state.get("raw_pid_mode")[0]
+            if raw_pid:
+                steering, throttle, sm_state = pid_steer, pid_throttle, "RAW_PID"
+            else:
+                steering, throttle, sm_state = sm.update(
+                    confidence, pid_steer, pid_throttle, heading, pitch, dt
+                )
 
             # ── Log state transitions ─────────────────────────────────────────
             if sm_state != prev_sm_state and web_server is not None:

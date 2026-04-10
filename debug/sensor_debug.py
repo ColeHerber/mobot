@@ -39,6 +39,7 @@ def _default_port() -> str:
 
 
 MEAN_SCALE = 7   # must match firmware constant
+DISABLE_MASK = (1<<13)|(1<<14)|(1<<15)  # must match firmware SENSOR_DISABLE_MASK
 
 
 def compute(raw: list[int], _cal_min=None, _cal_max=None):
@@ -52,7 +53,8 @@ def compute(raw: list[int], _cal_min=None, _cal_max=None):
     for v in raw:
         dev = mean_val - v          # positive = below mean = white line
         n   = int(dev * MEAN_SCALE)
-        norm.append(max(0, min(1000, n)))
+        v   = max(0, min(1000, n))
+        norm.append(0 if (DISABLE_MASK & (1 << i)) else v)
 
     total = sum(norm)
     flags = sum(1 << i for i in range(CHANNELS) if norm[i] > 500)
@@ -60,9 +62,9 @@ def compute(raw: list[int], _cal_min=None, _cal_max=None):
     if total < 100:
         line_pos = 0.0
     else:
-        weighted = sum(norm[i] * ((i - 7) * 1000 + 500) for i in range(CHANNELS))
-        centroid = weighted / total          # -7500 to +7500
-        line_pos = max(-1.0, min(1.0, centroid / 7500.0))
+        peak_idx = max(range(CHANNELS), key=lambda i: norm[i])
+        pos_scaled = (peak_idx - 7) * 1000 + 500   # -6500 to +8500
+        line_pos = max(-1.0, min(1.0, pos_scaled / 7500.0))
 
     confidence = min(255, int(total * 255 / 16000))
     return norm, line_pos, confidence, flags

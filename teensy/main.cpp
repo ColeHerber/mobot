@@ -56,6 +56,10 @@ static const uint16_t EEPROM_MAGIC = 0xAB12;
 uint16_t cal_min[NUM_SENSORS];
 uint16_t cal_max[NUM_SENSORS];
 
+// ─── Disabled sensor mask ────────────────────────────────────────────────────
+// Bit N set → sensor N is forced to 0 (bad ADC channel, bad solder, etc.)
+static const uint16_t SENSOR_DISABLE_MASK = (1<<13)|(1<<14)|(1<<15);
+
 // ─── Mean-relative normalization ─────────────────────────────────────────────
 // No calibration required. White line appears as a local dip below the array
 // mean — this cancels global illumination shifts (sun, shade, surface colour).
@@ -167,34 +171,31 @@ void send_packet(uint16_t raw[NUM_SENSORS]) {
     int32_t mean_val = (int32_t)(raw_sum / NUM_SENSORS);
 
     uint16_t norm[NUM_SENSORS];
-    uint32_t weighted_sum = 0;
     uint32_t total = 0;
     uint16_t flags = 0;
+    int      peak_idx = 0;
+    uint16_t peak_val = 0;
 
     for (int i = 0; i < NUM_SENSORS; i++) {
         // Positive deviation = below mean = white line candidate
         int32_t dev = mean_val - (int32_t)raw[i];
         int32_t n   = dev * MEAN_SCALE;
         norm[i] = (n <= 0) ? 0 : (n >= 1000 ? 1000 : (uint16_t)n);
+        if (SENSOR_DISABLE_MASK & (1 << i)) norm[i] = 0;  // mask bad channels
 
-        // Weighted centroid: sensor positions mapped to [-7500, +7500] in units of 1000/step
-        // Position of sensor i (0-indexed): maps to -7.5 to +7.5 (in steps of 1.0)
-        // Scaled by 1000 to keep integer math: -7500 to +7500
-        int32_t pos_scaled = ((int32_t)i - 7) * 1000 + 500; // center of each sensor slot
-        weighted_sum += (uint32_t)norm[i] * (uint32_t)(pos_scaled + 7500); // shift to positive
         total += norm[i];
         if (norm[i] > 500) flags |= (1 << i);
+        if (norm[i] > peak_val) { peak_val = norm[i]; peak_idx = i; }
     }
 
-    // line_pos in range [-1.0, +1.0]
+    // line_pos: position of peak sensor, range [-1.0, +1.0]
     int16_t line_pos_i16;
     if (total < 100) {
         line_pos_i16 = 0; // no line detected
     } else {
-        // centroid 0..15000, center at 7500
-        int32_t centroid = (int32_t)(weighted_sum / total) - 7500;
-        // centroid range: -7500 to +7500, map to -10000..+10000
-        int32_t pos = (centroid * 10000) / 7500;
+        // Map peak sensor index to position: center of slot i → ((i-7)*1000+500)/7500
+        int32_t pos_scaled = ((int32_t)peak_idx - 7) * 1000 + 500;
+        int32_t pos = (pos_scaled * 10000) / 7500;
         if (pos > 10000)  pos = 10000;
         if (pos < -10000) pos = -10000;
         line_pos_i16 = (int16_t)pos;
