@@ -2,13 +2,13 @@
 # Edit and restart to tune. All values are in SI units (m, s, rad) unless noted.
 
 pid:
-  kp: 0.1         # proportional gain on line position error
+  kp: 0.2        # proportional gain on line position error
   kd: 0.08         # derivative gain (on measurement, not error)
-  speed_kp: 0.5    # speed reduction factor: throttle -= speed_kp * |line_pos| * base
+  speed_kp: 0.1    # speed reduction factor: throttle -= speed_kp * |line_pos| * base
 
 speed:
-  base_ms: 0.05     # nominal forward speed (m/s) — increase after straight-line test
-  gate_ms: 0.05     # speed near gates / dead-reckoning / intersection (m/s)
+  base_ms: 0.01     # nominal forward speed (m/s) — increase after straight-line test
+  gate_ms: 0.01     # speed near gates / dead-reckoning / intersection (m/s)
   min_ms:  0.005     # minimum speed floor (m/s)
 
 servo:
