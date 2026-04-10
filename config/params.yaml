@@ -3,7 +3,7 @@
 
 pid:
   kp: 1                  # proportional gain on line position error
-  kd: 0.07              # derivative gain (on measurement, not error)
+  kd: 0.1              # derivative gain (on measurement, not error)
   speed_ramp_up: 0.2     # m/s per second to accelerate when well-centered on line
   speed_ramp_down: 0.8   # m/s per second to decelerate when off line / low confidence
   speed_conf_min: 80     # minimum confidence (0–255) to count as "on line"
