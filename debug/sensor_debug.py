@@ -50,7 +50,7 @@ def normalize(raw: int, mn: int, mx: int) -> int:
 
 def compute(raw: list[int], cal_min: list[int], cal_max: list[int]):
     """Compute line_pos and confidence from raw ADC values."""
-    norm = [normalize(raw[i], cal_min[i], cal_max[i]) for i in range(CHANNELS)]
+    norm = [1000 - normalize(raw[i], cal_min[i], cal_max[i]) for i in range(CHANNELS)]
     total = sum(norm)
     flags = sum(1 << i for i in range(CHANNELS) if norm[i] > 500)
 
