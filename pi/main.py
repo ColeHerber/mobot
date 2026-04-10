@@ -534,6 +534,14 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                     confidence, pid_steer, pid_throttle, heading, pitch, dt
                 )
 
+            # ── Hill compensation — drive straight on steep pitch ─────────────
+            _hill_thresh_deg = config.get("imu", {}).get("hill_pitch_threshold_deg", 0.0)
+            if _hill_thresh_deg > 0.0:
+                import math as _math
+                if abs(pitch) > _math.radians(_hill_thresh_deg):
+                    steering = 0.0
+                    sm_state = sm_state + "+HILL"
+
             # ── Log state transitions ─────────────────────────────────────────
             if sm_state != prev_sm_state and web_server is not None:
                 web_server.log_transition(prev_sm_state, sm_state,
@@ -554,19 +562,16 @@ def _run_loop(stdscr, args, config, route, config_path, route_path,
                 sm_state = "TELEOP"
 
             # ── Actuators ─────────────────────────────────────────────────────
-            robot_en, steer_test = state.get("robot_enabled", "steering_test")
+            robot_en = state.get("robot_enabled")[0]
             if robot_en and not prev_robot_en:
                 state.zero_heading()
-                state.set(steering_test=True)
                 sm.reset()
                 log.info("Heading zeroed, SM reset to LINE_FOLLOW on enable")
             prev_robot_en = robot_en
             duty = throttle / config["speed"]["base_ms"]
             if not dry_run and robot_en:
-                # In steer test mode bypass the state machine — use raw PID steering
-                # so the servo responds to the line sensor even at low confidence
-                servo.set_steering(pid_steer if steer_test else steering)
-                vesc.set_throttle(0.0 if steer_test else duty)
+                servo.set_steering(steering)
+                vesc.set_throttle(duty)
             else:
                 if not robot_en:
                     vesc.set_throttle(0)

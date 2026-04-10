@@ -64,9 +64,10 @@ class StateMachine:
         sensor_cfg = config.get("sensor", {})
         speed_cfg  = config.get("speed", {})
 
-        self._low_threshold  = int(sensor_cfg.get("low_confidence_threshold", 30))
-        self._gate_speed     = float(speed_cfg.get("gate_ms", 0.3))
-        self._base_speed     = float(speed_cfg.get("base_ms", 0.6))
+        self._low_threshold      = int(sensor_cfg.get("low_confidence_threshold", 30))
+        self._gate_speed         = float(speed_cfg.get("gate_ms", 0.3))
+        self._base_speed         = float(speed_cfg.get("base_ms", 0.6))
+        self._dead_reckon_steer  = float(sensor_cfg.get("dead_reckon_steer", -0.5))
 
         # Parse intersections from route YAML
         self._intersections = []
@@ -289,8 +290,8 @@ class StateMachine:
             return pid_steering, self._gate_speed, GATE_APPROACH
 
         elif self._state == DEAD_RECKON:
-            # Drive straight at reduced speed (line position unknown)
-            return 0.0, self._gate_speed * 0.8, DEAD_RECKON
+            # Steer toward disabled-sensor edge (line assumed to have exited that side)
+            return self._dead_reckon_steer, self._gate_speed * 0.8, DEAD_RECKON
 
         elif self._state == REACQUIRE:
             # Hand back to PID but at reduced speed

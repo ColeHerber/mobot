@@ -58,7 +58,7 @@ uint16_t cal_max[NUM_SENSORS];
 
 // ─── Disabled sensor mask ────────────────────────────────────────────────────
 // Bit N set → sensor N is forced to 0 (bad ADC channel, bad solder, etc.)
-static const uint16_t SENSOR_DISABLE_MASK = 0;  // all sensors enabled
+static const uint16_t SENSOR_DISABLE_MASK = (1<<13)|(1<<14)|(1<<15);
 
 // ─── Mean-relative normalization ─────────────────────────────────────────────
 // No calibration required. White line appears as a local dip below the array

@@ -181,12 +181,12 @@ class WebServer:
         try:
             (line_pos, conf, heading, x, y, sm_state,
              steering, throttle, vel, voltage, flags,
-             raw, rpm, robot_en, vesc_ok, steer_test, raw_pid) = s.get(
+             raw, rpm, robot_en, vesc_ok, raw_pid) = s.get(
                 "line_position", "sensor_confidence", "heading_rad",
                 "x", "y", "state", "steering", "throttle",
                 "wheel_velocity_ms", "input_voltage", "sensor_flags",
                 "sensor_raw", "motor_rpm", "robot_enabled", "vesc_connected",
-                "steering_test", "raw_pid_mode",
+                "raw_pid_mode",
             )
         except Exception:
             return {}
@@ -207,7 +207,6 @@ class WebServer:
             "motor_rpm":     _safe(rpm),
             "robot_enabled":  bool(robot_en),
             "vesc_connected": bool(vesc_ok),
-            "steering_test":  bool(steer_test),
             "raw_pid_mode":   bool(raw_pid),
         }
 
@@ -439,14 +438,6 @@ class WebServer:
             self._state.set(robot_enabled=enabled)
             log.info("Robot %s via web API", "ENABLED" if enabled else "DISABLED")
             return jsonify({"ok": True, "enabled": enabled})
-
-        @app.route("/api/steering_test", methods=["POST"])
-        def steering_test():
-            body = request.get_json(force=True, silent=True) or {}
-            active = bool(body.get("active", True))
-            self._state.set(steering_test=active)
-            log.info("Steering test %s via web API", "ON" if active else "OFF")
-            return jsonify({"ok": True, "active": active})
 
         @app.route("/api/raw_pid", methods=["POST"])
         def raw_pid():

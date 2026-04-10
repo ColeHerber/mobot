@@ -32,8 +32,10 @@ vesc:
 
 sensor:
   low_confidence_threshold: 30   # below this → DEAD_RECKON state (0–255 scale)
+  dead_reckon_steer: -0.5        # steering bias when line lost; negative = toward sensors 13-15 (right)
   port: /dev/serial/by-id/usb-Teensyduino_USB_Serial_14421340-if00             # Teensy USB serial device
   baud: 115200
 
 imu:
   i2c_address: 0x4A              # BNO085 default I2C address (AD0 low)
+  hill_pitch_threshold_deg: 8.0  # degrees of downward pitch → drive straight (0 = disabled)
