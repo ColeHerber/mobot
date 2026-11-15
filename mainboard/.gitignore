@@ -1,0 +1,9 @@
+# KiCad per-user / transient files
+*.lck
+~*.lck
+.history/
+*.kicad_prl
+fp-info-cache
+*-backups/
+# Murata full datasheet is marked CONFIDENTIAL - keep it out of the repo
+datasheets/02_imu/Datasheet-SCH16T-K01_JAN2024.pdf
