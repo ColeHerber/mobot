@@ -59,14 +59,14 @@ Still open: D3 (heater at all?), D5 (power-topology details). Deferred: D11 (ser
 
 ### Power warning: the TPS54360B resistor values are for a different pack
 
-**Corrected after reading the CAN schematic:** the EN/UVLO divider is R1 = 174 k / **R2 = 35.3 k** (R4 13 k is compensation). Using the datasheet equations (I1 = 1.2 µA, IHYS = 3.4 µA), it starts at **≈ 6.9 V and stops at ≈ 6.3 V**. That's too high for 2S, because the IMU rail would drop out during sag. The new schematic uses **R2 = 43.2 k → start ≈ 5.8 V / stop ≈ 5.2 V**. The FB divider (59 k / 10.2 k → 5.43 V) is **intentional**: diode D5/D105 after the regulator brings +5V down to ≈ 5.0 V, so it stays as-is.
+**Corrected after reading the CAN schematic:** the EN/UVLO divider is R1 = 174 k / **R2 = 35.3 k** (R4 13 k is compensation). Using the datasheet equations (I1 = 1.2 µA, IHYS = 3.4 µA), it starts at **≈ 6.9 V and stops at ≈ 6.3 V**. That's too high for 2S, because the IMU rail would drop out during sag. The new schematic uses **R2 = 43.2 k → start ≈ 5.8 V / stop ≈ 5.2 V**. The FB divider (59 k / 10.2 k → 5.43 V) is **intentional**: diode D5/D5 after the regulator brings +5V down to ≈ 5.0 V, so it stays as-is.
 
 ### Rail tree (updated)
 
 ```
 2S LiPo ── XT30 in ──┬───────────────────────────── XT30 out → ESC (unfused on board; short wide pours)
                      ├── TVS (SMBJ10A/12A) + input bulk
-                     └───────┬── servo VBAT bus ── 1000–2200 µF ──┬── front servo header (pin 2)
+                     └───────┬── servo VBAT bus ── 4×22µF MLCC ───┬── front servo header (pin 2)
                               │                                    └── rear servo header (pin 2)
                               ├── VBAT_SENSE divider → S3 ADC
                               ├── TPSM33620S3 → 3.3 V (2 A) ──┬── P4 module ESP_3V3 + VBAT pads (P4 + PSRAM + C6 Wi-Fi)
@@ -117,7 +117,7 @@ The short datasheet, Table 8, gives:
 That matches my expectation: fine resolution and good linearity, loose absolute accuracy. What matters for compensation and for a heater setpoint is repeatability, and the setpoint is "the die reading at calibration", not a true °C. So:
 - **Use it** as the heater PI feedback (decimate to 10–50 Hz) and as the compensation variable. It measures the die, where the bias lives.
 - **Don't trust ±15 °C absolute** when comparing against the ISM6HG256X die sensor (also ±15 °C) Learn each sensor's offset at calibration, then fault on changes.
-- **No hardware cutoff (decision):** the comparator/NTC circuit was dropped. Protection is firmware: hardware watchdog (a reset releases HEATER_PWM and R312 turns the MOSFET off), a duty cap, and cross-checking the SCH16T die temperature against the ISM6HG256X's. A shorted MOSFET is not covered either way.
+- **No hardware cutoff (decision):** the comparator/NTC circuit was dropped. Protection is firmware: hardware watchdog (a reset releases HEATER_PWM and R21 turns the MOSFET off), a duty cap, and cross-checking the SCH16T die temperature against the ISM6HG256X's. A shorted MOSFET is not covered either way.
 - The SCH16T's typical offset over temperature is already small (Z: ±0.01 °/s typ, ±0.1 °/s max over −40…110 °C; drift velocity ±0.01 (°/s)/min at 0.5 K/min). Compensation by itself may be enough (D3).
 
 ### D5. Power topology — settled by the module schematic
@@ -165,7 +165,7 @@ Costs and details:
 - **Bulk data:** frame dumps and logs come off the P4 over **Wi-Fi** (C6) or by pulling the **microSD card**. The S3's USB bridge is only for flashing and the console.
 
 ### D8. Servo and ESC power through the board — decided
-- **Servos:** 2S VBAT goes straight to servo header pin 2 (no fuse), with the 1000–2200 µF bulk capacitor at the split. One caution: goBILDA rates this servo **4.8–7.4 V**, and a fresh 2S pack is 8.4 V. Treated as compatible per your call.
+- **Servos:** 2S VBAT goes straight to servo header pin 2 (no fuse), with C39–C42 (4×22 µF 25 V X5R 1210) at the split. No board electrolytic: the ESC's own input cap, on XT30 out, provides the bulk and hot-plug damping; on the bench without the ESC the TVS clamps. One caution: goBILDA rates this servo **4.8–7.4 V**, and a fresh 2S pack is 8.4 V. Treated as compatible per your call.
 - **ESC:** XT30 out, placed **right next to** the XT30 in, joined by short, wide pours on L1 *and* L4, stitched with many vias. Keep the ESC loop inside the power corner, with the star ground at the input connector.
 - **XT30 rating:** 15 A continuous, **30 A for 1 min (< 80 °C)** per the Amass datasheet. A 34 s run fits inside the 1-minute rating if launch peaks stay under ~30 A. **I need the motor turn/kV and gearing, or better, a logged/clamped current**, to confirm. If peaks are higher, move battery-in and ESC-out to XT60.
 - **Trace widths (1 oz outer):** you're right that 0.6 mm works for each servo branch. 3 A stall is intermittent, and IPC-2221 puts 3 A continuous at ~0.7 mm for a 30 °C rise, or ~1.4 mm for 10 °C. Since board area is free there, I'll draw servo feeds at ≥ 1 mm and the shared servo trunk (two stalls = 6 A) as a pour. ESC current only flows in the short in→out pour.
@@ -294,7 +294,7 @@ The module has **no antenna of its own**: the C6's RF output comes out on **LNA_
 | 5/6/7/10 | SCH16T SCK/MOSI/MISO/CS (SPI3, **mode 0**, ≤ 10.5 MHz; 25.5 MHz with MISO_HI_SPD) | Dedicated bus |
 | 47 | SCH16T EXTRESN | |
 | 48 | SYNC out → SCH16T **DRY_SYNC** (pin 20), camera trigger, P4 sync input | SCH16T pin 20 is **either** DRY out **or** SYNC in. We use SYNC, because the S3 is the time master and reads at a fixed offset after each edge. 0 Ω in series so it can be lifted for DRY experiments. |
-| 11/12/13/14 | PWM: spare, ESC, steer front, steer rear | Unchanged |
+| 11/12/13/14 | PWM: ESC, steer front, steer rear, spare | Reordered so S3 pins 19-22, RN2 and the J10 SIG column route as one uncrossed bus |
 | 4 | Battery voltage ADC | |
 | 41/42 | UART1 ↔ P4 UART0 (runtime 2–4 Mbaud + flashing) | |
 | 3 | P4 EN | Strapping pin, used as output after boot; pull-up keeps the P4 running if the S3 is in reset |
@@ -340,7 +340,7 @@ Sheets:
    - SCH16T pins: TA8/TA9 → GND, pin 2 floating, pins 5/7 → GND, EXTRESN driven by the S3 (≤ 20 k pull-up to VDDIO if not), DRY_SYNC → SYNC net through the 0 Ω.
    - ISM6HG256X (copied).
    - Ferrite + AP2112K-3.3.
-   - Heater resistors + MOSFET + R312 gate pull-down (no hardware cutoff).
+   - Heater resistors + MOSFET + R21 gate pull-down (no hardware cutoff).
 4. `p4`: Waveshare ESP32-P4-Module (footprint from its DXF land pattern), VBAT pad tied to 3.3 V, GPIO36 10 k pull-up, EN/BOOT/UART0 to the S3, CSI pads 41–46 → FPC, microSD on GPIO39–44 (VO4 domain), sync input, IR LED one-shot output, LNA_OUT → π-match → U.FL (D16), test pads for C6 UART/boot and P4 USB-JTAG.
 5. `vision_io`: CAM_TRIG connector + level-shift option, IR LED constant-current driver, LED-board connector.
 6. `actuation`: PWM headers, battery ADC, J11 encoder Qwiic, expansion Qwiic.
@@ -375,7 +375,7 @@ DRC against **OSH Park's 4-layer DRU** (the rules file is imported into KiCad), 
 2. S3: USB, LEDs, PWM.
 3. ISM6HG256X (existing driver, WHO_AM_I 0x73). AS5600 at 0x36 with magnet status.
 4. SCH16T: SafeSPI CRC, status, TEMP/100, SYNC.
-5. Heater: confirm R312 holds it off through S3 reset/boot and that the watchdog trips it off, then tune the PI loop.
+5. Heater: confirm R21 holds it off through S3 reset/boot and that the watchdog trips it off, then tune the PI loop.
 6. P4 flashing through the S3 bridge. Then camera, trigger and IR one-shot on a scope.
 7. UART link and timestamp alignment (SYNC vs. trigger vs. P4 capture).
 
@@ -401,20 +401,21 @@ As in the architecture doc, plus the ISM6HG256X's scale factor above 300 °/s.
   - P4 over-the-air updates go through the S3, by store-and-forward over the S3↔P4 UART using `esp-serial-flasher`. USB flashing through the S3 bridge is unchanged.
   - Bulk P4 data (frame dumps) comes off the microSD card. The UART path to the S3's Wi-Fi is only ~250–500 KB/s.
   - Keep the WROOM-1 antenna at a board edge with no copper under it.
-- **Expansion Qwiic removed.** Only the AS5600 encoder Qwiic (J605) remains; S3 IO16/17 are now unused.
+- **Expansion Qwiic removed.** Only the AS5600 encoder Qwiic (J11) remains; S3 IO16/17 are now unused.
 - **IR illuminator removed** from the board (P4 GPIO3 now unused). If one is ever needed, it can run off the spare servo header J604 (PWM_SPARE + VBAT).
-- **Camera I2C pull-ups** (R501/R502) are wired at the FPC pins.
-- **Hardware heater cutoff removed.** Firmware handles safety (watchdog, duty cap, two-sensor temperature check). R312 gate pull-down kept.
-- **No fuse.** Four GND mounting holes. START is a Cherry MX keyswitch; RESET/BOOT are G-Switch GT-TC048D-H025-L1 (4.2 × 3.2 mm SMD).
+- **Camera I2C pull-ups** (R30/R31) are wired at the FPC pins.
+- **Hardware heater cutoff removed.** Firmware handles safety (watchdog, duty cap, two-sensor temperature check). R21 gate pull-down kept.
+- **No fuse.** Four GND mounting holes. START is a PC-case style front-panel header J4 (1x4: switch on pins 1-2, LED+/LED- on 3-4; LED+ driven straight from S3 IO17, LED− to GND; the LED/harness supplies its own series resistor); RESET/BOOT are G-Switch GT-TC048D-H025-L1 (4.2 × 3.2 mm SMD).
 - **BOM trims:**
   - Heater is now 4 × 39 Ω 2010, one per side of the SCH16T (≈ 2.6 W at 5 V).
-  - SPI series resistors are one 4×22 Ω array (RN201).
+  - SPI series resistors are one 4×22 Ω array (RN1).
   - Removed pull-ups that duplicate internal ones: S3 IO0 R206 + C204, SCH16T EXTRESN R302, P4 GPIO35 R402.
   - FAULT LED removed; the NeoPixel shows status and faults, and the LIFE LED stays.
   - SD pull-ups stay discrete, because an array can't sit at the socket pins without crossing lines.
   - About 108 placed parts on 61 BOM lines, excluding test pads and mounting holes.
-- **Servo connector:** the four 1×3 headers are now one 3×4 0.1" header, J601 (custom `mobot:PinHeader_3x04_P2.54mm_Servo`), sized for a stacked servo pin block.
+- **Servo connector:** the four 1×3 headers are now one 3×4 0.1" header, J10 (custom `mobot:PinHeader_3x04_P2.54mm_Servo`), sized for a stacked servo pin block.
   - Columns: ESC / STEER F / STEER R / SPARE.
   - Rows: SIG / V+ / GND.
   - Pads: (ch−1)·3 + row.
-  - RN601 is wired straight into the SIG pins. V+ (except the ESC's) and GND are bussed, and C601 sits on the V+ bus.
+  - RN2 is wired straight into the SIG pins. V+ (except the ESC's) and GND are bussed, and C39–C42 sit on the V+ bus. RN2 pairs are 4-5 ESC, 3-6 STEER F, 2-7 STEER R, 1-8 SPARE (uncrossed bus).
+- **Debug UART0 (DNP):** J5 (S3) and J7 (P4), separate 3-pin JST-GH (SM03B-GHS-TB): 1 GND / 2 RX / 3 TX, footprints only, meant for the bottom side. J7 shares the P4<->S3 UART link (hold the S3 in reset to use it). Camera trigger J9 is now the vertical JST-SH (BM02B-SRSS-TB).

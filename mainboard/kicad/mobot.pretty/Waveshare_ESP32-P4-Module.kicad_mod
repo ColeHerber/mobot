@@ -98,5 +98,5 @@
 	(fp_rect (start -13.5 -13.5) (end 13.5 13.5) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))
 	(fp_rect (start -13.25 -13.25) (end 13.25 13.25) (stroke (width 0.1) (type default)) (fill no) (layer "F.Fab"))
 	(fp_circle (center -14.1 -10.5) (end -13.9 -10.5) (stroke (width 0.2) (type default)) (fill yes) (layer "F.SilkS"))
-	(model "${KIPRJMOD}/3d/esp32-p4-module_20250730.stp" (offset (xyz 0 0 0)) (scale (xyz 1 1 1)) (rotate (xyz 0 0 0)))
+	(model "${KIPRJMOD}/3d/esp32-p4-module_20250730.stp" (offset (xyz -12.5 -12.5 0.8)) (scale (xyz 1 1 1)) (rotate (xyz 0 0 0)))
 )

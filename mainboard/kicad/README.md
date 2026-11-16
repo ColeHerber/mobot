@@ -12,8 +12,8 @@ Regulators, the heater, every decoupling cap and the microSD pull-ups are **draw
 are used only for connections between blocks (block inputs/outputs).
 
 Project libraries: `mobot.kicad_sym` (SCH16T-K01, Waveshare ESP32-P4-Module) and `mobot.pretty`
-(TPS54360B DDA8, TPSM33620 RDN0011B, ISM6HG256X LGA14, SCH16T SOIC-24 *without* center pad,
-Waveshare P4 module from Waveshare's DXF, G-Switch GT-TC048D-H025-L1 for RESET/BOOT; START uses the stock Cherry MX 1.00u footprint). STEP models in `3d/`.
+(TPS54360B DDA8, TPSM33620 `TPSM33620_RDN0011B`, ISM6HG256X LGA14, SCH16T SOIC-24 *without* center pad,
+Waveshare P4 module from Waveshare's DXF, G-Switch GT-TC048D-H025-L1 for RESET/BOOT; START is a 1x4 front-panel header, J4). STEP models in `3d/`.
 
 `generator/` holds the scripts that produced it (`python3 -I generator/design.py <out_dir>`); they also report
 estimated text/label overlaps. They overwrite the sheet, so **don't rerun them once the schematic has been edited by hand**.

@@ -9,12 +9,19 @@ Sensor channels 10–15 now use A10–A15. **Verify physical wiring matches.**
 
 ### Digital Control Pins (QTRX emitter enable + dimming)
 
-| Firmware Pin | Teensy 4.1 Label | Physical Pin | Wire goes to        | Verified? |
+QTRX-MD-16A has exactly ONE combined enable+dimming pin per bank, not separate
+LEDON/CTRL lines — confirmed from the Pololu connector silkscreen (label rows
+read `...EVN` / `ODD...`). The old 4-pin firmware model (LEDON_ODD/EVEN +
+CTRL_ODD/EVEN on Teensy pins 2/3/4/5) was wrong; pins 4/5 were never connected
+to anything real. Firmware now uses just two pins:
+
+| Firmware Pin | Teensy 4.1 Label | Physical Pin | Wire goes to | Verified? |
 |---|---|---|---|---|
-| Pin 2 (LEDON_ODD)  | `2`  | Pin 4  | QTRX LEDON_ODD  | [ ] |
-| Pin 3 (LEDON_EVEN) | `3`  | Pin 5  | QTRX LEDON_EVEN | [ ] |
-| Pin 4 (CTRL_ODD)   | `4`  | Pin 6  | QTRX CTRL_ODD   | [ ] |
-| Pin 5 (CTRL_EVEN)  | `5`  | Pin 7  | QTRX CTRL_EVEN  | [ ] |
+| ODD_PIN  | `2` | Pin 4 | QTRX `ODD` | [ ] |
+| EVEN_PIN | `3` | Pin 5 | QTRX `EVN` | [ ] |
+
+Teensy pins 4/5 (old CTRL_ODD/CTRL_EVEN) are unused now — fine to leave
+disconnected, or repurpose.
 
 ### Analog Sensor Pins (QTRX sensor outputs → Teensy ADC)
 

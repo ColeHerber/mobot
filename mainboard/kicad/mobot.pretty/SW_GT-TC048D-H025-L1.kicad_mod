@@ -18,4 +18,5 @@
 	(fp_line (start -2.2 -0.4) (end -2.2 0.4) (stroke (width 0.12) (type default)) (layer "F.SilkS"))
 	(fp_line (start 2.2 -0.4) (end 2.2 0.4) (stroke (width 0.12) (type default)) (layer "F.SilkS"))
 	(fp_rect (start -3.05 -1.95) (end 3.05 1.95) (stroke (width 0.05) (type default)) (fill no) (layer "F.CrtYd"))
+	(model "${KIPRJMOD}/3d/SW_GT-TC048D-H025-L1.step" (offset (xyz 0 0 0)) (scale (xyz 1 1 1)) (rotate (xyz 0 0 0)))
 )
