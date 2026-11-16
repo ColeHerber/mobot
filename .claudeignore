@@ -1,6 +1,0 @@
-mobot_architecture.svg
-logs/
-*.pyc
-__pycache__/
-.git/
-.DS_Store

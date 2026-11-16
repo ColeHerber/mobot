@@ -52,7 +52,7 @@
         "zones": {
           "border_display_style": 2,
           "border_hatch_pitch": 0.5,
-          "corner_radius": 2.0,
+          "corner_radius": 0.25,
           "corner_smoothing": 2,
           "fill_mode": 0,
           "hatch_gap": 1.5,
@@ -60,12 +60,12 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.05,
+          "min_clearance": 0.1,
           "min_island_area": 10.0,
-          "min_thickness": 0.125,
-          "pad_connection": 1,
+          "min_thickness": 0.25,
+          "pad_connection": 2,
           "remove_islands": 0,
-          "thermal_relief_gap": 0.1,
+          "thermal_relief_gap": 0.2,
           "thermal_relief_spoke_width": 1.0
         }
       },
@@ -76,7 +76,24 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "copper_edge_clearance|91065000|51390000|ced79e3d-9118-4f60-a95a-3db4f6df36cf|a6c0276f-cdb5-41a8-8f8a-6c4a5568d3b0",
+          ""
+        ],
+        [
+          "items_not_allowed|109805000|67945000|6231bb28-c860-4e83-a7cc-7fde9cfd279c|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "items_not_allowed|109805000|77410000|77273106-fd60-4aa0-bc50-24193558e3cf|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "items_not_allowed|109805000|86870000|7260c7d3-ef6f-4d93-9163-3703cd30be89|00000000-0000-0000-0000-000000000000",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -148,7 +165,7 @@
         "max_error": 0.005,
         "min_clearance": 0.127,
         "min_connection": 0.0,
-        "min_copper_edge_clearance": 0.42,
+        "min_copper_edge_clearance": 0.3,
         "min_groove_width": 0.0,
         "min_hole_clearance": 0.195,
         "min_hole_to_hole": 0.25,
@@ -156,8 +173,8 @@
         "min_microvia_drill": 0.1,
         "min_resolved_spokes": 2,
         "min_silk_clearance": 0.0,
-        "min_text_height": 0.8,
-        "min_text_thickness": 0.08,
+        "min_text_height": 0.5,
+        "min_text_thickness": 0.1,
         "min_through_hole_diameter": 0.2,
         "min_track_width": 0.195,
         "min_via_annular_width": 0.1,
@@ -526,7 +543,7 @@
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.195,
+        "clearance": 0.15,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,

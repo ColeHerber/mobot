@@ -12,6 +12,435 @@
 		(comment 1 "ESP32-S3 control + Waveshare ESP32-P4-Module vision; OSH Park 4-layer")
 	)
 	(lib_symbols
+(symbol "Jumper:SolderJumper_2_Open"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "JP"
+				(at 0 2.032 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SolderJumper_2_Open"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Solder Jumper, 2-pole, open"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "solder jumper SPST"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "SolderJumper*Open*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "SolderJumper_2_Open_0_1"
+				(polyline
+					(pts
+						(xy -0.254 1.016)
+						(xy -0.254 -1.016)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -0.254 -1.016)
+					(mid -1.2656 0)
+					(end -0.254 1.016)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(arc
+					(start 0.254 1.016)
+					(mid 1.2656 0)
+					(end 0.254 -1.016)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 1.016)
+						(xy 0.254 -1.016)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SolderJumper_2_Open_1_1"
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 3.81)
+					(name "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+(symbol "Interface_CAN_LIN:SN65HVD232"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at -2.54 10.16 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Value" "SN65HVD232"
+				(at -2.54 7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
+				(at 0 -12.7 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "http://www.ti.com/lit/ds/symlink/sn65hvd230.pdf"
+				(at -2.54 10.16 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "CAN Bus Transceivers, 3.3V, 1Mbps, SOIC-8"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "can transeiver ti"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "SOIC*3.9x4.9mm*P1.27mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "SN65HVD232_0_1"
+				(rectangle
+					(start -7.62 5.08)
+					(end 7.62 -7.62)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "SN65HVD232_1_1"
+				(pin input line
+					(at -10.16 2.54 0)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 -10.16 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 7.62 270)
+					(length 2.54)
+					(name "VCC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -10.16 0 0)
+					(length 2.54)
+					(name "R"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin no_connect line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(hide yes)
+					(name "NC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 10.16 -2.54 180)
+					(length 2.54)
+					(name "CANL"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 10.16 0 180)
+					(length 2.54)
+					(name "CANH"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin no_connect line
+					(at -7.62 -5.08 0)
+					(length 2.54)
+					(hide yes)
+					(name "NC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "mobot:Servo_Header_3x04"
 			(pin_names
 				(offset 1.016)
@@ -11347,7 +11776,7 @@
 		)
 		(uuid "0105e839-a082-4f31-b696-45e5ef59fa61")
 	)
-	(text "4 x 39R in parallel = 9.75R -> 2.6 W at 5 V (0.64 W each, 2010 = 0.75 W). One per side of U6, bottom side."
+	(text "4 x 39R in parallel = 9.75R -> 2.6 W at 5 V (0.64 W each, 2512 = 1 W). One per side of U6, bottom side."
 		(exclude_from_sim no)
 		(at 835.66 472.44 0)
 		(effects
@@ -12320,10 +12749,6 @@
 		(uuid "1c2582e1-cc99-40e4-b8cf-7de09fc99e3b")
 	)
 	(no_connect
-		(at 154.94 264.16)
-		(uuid "1cc132a2-036c-487a-9e60-2a7631673ead")
-	)
-	(no_connect
 		(at 170.18 556.26)
 		(uuid "21e94a86-ff70-4ffb-a262-9f95d1ba509e")
 	)
@@ -12450,10 +12875,6 @@
 	(no_connect
 		(at 119.38 548.64)
 		(uuid "a605af17-3ddf-4ada-a023-281b07191979")
-	)
-	(no_connect
-		(at 154.94 302.26)
-		(uuid "a8bca547-86a9-456a-95cc-eabf87e495ab")
 	)
 	(no_connect
 		(at 119.38 591.82)
@@ -32292,7 +32713,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "39R 0.75W"
+		(property "Value" "39R 1W"
 			(at 919.48 360.68 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -32303,7 +32724,29 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_2010_5025Metric"
+		(property "Footprint" "Resistor_SMD:R_2512_6332Metric"
+			(at 916.94 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 916.94 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "RC2512FK-0739RL"
 			(at 916.94 359.41 0)
 			(hide yes)
 			(show_name no)
@@ -33683,7 +34126,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "39R 0.75W"
+		(property "Value" "39R 1W"
 			(at 858.52 360.68 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -33694,7 +34137,29 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_2010_5025Metric"
+		(property "Footprint" "Resistor_SMD:R_2512_6332Metric"
+			(at 855.98 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 855.98 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "RC2512FK-0739RL"
 			(at 855.98 359.41 0)
 			(hide yes)
 			(show_name no)
@@ -36405,7 +36870,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "39R 0.75W"
+		(property "Value" "39R 1W"
 			(at 949.96 360.68 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -36416,7 +36881,29 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_2010_5025Metric"
+		(property "Footprint" "Resistor_SMD:R_2512_6332Metric"
+			(at 947.42 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 947.42 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "RC2512FK-0739RL"
 			(at 947.42 359.41 0)
 			(hide yes)
 			(show_name no)
@@ -36714,7 +37201,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "39R 0.75W"
+		(property "Value" "39R 1W"
 			(at 889 360.68 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -36725,7 +37212,29 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_2010_5025Metric"
+		(property "Footprint" "Resistor_SMD:R_2512_6332Metric"
+			(at 886.46 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 886.46 359.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "RC2512FK-0739RL"
 			(at 886.46 359.41 0)
 			(hide yes)
 			(show_name no)
@@ -39106,6 +39615,1221 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ac102002-9493-4e5e-ba54-2939bee38973")
+	)
+	(global_label "CAN_D"
+		(shape output)
+		(at 154.94 302.26 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "07514cc2-30bb-4018-8775-3c3b2769f108")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 154.94 302.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "CAN_R"
+		(shape input)
+		(at 154.94 264.16 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "59559536-c9e8-4bcf-a4d8-493436464b50")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 154.94 264.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(rectangle
+		(start 391.16 726.44)
+		(end 611.16 836.44)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "7eb5a558-2f4c-4be1-8163-50250327fd29")
+	)
+	(text "CAN (SN65HVD232, copied from the Rolly CAN+IMU board; all DNP, bottom side)"
+		(exclude_from_sim no)
+		(at 392.43 728.98 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0bf15c22-8a46-48be-a310-f5d1081b00b5")
+	)
+	(global_label "CAN_D"
+		(shape input)
+		(at 426.72 767.08 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "60888920-649d-444d-b8ef-7d1952393920")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 426.72 767.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 436.88 779.78 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3f964574-7891-4a8f-b650-a1b17fea298a")
+		(property "Reference" "#PWR148"
+			(at 436.88 785.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 436.88 785.38 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 436.88 779.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 436.88 779.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "db79751f-a16e-46d2-9b4e-3fafa9ff0a1a")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "#PWR148")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 436.88 762 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1518b811-285c-42bd-b719-ad20de4c6c2c")
+		(property "Reference" "#PWR149"
+			(at 436.88 756.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 436.88 756.4 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 436.88 762 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 436.88 762 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ce7520de-26eb-42c2-83a2-0010c9303aff")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "#PWR149")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "CAN_R"
+		(shape output)
+		(at 426.72 769.62 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "05d5cbcf-0104-41d8-b909-e46a56487ecc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 426.72 769.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "CAN-"
+		(shape bidirectional)
+		(at 447.04 772.16 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "30ea6f67-753a-4df7-a1ac-a6a7aca5ec52")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 447.04 772.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "CAN+"
+		(shape bidirectional)
+		(at 447.04 769.62 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ad85db92-ba1f-4a24-ac39-ecd91493e564")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 447.04 769.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_CAN_LIN:SN65HVD232")
+		(at 436.88 769.62 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "499bb913-9222-4d2b-a733-585192b5d0e7")
+		(property "Reference" "U9"
+			(at 429.26 760.73 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "SN65HVD232DR"
+			(at 429.26 763.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
+			(at 436.88 769.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 436.88 769.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "80e38ede-71e8-482a-a392-8ff1bb5dd173")
+		)
+		(pin "2"
+			(uuid "86c73a92-742c-456e-a24b-ddf592a23816")
+		)
+		(pin "3"
+			(uuid "59077406-a35d-44bf-b18d-03ac57ab3a91")
+		)
+		(pin "4"
+			(uuid "ad3e6a32-51d1-49aa-85c6-161f7c12ecc7")
+		)
+		(pin "5"
+			(uuid "2586132a-9d2c-448e-a4c7-397caaadd763")
+		)
+		(pin "6"
+			(uuid "861e9b51-f059-49eb-94e8-b0ba5d4ff2ae")
+		)
+		(pin "7"
+			(uuid "20c414f2-6617-435e-b0f7-130b27607142")
+		)
+		(pin "8"
+			(uuid "e08bbc1d-657e-4a6c-9122-36522514f310")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "U9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 434.34 805.18 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e08fadaa-ad51-46dc-8f9c-dec90f27e6ce")
+		(property "Reference" "#PWR150"
+			(at 428.24 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 428.24 805.18 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 434.34 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 434.34 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "37c84243-df9b-4e61-8f95-715b8f3a255c")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "#PWR150")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 439.42 805.18 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "717bd21e-0dbb-4b6c-be7e-38e180286a9c")
+		(property "Reference" "#PWR151"
+			(at 444.52 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 444.52 805.18 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 439.42 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 439.42 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f634d9b6-faf4-40e8-b683-34f8acf031fe")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "#PWR151")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Small")
+		(at 436.88 805.18 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "26308cba-4581-40a6-a5e3-ca19bf7a6c5e")
+		(property "Reference" "C43"
+			(at 436.88 802.005 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100nF"
+			(at 436.88 808.355 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
+			(at 436.88 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 436.88 805.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "78cd8674-e98e-44c3-93d2-ea74b6a4eddf")
+		)
+		(pin "2"
+			(uuid "7d581160-5c33-4c98-a932-bc4e994733dd")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "C43")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "CAN+"
+		(shape bidirectional)
+		(at 502.92 759.46 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d48d1489-102b-456a-aabf-9b63ae81f1c1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 502.92 759.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "CAN-"
+		(shape bidirectional)
+		(at 502.92 762 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "450ae22d-bc41-4e99-abcd-addc6a4aa99b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 502.92 762 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 502.92 764.54 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7bc83e65-8977-46d5-8023-8df5565543f5")
+		(property "Reference" "#PWR153"
+			(at 497.82 764.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 497.82 764.54 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 502.92 764.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 502.92 764.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3340f1f9-4e74-4762-84bc-fe9b44a6ccff")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "#PWR153")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x04")
+		(at 508 759.46 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "39ebd44b-0f38-4112-9f8f-c839543075fd")
+		(property "Reference" "CAN0"
+			(at 510.54 759.46 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CAN0"
+			(at 510.54 762 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal"
+			(at 508 759.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 508 759.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a18d5156-4c10-476d-991d-a3e0d1942c4f")
+		)
+		(pin "2"
+			(uuid "06a47316-74bc-4542-9aaa-8227275248e3")
+		)
+		(pin "3"
+			(uuid "e737af68-d48c-4450-9b46-4a90a7709bf4")
+		)
+		(pin "4"
+			(uuid "fed79a74-19f3-4db2-87c5-beccad6ebd88")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "CAN0")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "CAN+"
+		(shape bidirectional)
+		(at 502.92 792.48 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "0103f677-b8b1-4bcc-9847-bc95f6ccab4b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 502.92 792.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "CAN-"
+		(shape bidirectional)
+		(at 502.92 795.02 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "66a58b71-0fdd-4405-9fca-3ae2bafe08b2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 502.92 795.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 502.92 797.56 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "4e6aa38a-7d9c-4251-8ace-836c4348bd09")
+		(property "Reference" "#PWR155"
+			(at 497.82 797.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 497.82 797.56 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 502.92 797.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 502.92 797.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b25e54a6-142c-4021-b849-bcc8b2d5dfe1")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "#PWR155")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x04")
+		(at 508 792.48 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "c4ba9809-af5e-46f2-801a-270fa6f1ee11")
+		(property "Reference" "CAN1"
+			(at 510.54 792.48 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CAN1"
+			(at 510.54 795.02 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal"
+			(at 508 792.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 508 792.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "0849d8b8-f309-45be-9163-a9fc5a1a4d19")
+		)
+		(pin "2"
+			(uuid "7fee87c8-739e-46b1-add7-e557231aefac")
+		)
+		(pin "3"
+			(uuid "c850815a-5ce7-4590-ab0f-79aff1301a7d")
+		)
+		(pin "4"
+			(uuid "6a88cdd2-d530-429b-9c70-7dc4a78b2ff6")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "CAN1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "CAN-"
+		(shape bidirectional)
+		(at 570.23 756.92 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "225d7a42-b56d-4615-87e2-71fe11d0be3c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 570.23 756.92 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "CAN_TERM"
+		(shape bidirectional)
+		(at 577.85 756.92 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "4adc7b46-f8f9-4bf1-910a-974682e8b4c4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 577.85 756.92 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 574.04 756.92 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "861d3cc8-d554-470e-bb07-2799a8889d1b")
+		(property "Reference" "R36"
+			(at 574.04 753.745 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "120"
+			(at 574.04 760.095 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder"
+			(at 574.04 756.92 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 574.04 756.92 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "cbb6f463-0dae-4921-bf95-15dd5f5ee67f")
+		)
+		(pin "2"
+			(uuid "5eb6f6e9-146d-4170-b470-aaf7b23acb24")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "R36")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "CAN_TERM"
+		(shape bidirectional)
+		(at 574.04 779.78 270)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "27ee99a9-cd01-41b6-9ad3-b0b50498da77")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 574.04 779.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "CAN+"
+		(shape bidirectional)
+		(at 574.04 769.62 90)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "cbed4ec3-fb2c-4a1e-909f-b5984af21cd2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 574.04 769.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Jumper:SolderJumper_2_Open")
+		(at 574.04 774.7 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "09b9366c-e700-4a2a-9f10-6ad422880413")
+		(property "Reference" "CAN_TERM"
+			(at 574.04 772.795 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "CAN 120R"
+			(at 574.04 776.605 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm"
+			(at 574.04 774.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 574.04 774.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "95093f0a-28b2-4516-9147-4c09b76e3e04")
+		)
+		(pin "2"
+			(uuid "85f3572a-12b3-4602-9e9e-8e833bf71e6a")
+		)
+		(instances
+			(project "mobot_mainboard"
+				(path "/3bc6eac6-b466-46f2-b335-d07eaaa572a7"
+					(reference "CAN_TERM")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "TWAI: CAN_D = IO16 (TX), CAN_R = IO1 (RX). J12/J13 in parallel, DroneCAN pinout: 1 +5V (left open), 2 CANH, 3 CANL, 4 GND."
+		(exclude_from_sim no)
+		(at 396.24 825.5 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c6f2cb7a-c6f4-48ae-89b8-8fecaa19dbed")
+	)
+	(text "Bridge JP1 to add the 120R terminator (only at a bus end). Everything here is DNP, on B.Cu."
+		(exclude_from_sim no)
+		(at 396.24 828.04 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0290bfa0-54a8-456c-ae60-931cf938de36")
+	)
+	(no_connect
+		(at 502.92 756.92)
+		(uuid "724ec559-4035-41d1-bead-fef2cfa813b2")
+	)
+	(no_connect
+		(at 502.92 789.94)
+		(uuid "7bbd85e8-d10f-41a8-a771-89b0f5a8791b")
 	)
 	(sheet_instances
 		(path "/"

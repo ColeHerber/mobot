@@ -13,7 +13,7 @@ This document turns the architecture into a buildable board. It covers what carr
 | D1 | Backup IMU | SCH16T-K01 + **one ISM6HG256X**, no second footprint |
 | D2 | Heater element | Symmetric discrete resistors, not a trace heater |
 | D4 | SCH16T temperature output | Use it for compensation and heater feedback; safety is in firmware (no hardware cutoff) |
-| D6 | CAN | Dropped |
+| D6 | CAN | Footprints only (DNP, bottom side) |
 | D7 | P4 programming | **Through the S3**: a USB bridge plus store-and-forward. No P4 USB-C |
 | D8 | Power out | Servos powered from VBAT through board headers (assumed 2S-safe). ESC powered through an **XT30 output on the board** |
 | D9 | Camera | **Arducam OV9281 1 MP global-shutter NoIR mono, 130° M12, Raspberry Pi FPC** |
@@ -52,7 +52,7 @@ Still open: D3 (heater at all?), D5 (power-topology details). Deferred: D11 (ser
 | Pogo pads | J3 (prog/reset/boot), J5 (IMU SPI tap) | — | **Removed** (D14). Replaced by S3 BOOT + RESET buttons and bare test pads. |
 | LEDs | WS2812B-2020, PWR/LIFE/FAULT | Status | Keep. |
 | Buttons | PTS526 | S3 BOOT, S3 RESET (PTS526); **START = Cherry MX keyboard switch** | BOOT + RESET replace the pogo programming pins. |
-| CAN | SN65HVD232 (U3), JST-GH ×2 | — | **Removed** (D6). |
+| CAN | SN65HVD232 (U3), JST-GH ×2 | U9, CAN0/CAN1, R36 + CAN_TERM terminator | **Copied, all DNP on B.Cu** (D6). |
 | BOM fields | LCSC numbers | — | Replace with **DigiKey/Mouser** part numbers. OSH Park doesn't assemble (D12). |
 
 **About copper weight:** you're right, and my "2 oz" was wrong. I took it from the header line in `CIRCUIT_DIAGRAM.md` ("4-layer, 2-oz Cu") without checking the PCB. The `.kicad_pcb` stackup shows about 1 oz outer. It's moot anyway, because OSH Park 4-layer is 1 oz outer / ½ oz inner with no heavy-copper option. See D8 for widths.
@@ -135,7 +135,9 @@ The Waveshare module runs entirely from **3.3 V**: ESP_3V3 pads 85/86, with its 
 
 That fits the TPSM33620's 2 A with margin. Turning the S3's Wi-Fi off (D15) keeps it comfortable.
 
-### D6. CAN — decided: dropped. GPIO16/17 go to the expansion Qwiic port.
+### D6. CAN — footprints only, all DNP on the bottom side.
+
+The Rolly CAN block is copied as-is: SN65HVD232 (U9) + 100 nF (C43), two JST-GH 4-pin ports in parallel (CAN0/CAN1, DroneCAN pinout: 1 +5V left open, 2 CAN+, 3 CAN-, 4 GND), and the 120 R terminator (R36) behind solder jumper CAN_TERM. TX = IO16 (same as Rolly); RX moves to **IO1** because IO17 is now the START LED. Rolly's schematic left R36/JP1 pin 1 unconnected; here they share net CAN_TERM so the terminator actually works when CAN_TERM is bridged.
 
 ### D7. Programming the P4 through the S3 — yes, and recommended
 

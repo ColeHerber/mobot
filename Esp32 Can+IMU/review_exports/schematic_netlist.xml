@@ -1,0 +1,3708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>/Users/cole/Desktop/Rolly/Esp32 Can+IMU/Esp32 Can+IMU.kicad_sch</source>
+    <date>2026-07-04T12:19:35</date>
+    <tool>Eeschema 10.0.3</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Esp32 Can+IMU.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="C1">
+      <value>2.2uF 100v</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>6a91c0a6-c090-435b-bf0d-e96678650717</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C2">
+      <value>2.2uF 100v</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>fce11cfd-4442-48ac-9a92-2b70ff65da96</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C3">
+      <value>1uF 10V X5R</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>599c262c-da06-4889-8ea2-878f4fd51eaf</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C4">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ece95228-6d65-4cbd-9f08-a32c8cc49479</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C5">
+      <value>6.8nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>019bbff4-5f8c-48bd-88ad-6024c8259e48</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C6">
+      <value>47uF 10v</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c8e4fdb4-eede-4894-b4c0-3b9370d1f6ac</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C7">
+      <value>47uF 10v</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_1206_3216Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1e0629d5-26ad-4437-9f6e-2aa91cd6e4bb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C8">
+      <value>39pF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>32772843-7e59-40ad-aa40-77c667f9fe8b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C9">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>53a696b5-6bca-44b0-8664-6d61a6ca24fb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C10">
+      <value>22uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0603_1608Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e6e13856-7574-4b12-9292-8c43a1629223</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C11">
+      <value>4.7uF X7R</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0805_2012Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>eda29683-203d-43db-af64-2e6a9d2b40f7</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C12">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>4f1db6eb-4cd8-4945-a3ba-3f388db97f5f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C13">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d732516b-2535-4286-854b-31846cce7252</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C14">
+      <value>1uF 10V X5R</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3a43f79b-5b8e-426c-b94d-85aa42be620a</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C15">
+      <value>1uF 10V X5R</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9dd603e4-308b-4f31-a23d-0e4893cb8011</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C16">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>73cdc8ab-57d1-4ecd-8376-3b40b280d2f8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C17">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f0ad603d-c112-48a3-bbf7-0e2e9d363e87</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C18">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0402_1005Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>fabe79bd-1edc-4e70-a7b5-828cd2749701</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C19">
+      <value>22uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0805_2012Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>023e4638-cfe1-4d61-87d8-cd1e8473c1d8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C20">
+      <value>22uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <description>Unpolarized capacitor, small symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Capacitor_SMD:C_0805_2012Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7589e7d3-1dc7-44b8-9924-bd4d398f1281</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="CAN_TERM1">
+      <value>CAN 120R</value>
+      <footprint>Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm</footprint>
+      <description>Solder Jumper, 2-pole, open</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Solder Jumper, 2-pole, open</field>
+      </fields>
+      <libsource lib="Jumper" part="SolderJumper_2_Open" description="Solder Jumper, 2-pole, open"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="solder jumper SPST"/>
+      <property name="ki_fp_filters" value="SolderJumper*Open*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c90ab145-fcd8-4299-a122-0864d81b8048</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D2">
+      <value>WS2812B-2020</value>
+      <footprint>LED_SMD:LED_WS2812B-2020_PLCC4_2.0x2.0mm</footprint>
+      <datasheet>https://cdn-shop.adafruit.com/product-files/4684/4684_WS2812B-2020_V1.3_EN.pdf</datasheet>
+      <description>RGB LED with integrated controller, 2.0 x 2.0 mm, 12 mA</description>
+      <fields>
+        <field name="Label">Status</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">LED_SMD:LED_WS2812B-2020_PLCC4_2.0x2.0mm</field>
+        <field name="Datasheet">https://cdn-shop.adafruit.com/product-files/4684/4684_WS2812B-2020_V1.3_EN.pdf</field>
+        <field name="Description">RGB LED with integrated controller, 2.0 x 2.0 mm, 12 mA</field>
+      </fields>
+      <libsource lib="LED" part="WS2812B-2020" description="RGB LED with integrated controller, 2.0 x 2.0 mm, 12 mA"/>
+      <property name="Label" value="Status"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="RGB LED NeoPixel Nano addressable"/>
+      <property name="ki_fp_filters" value="LED*WS2812*-2020_PLCC4*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>58fc9c63-707a-4474-9c10-09caa6b0f878</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="2"/>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D3">
+      <value>PWR</value>
+      <footprint>LED_SMD:LED_0603_1608Metric</footprint>
+      <description>Light emitting diode</description>
+      <fields>
+        <field name="Sim.Pins">1=K 2=A</field>
+        <field name="LCSC"/>
+        <field name="LCSC#">C2986048</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">LED_SMD:LED_0603_1608Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Light emitting diode</field>
+      </fields>
+      <libsource lib="Device" part="LED" description="Light emitting diode"/>
+      <property name="Sim.Pins" value="1=K 2=A"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C2986048"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="LED diode"/>
+      <property name="ki_fp_filters" value="LED* LED_SMD:* LED_THT:*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>62f51144-e84b-4ad9-8a15-fef7c960c55d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D4">
+      <value>LIFE</value>
+      <footprint>LED_SMD:LED_0603_1608Metric</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/Rohm%20PDFs/SMLE12_Series_Rev2.0_2007.pdf</datasheet>
+      <description>Light emitting diode</description>
+      <fields>
+        <field name="PROD_ID">DIO-08575</field>
+        <field name="LCSC"/>
+        <field name="LCSC#">C19171390</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">LED_SMD:LED_0603_1608Metric</field>
+        <field name="Datasheet">https://media.digikey.com/pdf/Data%20Sheets/Rohm%20PDFs/SMLE12_Series_Rev2.0_2007.pdf</field>
+        <field name="Description">Light emitting diode</field>
+      </fields>
+      <libsource lib="PCM_SparkFun-LED" part="LED_Blue_0603" description="Light emitting diode"/>
+      <property name="PROD_ID" value="DIO-08575"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C19171390"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="SparkFun LED diode"/>
+      <property name="ki_fp_filters" value="LED* LED_SMD:* LED_THT:*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8db0cba0-cdce-48a8-92b2-b4a03766e4e0</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D5">
+      <value>SS54</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <description>Schottky diode</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Diode_SMD:D_SMA</field>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode</field>
+      </fields>
+      <libsource lib="Device" part="D_Schottky" description="Schottky diode"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="diode Schottky"/>
+      <property name="ki_fp_filters" value="TO-???* *_Diode_* *SingleDiode* D_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>05fe2ab9-101d-4612-b456-8b6de805c556</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D6">
+      <value>FAULT</value>
+      <footprint>LED_SMD:LED_0603_1608Metric</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/Rohm%20PDFs/SMLE12_Series_Rev2.0_2007.pdf</datasheet>
+      <description>Light emitting diode</description>
+      <fields>
+        <field name="PROD_ID">DIO-08575</field>
+        <field name="LCSC"/>
+        <field name="LCSC#">C19171390</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">LED_SMD:LED_0603_1608Metric</field>
+        <field name="Datasheet">https://media.digikey.com/pdf/Data%20Sheets/Rohm%20PDFs/SMLE12_Series_Rev2.0_2007.pdf</field>
+        <field name="Description">Light emitting diode</field>
+      </fields>
+      <libsource lib="PCM_SparkFun-LED" part="LED_Blue_0603" description="Light emitting diode"/>
+      <property name="PROD_ID" value="DIO-08575"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C19171390"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="SparkFun LED diode"/>
+      <property name="ki_fp_filters" value="LED* LED_SMD:* LED_THT:*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>94a81a21-3c7a-4774-afe9-9ef837c163b9</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D7">
+      <value>SS56</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <description>Schottky diode</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Diode_SMD:D_SMA</field>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode</field>
+      </fields>
+      <libsource lib="Device" part="D_Schottky" description="Schottky diode"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="diode Schottky"/>
+      <property name="ki_fp_filters" value="TO-???* *_Diode_* *SingleDiode* D_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d3dac65d-6670-4ce9-ae34-21d837c43016</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D8">
+      <value>SS56</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <description>Schottky diode</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Diode_SMD:D_SMA</field>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode</field>
+      </fields>
+      <libsource lib="Device" part="D_Schottky" description="Schottky diode"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="diode Schottky"/>
+      <property name="ki_fp_filters" value="TO-???* *_Diode_* *SingleDiode* D_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>49d0745b-1116-482a-9c54-6ee0d69e7ae8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D9">
+      <value>SS54</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <description>Schottky diode</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Diode_SMD:D_SMA</field>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode</field>
+      </fields>
+      <libsource lib="Device" part="D_Schottky" description="Schottky diode"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="diode Schottky"/>
+      <property name="ki_fp_filters" value="TO-???* *_Diode_* *SingleDiode* D_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a53fee51-bc24-4ead-b770-00047e59f29b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D10">
+      <value>SS54</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <description>Schottky diode</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Diode_SMD:D_SMA</field>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode</field>
+      </fields>
+      <libsource lib="Device" part="D_Schottky" description="Schottky diode"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="diode Schottky"/>
+      <property name="ki_fp_filters" value="TO-???* *_Diode_* *SingleDiode* D_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c579502c-a1a6-4b5f-ad95-fe411dbe1044</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="D_TVS1">
+      <value>SMBJ58A</value>
+      <footprint>Diode_SMD:D_SMB</footprint>
+      <description>Schottky diode</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Diode_SMD:D_SMB</field>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode</field>
+      </fields>
+      <libsource lib="Device" part="D_Schottky" description="Schottky diode"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="diode Schottky"/>
+      <property name="ki_fp_filters" value="TO-???* *_Diode_* *SingleDiode* D_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8bcb6b4c-ea6e-457e-81f4-71324ed9345a</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="F1">
+      <value>C41367225</value>
+      <footprint>Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder</footprint>
+      <description>Fuse</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C41367225</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder</field>
+        <field name="Datasheet"/>
+        <field name="Description">Fuse</field>
+      </fields>
+      <libsource lib="Device" part="Fuse" description="Fuse"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C41367225"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="fuse"/>
+      <property name="ki_fp_filters" value="*Fuse*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1ff0ff6f-5e5f-4caf-9212-5992db473f28</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="H1">
+      <value>M3</value>
+      <footprint>MountingHole:MountingHole_3.2mm_M3_Pad_Via</footprint>
+      <description>Mounting Hole with connection</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">MountingHole:MountingHole_3.2mm_M3_Pad_Via</field>
+        <field name="Datasheet"/>
+        <field name="Description">Mounting Hole with connection</field>
+      </fields>
+      <libsource lib="Mechanical" part="MountingHole_Pad" description="Mounting Hole with connection"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <property name="ki_fp_filters" value="MountingHole*Pad*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>327aa0f2-88d3-4233-9b12-e739dd6df52f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="H2">
+      <value>M3</value>
+      <footprint>MountingHole:MountingHole_3.2mm_M3_Pad_Via</footprint>
+      <description>Mounting Hole with connection</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">MountingHole:MountingHole_3.2mm_M3_Pad_Via</field>
+        <field name="Datasheet"/>
+        <field name="Description">Mounting Hole with connection</field>
+      </fields>
+      <libsource lib="Mechanical" part="MountingHole_Pad" description="Mounting Hole with connection"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <property name="ki_fp_filters" value="MountingHole*Pad*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e61c4027-fda9-41ba-9224-5d7e1437c3dc</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="H3">
+      <value>M3</value>
+      <footprint>MountingHole:MountingHole_3.2mm_M3_Pad_Via</footprint>
+      <description>Mounting Hole with connection</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">MountingHole:MountingHole_3.2mm_M3_Pad_Via</field>
+        <field name="Datasheet"/>
+        <field name="Description">Mounting Hole with connection</field>
+      </fields>
+      <libsource lib="Mechanical" part="MountingHole_Pad" description="Mounting Hole with connection"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <property name="ki_fp_filters" value="MountingHole*Pad*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>230279b3-bf99-4209-8c41-21150e11352b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="H4">
+      <value>M3</value>
+      <footprint>MountingHole:MountingHole_3.2mm_M3_Pad_Via</footprint>
+      <description>Mounting Hole with connection</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">MountingHole:MountingHole_3.2mm_M3_Pad_Via</field>
+        <field name="Datasheet"/>
+        <field name="Description">Mounting Hole with connection</field>
+      </fields>
+      <libsource lib="Mechanical" part="MountingHole_Pad" description="Mounting Hole with connection"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <property name="ki_fp_filters" value="MountingHole*Pad*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b6acdfa6-51b3-46d3-981f-5fa7ef6e35d2</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J1">
+      <value>CAN0</value>
+      <footprint>Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal</footprint>
+      <description>Generic connector, single row, 01x04, script generated</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C189895</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x04, script generated</field>
+      </fields>
+      <libsource lib="Connector" part="Conn_01x04_Pin" description="Generic connector, single row, 01x04, script generated"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C189895"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b6fc7a51-eb2a-439a-a98a-c8af31be8db4</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J2">
+      <value>CAN1</value>
+      <footprint>Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal</footprint>
+      <description>Generic connector, single row, 01x04, script generated</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C189895</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x04, script generated</field>
+      </fields>
+      <libsource lib="Connector" part="Conn_01x04_Pin" description="Generic connector, single row, 01x04, script generated"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C189895"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>08cb0f9e-60b3-4f18-b49c-2087dfbb0877</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J3">
+      <value>Conn_01x09_Pin</value>
+      <footprint>Pogo:Untitled</footprint>
+      <description>Generic connector, single row, 01x09, script generated</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Pogo:Untitled</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x09, script generated</field>
+      </fields>
+      <libsource lib="Connector" part="Conn_01x09_Pin" description="Generic connector, single row, 01x09, script generated"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d7929ab0-3d18-4fb9-9ad4-e1ed55843f0d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+            <pin num="8"/>
+            <pin num="9"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J4">
+      <value>UART1</value>
+      <footprint>Connector_JST:JST_GH_SM03B-GHS-TB_1x03-1MP_P1.25mm_Horizontal</footprint>
+      <description>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_JST:JST_GH_SM03B-GHS-TB_1x03-1MP_P1.25mm_Horizontal</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</field>
+      </fields>
+      <libsource lib="Connector_Generic" part="Conn_01x03" description="Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f0cc8b72-ffd5-44d9-916a-0af7068721d5</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J5">
+      <value>Conn_01x09_Pin</value>
+      <footprint>Pogo:Untitled</footprint>
+      <description>Generic connector, single row, 01x09, script generated</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Pogo:Untitled</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x09, script generated</field>
+      </fields>
+      <libsource lib="Connector" part="Conn_01x09_Pin" description="Generic connector, single row, 01x09, script generated"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b6ea0205-8bf3-457d-b265-b738b392b180</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+            <pin num="8"/>
+            <pin num="9"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J6">
+      <value>5V ⏚</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</field>
+      </fields>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2d0ab1b7-0fbb-47f2-94e8-0952a6547f96</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J7">
+      <value>PWM1</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">1</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="1"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>11e2cdcc-890d-40b6-a2e8-2c20e4474821</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J8">
+      <value>PWM2</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">2</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="2"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>741e648b-10a7-4a17-a6cc-d22e1ecb1d0e</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J9">
+      <value>PWM3</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">4</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="4"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>33c7e6aa-4667-481d-bffd-818a1bb6edf8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J10">
+      <value>PWM4</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">4</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="4"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>61c0fe5f-eead-49c4-a864-2afd296f29b4</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J11">
+      <value>Qwiic</value>
+      <footprint>Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical</footprint>
+      <datasheet>https://www.jst-mfg.com/product/pdf/eng/eSH.pdf</datasheet>
+      <description>4 pin JST 1mm polarized connector for I2C</description>
+      <fields>
+        <field name="PROD_ID">CONN-14483</field>
+        <field name="LCSC"/>
+        <field name="LCSC#">C160390</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical</field>
+        <field name="Datasheet">https://www.jst-mfg.com/product/pdf/eng/eSH.pdf</field>
+        <field name="Description">4 pin JST 1mm polarized connector for I2C</field>
+      </fields>
+      <libsource lib="PCM_SparkFun-Connector" part="Qwiic_Vertical" description="4 pin JST 1mm polarized connector for I2C"/>
+      <property name="PROD_ID" value="CONN-14483"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C160390"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="SparkFun connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>dc688b53-38fb-4c62-93d1-6617023dd698</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="4"/>
+            <pin num="3"/>
+            <pin num="2"/>
+            <pin num="1"/>
+            <pin num="NC1"/>
+            <pin num="NC2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J12">
+      <value>ADC1</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">1</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="1"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>fb0eaba0-4036-444d-b22f-121dd7412671</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J13">
+      <value>ADC2</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">2</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="2"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>4fb9b3bd-3039-42c2-aed1-c286ccecb28e</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J14">
+      <value>ADC3</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">3</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="3"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>6ab46626-a2ff-4d0a-bbfc-30f9963d3c28</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J15">
+      <value>ADC4</value>
+      <footprint>Connector:PinHeader_1x03_P2.54mm_Vertical_Close</footprint>
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Number">4</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector:PinHeader_1x03_P2.54mm_Vertical_Close</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <libsource lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male" description="Pin Header male with pin space 2.54mm. Pin Count -3"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Number" value="4"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="Pin Header"/>
+      <property name="ki_fp_filters" value="PinHeader_1x03_P2.54mm*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e9a2bb0f-7cf9-4567-9c64-6c8ccacf21a7</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="J17">
+      <value>USB C IN</value>
+      <footprint>Connector_USB:USB_C_Receptacle_JAE_DX07S016JA1R1500</footprint>
+      <datasheet>https://www.usb.org/sites/default/files/documents/usb_type-c.zip</datasheet>
+      <description>USB 2.0-only 16P Type-C Receptacle connector</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_USB:USB_C_Receptacle_JAE_DX07S016JA1R1500</field>
+        <field name="Datasheet">https://www.usb.org/sites/default/files/documents/usb_type-c.zip</field>
+        <field name="Description">USB 2.0-only 16P Type-C Receptacle connector</field>
+      </fields>
+      <libsource lib="Connector" part="USB_C_Receptacle_USB2.0_16P" description="USB 2.0-only 16P Type-C Receptacle connector"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="usb universal serial bus type-C USB2.0"/>
+      <property name="ki_fp_filters" value="USB*C*Receptacle*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>76e5b75d-9da2-4b0b-9f5c-f19f000aea4f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="SH"/>
+            <pin num="A1"/>
+            <pin num="A12"/>
+            <pin num="B1"/>
+            <pin num="B12"/>
+            <pin num="A4"/>
+            <pin num="A9"/>
+            <pin num="B4"/>
+            <pin num="B9"/>
+            <pin num="A5"/>
+            <pin num="B5"/>
+            <pin num="A7"/>
+            <pin num="B7"/>
+            <pin num="A6"/>
+            <pin num="B6"/>
+            <pin num="A8"/>
+            <pin num="B8"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="L1">
+      <value>8.2uH</value>
+      <footprint>Inductor_SMD:L_Changjiang_FNR4010S</footprint>
+      <description>Inductor</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C45958745</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Inductor_SMD:L_Changjiang_FNR4010S</field>
+        <field name="Datasheet"/>
+        <field name="Description">Inductor</field>
+      </fields>
+      <libsource lib="Device" part="L" description="Inductor"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C45958745"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="inductor choke coil reactor magnetic"/>
+      <property name="ki_fp_filters" value="Choke_* *Coil* Inductor_* L_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b1a89d9f-9e1c-40c0-b551-05986fcc5b8c</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R1">
+      <value>174k</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0603_1608Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1aee9c24-d5bb-473e-a690-642f6efe0180</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R2">
+      <value>35.3k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1b92f6bf-b7a7-41b7-b339-500ce62c5e79</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R3">
+      <value>162k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>23478a41-cbd8-4c5e-8a52-83af66047bfc</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R4">
+      <value>13.0k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ee5fccb8-8657-47b4-86c7-d16c52d87275</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R5">
+      <value>59k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e34d39b7-abc2-4537-a4c7-76acb59391f0</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R6">
+      <value>10.2k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9241ed77-979f-4858-a36a-fa5734e76f98</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R7">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>6d949d1a-49b6-4a9c-ae34-ab59d644e0ad</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R8">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>99b18bda-ae68-4ab2-83d9-b34e1df23648</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R9">
+      <value>120</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>4cf8ea22-db4c-4f96-9ff0-41622cd6c250</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R10">
+      <value>5.1k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c1aedde8-4dd1-440d-a52c-0d67705d536e</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R11">
+      <value>5.1k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>bc337c2d-8da7-480a-8b6f-46a4c35e110d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R16">
+      <value>100k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>eb87654b-de6e-467e-8453-749a06347bd6</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R18">
+      <value>4.7k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>08960840-a239-4093-912e-0ca04d0ba4d3</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R19">
+      <value>4.7k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>69672b6b-51eb-459b-9c9b-4d870eeabcd7</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R22">
+      <value>1k</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>af9eb1db-6c6a-485e-adff-ce61d67f7a95</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R23">
+      <value>100</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3ab22fab-66fe-498e-833c-52e27bf11729</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R24">
+      <value>100</value>
+      <footprint>Resistor_SMD:R_0402_1005Metric</footprint>
+      <description>Resistor, US symbol</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_0402_1005Metric</field>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <libsource lib="Device" part="R_US" description="Resistor, US symbol"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f559b16c-e463-4af1-b01c-b4a9ef52c7b8</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="RegPwr1">
+      <value>CAN_PWR</value>
+      <footprint>Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm</footprint>
+      <description>Solder Jumper, 2-pole, open</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#"/>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm</field>
+        <field name="Datasheet"/>
+        <field name="Description">Solder Jumper, 2-pole, open</field>
+      </fields>
+      <libsource lib="Jumper" part="SolderJumper_2_Open" description="Solder Jumper, 2-pole, open"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="solder jumper SPST"/>
+      <property name="ki_fp_filters" value="SolderJumper*Open*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8b131fca-cb5c-4d1c-a7d5-3939f32dd755</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="RN1">
+      <value>33</value>
+      <footprint>Resistor_SMD:R_Array_Concave_4x0402</footprint>
+      <description>4 resistor network, parallel topology</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_Array_Concave_4x0402</field>
+        <field name="Datasheet"/>
+        <field name="Description">4 resistor network, parallel topology</field>
+      </fields>
+      <libsource lib="Device" part="R_Pack04" description="4 resistor network, parallel topology"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R network parallel topology isolated"/>
+      <property name="ki_fp_filters" value="DIP* SOIC* R*Array*Concave* R*Array*Convex* MSOP*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f07c900b-864b-4d63-a516-a7f7f1b35277</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="8"/>
+            <pin num="1"/>
+            <pin num="7"/>
+            <pin num="2"/>
+            <pin num="6"/>
+            <pin num="3"/>
+            <pin num="5"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="RN3">
+      <value>2.2k</value>
+      <footprint>Resistor_SMD:R_Array_Concave_4x0402</footprint>
+      <description>4 resistor network, parallel topology</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_Array_Concave_4x0402</field>
+        <field name="Datasheet"/>
+        <field name="Description">4 resistor network, parallel topology</field>
+      </fields>
+      <libsource lib="Device" part="R_Pack04" description="4 resistor network, parallel topology"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R network parallel topology isolated"/>
+      <property name="ki_fp_filters" value="DIP* SOIC* R*Array*Concave* R*Array*Convex* MSOP*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>52501ae8-6192-41cd-9e7c-4ef9705a393b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="8"/>
+            <pin num="1"/>
+            <pin num="7"/>
+            <pin num="2"/>
+            <pin num="6"/>
+            <pin num="3"/>
+            <pin num="5"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="RN4">
+      <value>2.2k</value>
+      <footprint>Resistor_SMD:R_Array_Concave_4x0402</footprint>
+      <description>4 resistor network, parallel topology</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Resistor_SMD:R_Array_Concave_4x0402</field>
+        <field name="Datasheet"/>
+        <field name="Description">4 resistor network, parallel topology</field>
+      </fields>
+      <libsource lib="Device" part="R_Pack04" description="4 resistor network, parallel topology"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="R network parallel topology isolated"/>
+      <property name="ki_fp_filters" value="DIP* SOIC* R*Array*Concave* R*Array*Convex* MSOP*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8d1c3df5-3295-4e6f-90fe-63b9245209e2</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="8"/>
+            <pin num="1"/>
+            <pin num="7"/>
+            <pin num="2"/>
+            <pin num="6"/>
+            <pin num="3"/>
+            <pin num="5"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U1">
+      <value>ESP32-S3-WROOM-1</value>
+      <footprint>RF_Module:ESP32-S3-WROOM-1</footprint>
+      <datasheet>https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf</datasheet>
+      <description>RF Module, ESP32-S3 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 3.3V, onboard antenna, SMD</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C2913198</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">RF_Module:ESP32-S3-WROOM-1</field>
+        <field name="Datasheet">https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf</field>
+        <field name="Description">RF Module, ESP32-S3 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 3.3V, onboard antenna, SMD</field>
+      </fields>
+      <libsource lib="RF_Module" part="ESP32-S3-WROOM-1" description="RF Module, ESP32-S3 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 3.3V, onboard antenna, SMD"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C2913198"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="RF Radio BT ESP ESP32-S3 Espressif onboard PCB antenna"/>
+      <property name="ki_fp_filters" value="ESP32?S3?WROOM?1*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ea75f64d-d4de-4638-b485-2d01bfd531ba</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="3"/>
+            <pin num="27"/>
+            <pin num="39"/>
+            <pin num="38"/>
+            <pin num="15"/>
+            <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+            <pin num="12"/>
+            <pin num="17"/>
+            <pin num="18"/>
+            <pin num="19"/>
+            <pin num="20"/>
+            <pin num="21"/>
+            <pin num="22"/>
+            <pin num="8"/>
+            <pin num="9"/>
+            <pin num="2"/>
+            <pin num="1"/>
+            <pin num="40"/>
+            <pin num="41"/>
+            <pin num="37"/>
+            <pin num="36"/>
+            <pin num="10"/>
+            <pin num="11"/>
+            <pin num="13"/>
+            <pin num="14"/>
+            <pin num="23"/>
+            <pin num="28"/>
+            <pin num="29"/>
+            <pin num="30"/>
+            <pin num="31"/>
+            <pin num="32"/>
+            <pin num="33"/>
+            <pin num="34"/>
+            <pin num="35"/>
+            <pin num="26"/>
+            <pin num="16"/>
+            <pin num="24"/>
+            <pin num="25"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U2">
+      <value>ISM6HG256XTR</value>
+      <footprint>Sensor_Motion:LGA14L_2P5X3_STM</footprint>
+      <datasheet>https://www.st.com/resource/en/datasheet/ism6hg256x.pdf</datasheet>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C51931514</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Sensor_Motion:LGA14L_2P5X3_STM</field>
+        <field name="Datasheet">https://www.st.com/resource/en/datasheet/ism6hg256x.pdf</field>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Sensor_Motion" part="ISM6HG256XTR" description=""/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C51931514"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="ki_keywords" value="ISM6HG256XTR"/>
+      <property name="ki_fp_filters" value="LGA14L_2P5X3_STM LGA14L_2P5X3_STM-M LGA14L_2P5X3_STM-L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c80db1e8-79a6-4c16-a504-fc969758113b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="4"/>
+            <pin num="9"/>
+            <pin num="12"/>
+            <pin num="10"/>
+            <pin num="13"/>
+            <pin num="3"/>
+            <pin num="14"/>
+            <pin num="2"/>
+            <pin num="8"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="7"/>
+            <pin num="1"/>
+            <pin num="11"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U3">
+      <value>SN65HVD232DR</value>
+      <footprint>Symbol:D8-L</footprint>
+      <datasheet>https://www.ti.com/lit/gpn/sn65hvd230</datasheet>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C30530</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Symbol:D8-L</field>
+        <field name="Datasheet">https://www.ti.com/lit/gpn/sn65hvd230</field>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Connector" part="SN65HVD230DR" description=""/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C30530"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="SN65HVD230DR"/>
+      <property name="ki_fp_filters" value="D8 D8-M D8-L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3904edac-4389-4a94-a5fc-5f6784d23b63</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="8"/>
+            <pin num="7"/>
+            <pin num="6"/>
+            <pin num="5"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U4">
+      <value>TPS54360BQDDARQ1</value>
+      <footprint>Transistor_Power_Module:DDA8_3P1X2P4_TEX-L</footprint>
+      <datasheet>https://www.ti.com/lit/gpn/tps54360b-q1</datasheet>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C2687968</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Transistor_Power_Module:DDA8_3P1X2P4_TEX-L</field>
+        <field name="Datasheet">https://www.ti.com/lit/gpn/tps54360b-q1</field>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Power_Management" part="TPS54360BQDDARQ1" description=""/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C2687968"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="TPS54360BQDDARQ1"/>
+      <property name="ki_fp_filters" value="DDA8_3P1X2P4_TEX DDA8_3P1X2P4_TEX-M DDA8_3P1X2P4_TEX-L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>528961bb-c6d4-44ba-9e7d-6a72f65a9265</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+            <pin num="EPAD"/>
+            <pin num="8"/>
+            <pin num="7"/>
+            <pin num="6"/>
+            <pin num="5"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U5">
+      <value>TPSM33620S3QRDNRQ1</value>
+      <footprint>RDN0011B-MFG</footprint>
+      <datasheet>https://www.ti.com/lit/gpn/tpsm33620-q1</datasheet>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">RDN0011B-MFG</field>
+        <field name="Datasheet">https://www.ti.com/lit/gpn/tpsm33620-q1</field>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Regulator_Linear" part="TPSM33620S3QRDNRQ1" description=""/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="TPSM33620S3QRDNRQ1"/>
+      <property name="ki_fp_filters" value="RDN0011B-MFG"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>872a32af-2d2e-4a28-afe4-d95dda4dfc05</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="3"/>
+            <pin num="8"/>
+            <pin num="2"/>
+            <pin num="1"/>
+            <pin num="11"/>
+            <pin num="7"/>
+            <pin num="5"/>
+            <pin num="6"/>
+            <pin num="4"/>
+            <pin num="9"/>
+            <pin num="10"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="U7">
+      <value>USBLC6-2SC6</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23-6_Handsoldering</footprint>
+      <datasheet>https://www.st.com/resource/en/datasheet/usblc6-2.pdf</datasheet>
+      <description>Very low capacitance ESD protection diode, 2 data-line, SOT-23-6</description>
+      <fields>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23-6_Handsoldering</field>
+        <field name="Datasheet">https://www.st.com/resource/en/datasheet/usblc6-2.pdf</field>
+        <field name="Description">Very low capacitance ESD protection diode, 2 data-line, SOT-23-6</field>
+      </fields>
+      <libsource lib="Power_Protection" part="USBLC6-2SC6" description="Very low capacitance ESD protection diode, 2 data-line, SOT-23-6"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="usb ethernet video"/>
+      <property name="ki_fp_filters" value="SOT?23*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>39e44073-2492-4633-b5c7-f019740d4952</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="3"/>
+            <pin num="5"/>
+            <pin num="2"/>
+            <pin num="6"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="XT30F1">
+      <value>XT30F</value>
+      <footprint>Connector_AMASS:AMASS_XT30UPB-F_1x02_P5.0mm_Vertical</footprint>
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C108769</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_AMASS:AMASS_XT30UPB-F_1x02_P5.0mm_Vertical</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</field>
+      </fields>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C108769"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2d8f7882-08fe-46b2-88d7-60bd81d03e7f</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="XT30F2">
+      <value>XT30F</value>
+      <footprint>Connector_AMASS:AMASS_XT30UPB-F_1x02_P5.0mm_Vertical</footprint>
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C108769</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_AMASS:AMASS_XT30UPB-F_1x02_P5.0mm_Vertical</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</field>
+      </fields>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C108769"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>dcec94fd-712a-4324-b6a0-11c8717ee4fb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="XT30M1">
+      <value>XT30M</value>
+      <footprint>Connector_AMASS:AMASS_XT30UPB-M_1x02_P5.0mm_Vertical</footprint>
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <fields>
+        <field name="LCSC"/>
+        <field name="LCSC#">C19268026</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint">Connector_AMASS:AMASS_XT30UPB-M_1x02_P5.0mm_Vertical</field>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</field>
+      </fields>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="LCSC" value=""/>
+      <property name="LCSC#" value="C19268026"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ebbfed57-8593-45d1-973d-ca73a965b31d</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="XT302+2F1">
+      <value>Conn_01x04_Pin</value>
+      <description>Generic connector, single row, 01x04, script generated</description>
+      <fields>
+        <field name="LCSC#">C19268028</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x04, script generated</field>
+      </fields>
+      <libsource lib="Connector" part="Conn_01x04_Pin" description="Generic connector, single row, 01x04, script generated"/>
+      <property name="LCSC#" value="C19268028"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_board"/>
+      <property name="exclude_from_pos_files"/>
+      <property name="dnp"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3b07a681-8716-4d1f-a7c8-8c436621d0d3</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="Xt302+2F2">
+      <value>Conn_01x04_Pin</value>
+      <description>Generic connector, single row, 01x04, script generated</description>
+      <fields>
+        <field name="LCSC#">C19268028</field>
+        <field name="Mfg Part#"/>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x04, script generated</field>
+      </fields>
+      <libsource lib="Connector" part="Conn_01x04_Pin" description="Generic connector, single row, 01x04, script generated"/>
+      <property name="LCSC#" value="C19268028"/>
+      <property name="Mfg Part#" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Esp32 Can+IMU.kicad_sch"/>
+      <property name="exclude_from_board"/>
+      <property name="exclude_from_pos_files"/>
+      <property name="dnp"/>
+      <property name="ki_keywords" value="connector"/>
+      <property name="ki_fp_filters" value="Connector*:*_1x??_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d3f5888c-5b75-4659-a7ae-d0886e58d58a</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+            <pin num="3"/>
+            <pin num="4"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Connector" part="Conn_01x04_Pin">
+      <description>Generic connector, single row, 01x04, script generated</description>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x04_Pin</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x04, script generated</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="Conn_01x09_Pin">
+      <description>Generic connector, single row, 01x09, script generated</description>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x09_Pin</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x09, script generated</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+        <pin num="8" name="Pin_8" type="passive"/>
+        <pin num="9" name="Pin_9" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="SN65HVD230DR">
+      <docs>https://www.ti.com/lit/gpn/sn65hvd230</docs>
+      <footprints>
+        <fp>D8</fp>
+        <fp>D8-M</fp>
+        <fp>D8-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">SN65HVD230DR</field>
+        <field name="Footprint">D8</field>
+        <field name="Datasheet">https://www.ti.com/lit/gpn/sn65hvd230</field>
+        <field name="Description"/>
+      </fields>
+      <pins>
+        <pin num="1" name="D" type="input"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="VCC" type="power_in"/>
+        <pin num="4" name="R" type="input"/>
+        <pin num="5" name="VREF" type="power_in"/>
+        <pin num="6" name="CANL" type="output"/>
+        <pin num="7" name="CANH" type="output"/>
+        <pin num="8" name="RS" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="USB_C_Receptacle_USB2.0_16P">
+      <description>USB 2.0-only 16P Type-C Receptacle connector</description>
+      <docs>https://www.usb.org/sites/default/files/documents/usb_type-c.zip</docs>
+      <footprints>
+        <fp>USB*C*Receptacle*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">USB_C_Receptacle_USB2.0_16P</field>
+        <field name="Footprint"/>
+        <field name="Datasheet">https://www.usb.org/sites/default/files/documents/usb_type-c.zip</field>
+        <field name="Description">USB 2.0-only 16P Type-C Receptacle connector</field>
+      </fields>
+      <pins>
+        <pin num="A1" name="GND" type="passive"/>
+        <pin num="A4" name="VBUS" type="passive"/>
+        <pin num="A5" name="CC1" type="bidirectional"/>
+        <pin num="A6" name="D+" type="bidirectional"/>
+        <pin num="A7" name="D-" type="bidirectional"/>
+        <pin num="A8" name="SBU1" type="bidirectional"/>
+        <pin num="A9" name="VBUS" type="passive"/>
+        <pin num="A12" name="GND" type="passive"/>
+        <pin num="B1" name="GND" type="passive"/>
+        <pin num="B4" name="VBUS" type="passive"/>
+        <pin num="B5" name="CC2" type="bidirectional"/>
+        <pin num="B6" name="D+" type="bidirectional"/>
+        <pin num="B7" name="D-" type="bidirectional"/>
+        <pin num="B8" name="SBU2" type="bidirectional"/>
+        <pin num="B9" name="VBUS" type="passive"/>
+        <pin num="B12" name="GND" type="passive"/>
+        <pin num="SH" name="SHIELD" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector_Generic" part="Conn_01x02">
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x02</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector_Generic" part="Conn_01x03">
+      <description>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x03</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C_Small">
+      <description>Unpolarized capacitor, small symbol</description>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Small</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor, small symbol</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="D_Schottky">
+      <description>Schottky diode</description>
+      <footprints>
+        <fp>TO-???*</fp>
+        <fp>*_Diode_*</fp>
+        <fp>*SingleDiode*</fp>
+        <fp>D_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D_Schottky</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Schottky diode</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="Fuse">
+      <description>Fuse</description>
+      <footprints>
+        <fp>*Fuse*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">F</field>
+        <field name="Value">Fuse</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Fuse</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="L">
+      <description>Inductor</description>
+      <footprints>
+        <fp>Choke_*</fp>
+        <fp>*Coil*</fp>
+        <fp>Inductor_*</fp>
+        <fp>L_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Inductor</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="LED">
+      <description>Light emitting diode</description>
+      <footprints>
+        <fp>LED*</fp>
+        <fp>LED_SMD:*</fp>
+        <fp>LED_THT:*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Light emitting diode</field>
+        <field name="Sim.Pins">1=K 2=A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R_Pack04">
+      <description>4 resistor network, parallel topology</description>
+      <footprints>
+        <fp>DIP*</fp>
+        <fp>SOIC*</fp>
+        <fp>R*Array*Concave*</fp>
+        <fp>R*Array*Convex*</fp>
+        <fp>MSOP*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">RN</field>
+        <field name="Value">R_Pack04</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">4 resistor network, parallel topology</field>
+      </fields>
+      <pins>
+        <pin num="1" name="R1.1" type="passive"/>
+        <pin num="2" name="R2.1" type="passive"/>
+        <pin num="3" name="R3.1" type="passive"/>
+        <pin num="4" name="R4.1" type="passive"/>
+        <pin num="5" name="R4.2" type="passive"/>
+        <pin num="6" name="R3.2" type="passive"/>
+        <pin num="7" name="R2.2" type="passive"/>
+        <pin num="8" name="R1.2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R_US">
+      <description>Resistor, US symbol</description>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R_US</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor, US symbol</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Jumper" part="SolderJumper_2_Open">
+      <description>Solder Jumper, 2-pole, open</description>
+      <footprints>
+        <fp>SolderJumper*Open*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">JP</field>
+        <field name="Value">SolderJumper_2_Open</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Solder Jumper, 2-pole, open</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A" type="passive"/>
+        <pin num="2" name="B" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="LED" part="WS2812B-2020">
+      <description>RGB LED with integrated controller, 2.0 x 2.0 mm, 12 mA</description>
+      <docs>https://cdn-shop.adafruit.com/product-files/4684/4684_WS2812B-2020_V1.3_EN.pdf</docs>
+      <footprints>
+        <fp>LED*WS2812*-2020_PLCC4*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">WS2812B-2020</field>
+        <field name="Footprint">LED_SMD:LED_WS2812B-2020_PLCC4_2.0x2.0mm</field>
+        <field name="Datasheet">https://cdn-shop.adafruit.com/product-files/4684/4684_WS2812B-2020_V1.3_EN.pdf</field>
+        <field name="Description">RGB LED with integrated controller, 2.0 x 2.0 mm, 12 mA</field>
+      </fields>
+      <pins>
+        <pin num="1" name="DOUT" type="output"/>
+        <pin num="2" name="VSS" type="power_in"/>
+        <pin num="3" name="DIN" type="input"/>
+        <pin num="4" name="VDD" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Mechanical" part="MountingHole_Pad">
+      <description>Mounting Hole with connection</description>
+      <footprints>
+        <fp>MountingHole*Pad*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">H</field>
+        <field name="Value">MountingHole_Pad</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Mounting Hole with connection</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="PCM_SL_Pin_Headers" part="PINHD_1x3_Male">
+      <description>Pin Header male with pin space 2.54mm. Pin Count -3</description>
+      <footprints>
+        <fp>PinHeader_1x03_P2.54mm*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">PINHD_1x3_Male</field>
+        <field name="Footprint">Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical</field>
+        <field name="Datasheet"/>
+        <field name="Description">Pin Header male with pin space 2.54mm. Pin Count -3</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+        <pin num="3" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="PCM_SparkFun-Connector" part="Qwiic_Vertical">
+      <description>4 pin JST 1mm polarized connector for I2C</description>
+      <docs>https://www.jst-mfg.com/product/pdf/eng/eSH.pdf</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Qwiic_Vertical</field>
+        <field name="Footprint">PCM_SparkFun-Connector:JST_1x04_P1.0mm_Vertical_SMD</field>
+        <field name="Datasheet">https://www.jst-mfg.com/product/pdf/eng/eSH.pdf</field>
+        <field name="Description">4 pin JST 1mm polarized connector for I2C</field>
+        <field name="PROD_ID">CONN-14483</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="NC1" name="NC" type="no_connect"/>
+        <pin num="NC2" name="NC" type="no_connect"/>
+      </pins>
+    </libpart>
+    <libpart lib="PCM_SparkFun-LED" part="LED_Blue_0603">
+      <description>Light emitting diode</description>
+      <docs>https://media.digikey.com/pdf/Data%20Sheets/Rohm%20PDFs/SMLE12_Series_Rev2.0_2007.pdf</docs>
+      <footprints>
+        <fp>LED*</fp>
+        <fp>LED_SMD:*</fp>
+        <fp>LED_THT:*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">Blue</field>
+        <field name="Footprint">PCM_SparkFun-LED:LED_0603_1608Metric_Blue</field>
+        <field name="Datasheet">https://media.digikey.com/pdf/Data%20Sheets/Rohm%20PDFs/SMLE12_Series_Rev2.0_2007.pdf</field>
+        <field name="Description">Light emitting diode</field>
+        <field name="PROD_ID">DIO-08575</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Power_Management" part="TPS54360BQDDARQ1">
+      <docs>https://www.ti.com/lit/gpn/tps54360b-q1</docs>
+      <footprints>
+        <fp>DDA8_3P1X2P4_TEX</fp>
+        <fp>DDA8_3P1X2P4_TEX-M</fp>
+        <fp>DDA8_3P1X2P4_TEX-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TPS54360BQDDARQ1</field>
+        <field name="Footprint">DDA8_3P1X2P4_TEX</field>
+        <field name="Datasheet">https://www.ti.com/lit/gpn/tps54360b-q1</field>
+        <field name="Description"/>
+      </fields>
+      <pins>
+        <pin num="1" name="BOOT" type="output"/>
+        <pin num="2" name="VIN" type="power_in"/>
+        <pin num="3" name="EN" type="input"/>
+        <pin num="4" name="RT/CLK" type="input"/>
+        <pin num="5" name="FB" type="input"/>
+        <pin num="6" name="COMP" type="output"/>
+        <pin num="7" name="GND" type="power_in"/>
+        <pin num="8" name="SW" type="input"/>
+        <pin num="EPAD" name="EPAD" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Power_Protection" part="USBLC6-2SC6">
+      <description>Very low capacitance ESD protection diode, 2 data-line, SOT-23-6</description>
+      <docs>https://www.st.com/resource/en/datasheet/usblc6-2.pdf</docs>
+      <footprints>
+        <fp>SOT?23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">USBLC6-2SC6</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23-6</field>
+        <field name="Datasheet">https://www.st.com/resource/en/datasheet/usblc6-2.pdf</field>
+        <field name="Description">Very low capacitance ESD protection diode, 2 data-line, SOT-23-6</field>
+      </fields>
+      <pins>
+        <pin num="1" name="I/O1" type="passive"/>
+        <pin num="2" name="GND" type="passive"/>
+        <pin num="3" name="I/O2" type="passive"/>
+        <pin num="4" name="I/O2" type="passive"/>
+        <pin num="5" name="VBUS" type="passive"/>
+        <pin num="6" name="I/O1" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="RF_Module" part="ESP32-S3-WROOM-1">
+      <description>RF Module, ESP32-S3 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 3.3V, onboard antenna, SMD</description>
+      <docs>https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf</docs>
+      <footprints>
+        <fp>ESP32?S3?WROOM?1*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">ESP32-S3-WROOM-1</field>
+        <field name="Footprint">RF_Module:ESP32-S3-WROOM-1</field>
+        <field name="Datasheet">https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf</field>
+        <field name="Description">RF Module, ESP32-S3 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 3.3V, onboard antenna, SMD</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="power_in"/>
+        <pin num="2" name="3V3" type="power_in"/>
+        <pin num="3" name="EN" type="input"/>
+        <pin num="4" name="IO4" type="bidirectional"/>
+        <pin num="5" name="IO5" type="bidirectional"/>
+        <pin num="6" name="IO6" type="bidirectional"/>
+        <pin num="7" name="IO7" type="bidirectional"/>
+        <pin num="8" name="IO15" type="bidirectional"/>
+        <pin num="9" name="IO16" type="bidirectional"/>
+        <pin num="10" name="IO17" type="bidirectional"/>
+        <pin num="11" name="IO18" type="bidirectional"/>
+        <pin num="12" name="IO8" type="bidirectional"/>
+        <pin num="13" name="USB_D-" type="bidirectional"/>
+        <pin num="14" name="USB_D+" type="bidirectional"/>
+        <pin num="15" name="IO3" type="bidirectional"/>
+        <pin num="16" name="IO46" type="bidirectional"/>
+        <pin num="17" name="IO9" type="bidirectional"/>
+        <pin num="18" name="IO10" type="bidirectional"/>
+        <pin num="19" name="IO11" type="bidirectional"/>
+        <pin num="20" name="IO12" type="bidirectional"/>
+        <pin num="21" name="IO13" type="bidirectional"/>
+        <pin num="22" name="IO14" type="bidirectional"/>
+        <pin num="23" name="IO21" type="bidirectional"/>
+        <pin num="24" name="IO47" type="bidirectional"/>
+        <pin num="25" name="IO48" type="bidirectional"/>
+        <pin num="26" name="IO45" type="bidirectional"/>
+        <pin num="27" name="IO0" type="bidirectional"/>
+        <pin num="28" name="IO35" type="bidirectional"/>
+        <pin num="29" name="IO36" type="bidirectional"/>
+        <pin num="30" name="IO37" type="bidirectional"/>
+        <pin num="31" name="IO38" type="bidirectional"/>
+        <pin num="32" name="IO39" type="bidirectional"/>
+        <pin num="33" name="IO40" type="bidirectional"/>
+        <pin num="34" name="IO41" type="bidirectional"/>
+        <pin num="35" name="IO42" type="bidirectional"/>
+        <pin num="36" name="RXD0" type="bidirectional"/>
+        <pin num="37" name="TXD0" type="bidirectional"/>
+        <pin num="38" name="IO2" type="bidirectional"/>
+        <pin num="39" name="IO1" type="bidirectional"/>
+        <pin num="40" name="GND" type="passive"/>
+        <pin num="41" name="GND" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Regulator_Linear" part="TPSM33620S3QRDNRQ1">
+      <docs>https://www.ti.com/lit/gpn/tpsm33620-q1</docs>
+      <footprints>
+        <fp>RDN0011B-MFG</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TPSM33620S3QRDNRQ1</field>
+        <field name="Footprint">RDN0011B-MFG</field>
+        <field name="Datasheet">https://www.ti.com/lit/gpn/tpsm33620-q1</field>
+        <field name="Description"/>
+      </fields>
+      <pins>
+        <pin num="1" name="PGOOD" type="open_collector"/>
+        <pin num="2" name="EN" type="input"/>
+        <pin num="3" name="VIN" type="power_in"/>
+        <pin num="4" name="VOUT" type="power_in"/>
+        <pin num="5" name="SW" type="no_connect"/>
+        <pin num="6" name="SW" type="no_connect"/>
+        <pin num="7" name="BOOT" type="no_connect"/>
+        <pin num="8" name="VCC" type="power_in"/>
+        <pin num="9" name="FB" type="input"/>
+        <pin num="10" name="GND" type="power_in"/>
+        <pin num="11" name="MODE_SYNC" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="Sensor_Motion" part="ISM6HG256XTR">
+      <docs>https://www.st.com/resource/en/datasheet/ism6hg256x.pdf</docs>
+      <footprints>
+        <fp>LGA14L_2P5X3_STM</fp>
+        <fp>LGA14L_2P5X3_STM-M</fp>
+        <fp>LGA14L_2P5X3_STM-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">ISM6HG256XTR</field>
+        <field name="Footprint">LGA14L_2P5X3_STM</field>
+        <field name="Datasheet">https://www.st.com/resource/en/datasheet/ism6hg256x.pdf</field>
+        <field name="Description"/>
+      </fields>
+      <pins>
+        <pin num="1" name="SDO/TA0" type="output"/>
+        <pin num="2" name="SDX" type="input"/>
+        <pin num="3" name="SCX" type="input"/>
+        <pin num="4" name="INT1" type="output"/>
+        <pin num="5" name="VDDIO" type="power_in"/>
+        <pin num="6" name="GND" type="power_in"/>
+        <pin num="7" name="GND" type="power_in"/>
+        <pin num="8" name="VDD" type="power_in"/>
+        <pin num="9" name="INT2" type="output"/>
+        <pin num="10" name="OCS_AUX" type="input"/>
+        <pin num="11" name="SDO_AUX" type="output"/>
+        <pin num="12" name="CS" type="input"/>
+        <pin num="13" name="SCL" type="input"/>
+        <pin num="14" name="SDA" type="bidirectional"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Connector">
+      <uri>${KICAD10_SYMBOL_DIR}/Connector.kicad_sym</uri>
+    </library>
+    <library logical="Connector_Generic">
+      <uri>${KICAD10_SYMBOL_DIR}/Connector_Generic.kicad_sym</uri>
+    </library>
+    <library logical="Device">
+      <uri>${KICAD10_SYMBOL_DIR}/Device.kicad_sym</uri>
+    </library>
+    <library logical="Jumper">
+      <uri>${KICAD10_SYMBOL_DIR}/Jumper.kicad_sym</uri>
+    </library>
+    <library logical="LED">
+      <uri>${KICAD10_SYMBOL_DIR}/LED.kicad_sym</uri>
+    </library>
+    <library logical="Mechanical">
+      <uri>${KICAD10_SYMBOL_DIR}/Mechanical.kicad_sym</uri>
+    </library>
+    <library logical="PCM_SL_Pin_Headers">
+      <uri>${KICAD10_3RD_PARTY}/symbols/com_github_Sajitha-Aldeniya_KiCad-Simple-Libraries/SL_Pin_Headers.kicad_sym</uri>
+    </library>
+    <library logical="PCM_SparkFun-Connector">
+      <uri>${KICAD10_3RD_PARTY}/symbols/com_github_sparkfun_SparkFun-KiCad-Libraries/SparkFun-Connector.kicad_sym</uri>
+    </library>
+    <library logical="PCM_SparkFun-LED">
+      <uri>${KICAD10_3RD_PARTY}/symbols/com_github_sparkfun_SparkFun-KiCad-Libraries/SparkFun-LED.kicad_sym</uri>
+    </library>
+    <library logical="Power_Management">
+      <uri>${KICAD10_SYMBOL_DIR}/Power_Management.kicad_sym</uri>
+    </library>
+    <library logical="Power_Protection">
+      <uri>${KICAD10_SYMBOL_DIR}/Power_Protection.kicad_sym</uri>
+    </library>
+    <library logical="RF_Module">
+      <uri>${KICAD10_SYMBOL_DIR}/RF_Module.kicad_sym</uri>
+    </library>
+    <library logical="Regulator_Linear">
+      <uri>${KICAD10_SYMBOL_DIR}/Regulator_Linear.kicad_sym</uri>
+    </library>
+    <library logical="Sensor_Motion">
+      <uri>${KICAD10_SYMBOL_DIR}/Sensor_Motion.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="+3.3V" class="Default">
+      <node ref="C10" pin="1" pintype="passive"/>
+      <node ref="C12" pin="2" pintype="passive"/>
+      <node ref="C13" pin="1" pintype="passive"/>
+      <node ref="C16" pin="2" pintype="passive"/>
+      <node ref="C18" pin="1" pintype="passive"/>
+      <node ref="C19" pin="2" pintype="passive"/>
+      <node ref="C20" pin="2" pintype="passive"/>
+      <node ref="C9" pin="2" pintype="passive"/>
+      <node ref="D2" pin="4" pinfunction="VDD_4" pintype="power_in"/>
+      <node ref="J11" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="J5" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="R18" pin="1" pintype="passive"/>
+      <node ref="R19" pin="2" pintype="passive"/>
+      <node ref="R22" pin="2" pintype="passive"/>
+      <node ref="R7" pin="1" pintype="passive"/>
+      <node ref="R8" pin="2" pintype="passive"/>
+      <node ref="U1" pin="2" pinfunction="3V3_2" pintype="power_in"/>
+      <node ref="U2" pin="5" pinfunction="VDDIO_5" pintype="power_in"/>
+      <node ref="U2" pin="8" pinfunction="VDD_8" pintype="power_in"/>
+      <node ref="U3" pin="3" pinfunction="VCC_3" pintype="power_in"/>
+      <node ref="U5" pin="4" pinfunction="VOUT_4" pintype="power_in"/>
+      <node ref="U5" pin="9" pinfunction="FB_9" pintype="input"/>
+    </net>
+    <net code="2" name="+5V" class="Default">
+      <node ref="C11" pin="2" pintype="passive"/>
+      <node ref="C17" pin="2" pintype="passive"/>
+      <node ref="D5" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="D9" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="J10" pin="2" pintype="passive"/>
+      <node ref="J12" pin="2" pintype="passive"/>
+      <node ref="J13" pin="2" pintype="passive"/>
+      <node ref="J14" pin="2" pintype="passive"/>
+      <node ref="J15" pin="2" pintype="passive"/>
+      <node ref="J3" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="J6" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="J7" pin="2" pintype="passive"/>
+      <node ref="J8" pin="2" pintype="passive"/>
+      <node ref="J9" pin="2" pintype="passive"/>
+      <node ref="R16" pin="1" pintype="passive"/>
+      <node ref="RegPwr1" pin="1" pinfunction="A_1" pintype="passive"/>
+      <node ref="U5" pin="3" pinfunction="VIN_3" pintype="power_in"/>
+    </net>
+    <net code="3" name="+USB_5v" class="Default">
+      <node ref="D9" pin="2" pinfunction="A_2" pintype="passive"/>
+      <node ref="J17" pin="A4" pinfunction="VBUS_A4" pintype="passive"/>
+      <node ref="J17" pin="A9" pinfunction="VBUS_A9" pintype="passive"/>
+      <node ref="J17" pin="B4" pinfunction="VBUS_B4" pintype="passive"/>
+      <node ref="J17" pin="B9" pinfunction="VBUS_B9" pintype="passive"/>
+      <node ref="U7" pin="5" pinfunction="VBUS_5" pintype="passive"/>
+    </net>
+    <net code="19" name="3v3_EN" class="Default">
+      <node ref="J3" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
+      <node ref="R16" pin="2" pintype="passive"/>
+      <node ref="U5" pin="2" pinfunction="EN_2" pintype="input"/>
+    </net>
+    <net code="20" name="ADC1_CH0" class="Default">
+      <node ref="RN3" pin="6" pinfunction="R3.2_6" pintype="passive"/>
+      <node ref="RN4" pin="3" pinfunction="R3.1_3" pintype="passive"/>
+      <node ref="U1" pin="5" pinfunction="IO5_5" pintype="bidirectional"/>
+    </net>
+    <net code="21" name="ADC1_CH1" class="Default">
+      <node ref="RN3" pin="5" pinfunction="R4.2_5" pintype="passive"/>
+      <node ref="RN4" pin="4" pinfunction="R4.1_4" pintype="passive"/>
+      <node ref="U1" pin="4" pinfunction="IO4_4" pintype="bidirectional"/>
+    </net>
+    <net code="22" name="ADC1_CH5" class="Default">
+      <node ref="RN3" pin="7" pinfunction="R2.2_7" pintype="passive"/>
+      <node ref="RN4" pin="2" pinfunction="R2.1_2" pintype="passive"/>
+      <node ref="U1" pin="6" pinfunction="IO6_6" pintype="bidirectional"/>
+    </net>
+    <net code="23" name="ADC1_CH6" class="Default">
+      <node ref="RN3" pin="8" pinfunction="R1.2_8" pintype="passive"/>
+      <node ref="RN4" pin="1" pinfunction="R1.1_1" pintype="passive"/>
+      <node ref="U1" pin="7" pinfunction="IO7_7" pintype="bidirectional"/>
+    </net>
+    <net code="24" name="BOOT" class="Default">
+      <node ref="C15" pin="2" pintype="passive"/>
+      <node ref="J3" pin="7" pinfunction="Pin_7_7" pintype="passive"/>
+      <node ref="R8" pin="1" pintype="passive"/>
+      <node ref="U1" pin="27" pinfunction="IO0_27" pintype="bidirectional"/>
+    </net>
+    <net code="25" name="CAN+" class="CAN,Default">
+      <node ref="CAN_TERM1" pin="2" pinfunction="B_2" pintype="passive"/>
+      <node ref="J1" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="J2" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="U3" pin="7" pinfunction="CANH_7" pintype="output"/>
+    </net>
+    <net code="26" name="CAN-" class="CAN,Default">
+      <node ref="J1" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
+      <node ref="J2" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
+      <node ref="R9" pin="2" pintype="passive"/>
+      <node ref="U3" pin="6" pinfunction="CANL_6" pintype="output"/>
+    </net>
+    <net code="27" name="CAN_D" class="Default">
+      <node ref="J3" pin="5" pinfunction="Pin_5_5" pintype="passive"/>
+      <node ref="U1" pin="9" pinfunction="IO16_9" pintype="bidirectional"/>
+      <node ref="U3" pin="1" pinfunction="D_1" pintype="input"/>
+    </net>
+    <net code="28" name="CAN_R" class="Default">
+      <node ref="J3" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
+      <node ref="U1" pin="10" pinfunction="IO17_10" pintype="bidirectional"/>
+      <node ref="U3" pin="4" pinfunction="R_4" pintype="input"/>
+    </net>
+    <net code="29" name="CS" class="Default">
+      <node ref="J5" pin="6" pinfunction="Pin_6_6" pintype="passive"/>
+      <node ref="U1" pin="23" pinfunction="IO21_23" pintype="bidirectional"/>
+      <node ref="U2" pin="12" pinfunction="CS_12" pintype="input"/>
+    </net>
+    <net code="30" name="FAULT" class="Default">
+      <node ref="R24" pin="2" pintype="passive"/>
+      <node ref="U1" pin="39" pinfunction="IO1_39" pintype="bidirectional"/>
+    </net>
+    <net code="31" name="FB" class="Default">
+      <node ref="R5" pin="2" pintype="passive"/>
+      <node ref="R6" pin="1" pintype="passive"/>
+      <node ref="U4" pin="5" pinfunction="FB_5" pintype="input"/>
+    </net>
+    <net code="32" name="GND" class="Default">
+      <node ref="C1" pin="2" pintype="passive"/>
+      <node ref="C10" pin="2" pintype="passive"/>
+      <node ref="C11" pin="1" pintype="passive"/>
+      <node ref="C12" pin="1" pintype="passive"/>
+      <node ref="C13" pin="2" pintype="passive"/>
+      <node ref="C14" pin="1" pintype="passive"/>
+      <node ref="C15" pin="1" pintype="passive"/>
+      <node ref="C16" pin="1" pintype="passive"/>
+      <node ref="C17" pin="1" pintype="passive"/>
+      <node ref="C18" pin="2" pintype="passive"/>
+      <node ref="C19" pin="1" pintype="passive"/>
+      <node ref="C2" pin="2" pintype="passive"/>
+      <node ref="C20" pin="1" pintype="passive"/>
+      <node ref="C3" pin="1" pintype="passive"/>
+      <node ref="C5" pin="2" pintype="passive"/>
+      <node ref="C6" pin="2" pintype="passive"/>
+      <node ref="C7" pin="2" pintype="passive"/>
+      <node ref="C8" pin="2" pintype="passive"/>
+      <node ref="C9" pin="1" pintype="passive"/>
+      <node ref="D2" pin="2" pinfunction="VSS_2" pintype="power_in"/>
+      <node ref="D3" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="D4" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="D6" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="D8" pin="2" pinfunction="A_2" pintype="passive"/>
+      <node ref="D_TVS1" pin="2" pinfunction="A_2" pintype="passive"/>
+      <node ref="H1" pin="1" pinfunction="1_1" pintype="input"/>
+      <node ref="H2" pin="1" pinfunction="1_1" pintype="input"/>
+      <node ref="H3" pin="1" pinfunction="1_1" pintype="input"/>
+      <node ref="H4" pin="1" pinfunction="1_1" pintype="input"/>
+      <node ref="J1" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
+      <node ref="J10" pin="3" pintype="passive"/>
+      <node ref="J11" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+      <node ref="J12" pin="3" pintype="passive"/>
+      <node ref="J13" pin="3" pintype="passive"/>
+      <node ref="J14" pin="3" pintype="passive"/>
+      <node ref="J15" pin="3" pintype="passive"/>
+      <node ref="J17" pin="A1" pinfunction="GND_A1" pintype="passive"/>
+      <node ref="J17" pin="A12" pinfunction="GND_A12" pintype="passive"/>
+      <node ref="J17" pin="B1" pinfunction="GND_B1" pintype="passive"/>
+      <node ref="J17" pin="B12" pinfunction="GND_B12" pintype="passive"/>
+      <node ref="J17" pin="SH" pinfunction="SHIELD_SH" pintype="passive"/>
+      <node ref="J2" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
+      <node ref="J3" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+      <node ref="J4" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="J5" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+      <node ref="J5" pin="5" pinfunction="Pin_5_5" pintype="passive"/>
+      <node ref="J6" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+      <node ref="J7" pin="3" pintype="passive"/>
+      <node ref="J8" pin="3" pintype="passive"/>
+      <node ref="J9" pin="3" pintype="passive"/>
+      <node ref="R10" pin="2" pintype="passive"/>
+      <node ref="R11" pin="2" pintype="passive"/>
+      <node ref="R2" pin="2" pintype="passive"/>
+      <node ref="R3" pin="2" pintype="passive"/>
+      <node ref="R6" pin="2" pintype="passive"/>
+      <node ref="RN3" pin="1" pinfunction="R1.1_1" pintype="passive"/>
+      <node ref="RN3" pin="2" pinfunction="R2.1_2" pintype="passive"/>
+      <node ref="RN3" pin="3" pinfunction="R3.1_3" pintype="passive"/>
+      <node ref="RN3" pin="4" pinfunction="R4.1_4" pintype="passive"/>
+      <node ref="U1" pin="1" pinfunction="GND_1" pintype="power_in"/>
+      <node ref="U1" pin="40" pinfunction="GND_40" pintype="passive"/>
+      <node ref="U1" pin="41" pinfunction="GND_41" pintype="passive"/>
+      <node ref="U2" pin="2" pinfunction="SDX_2" pintype="input"/>
+      <node ref="U2" pin="3" pinfunction="SCX_3" pintype="input"/>
+      <node ref="U2" pin="6" pinfunction="GND_6" pintype="power_in"/>
+      <node ref="U2" pin="7" pinfunction="GND_7" pintype="power_in"/>
+      <node ref="U3" pin="2" pinfunction="GND_2" pintype="power_in"/>
+      <node ref="U4" pin="7" pinfunction="GND_7" pintype="power_in"/>
+      <node ref="U4" pin="EPAD" pinfunction="EPAD_EPAD" pintype="power_in"/>
+      <node ref="U5" pin="10" pinfunction="GND_10" pintype="power_in"/>
+      <node ref="U5" pin="11" pinfunction="MODE_SYNC_11" pintype="input"/>
+      <node ref="U7" pin="2" pinfunction="GND_2" pintype="passive"/>
+      <node ref="XT30F1" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+      <node ref="XT30F2" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+      <node ref="XT30M1" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+    </net>
+    <net code="33" name="INT1" class="Default">
+      <node ref="J5" pin="8" pinfunction="Pin_8_8" pintype="passive"/>
+      <node ref="U1" pin="31" pinfunction="IO38_31" pintype="bidirectional"/>
+      <node ref="U2" pin="4" pinfunction="INT1_4" pintype="output"/>
+    </net>
+    <net code="34" name="INT2" class="Default">
+      <node ref="J5" pin="9" pinfunction="Pin_9_9" pintype="passive"/>
+      <node ref="U1" pin="32" pinfunction="IO39_32" pintype="bidirectional"/>
+      <node ref="U2" pin="9" pinfunction="INT2_9" pintype="output"/>
+    </net>
+    <net code="35" name="PWM_1" class="Default">
+      <node ref="RN1" pin="7" pinfunction="R2.2_7" pintype="passive"/>
+      <node ref="U1" pin="22" pinfunction="IO14_22" pintype="bidirectional"/>
+    </net>
+    <net code="36" name="PWM_2" class="Default">
+      <node ref="RN1" pin="8" pinfunction="R1.2_8" pintype="passive"/>
+      <node ref="U1" pin="21" pinfunction="IO13_21" pintype="bidirectional"/>
+    </net>
+    <net code="37" name="PWM_3" class="Default">
+      <node ref="RN1" pin="6" pinfunction="R3.2_6" pintype="passive"/>
+      <node ref="U1" pin="20" pinfunction="IO12_20" pintype="bidirectional"/>
+    </net>
+    <net code="38" name="PWM_4" class="Default">
+      <node ref="RN1" pin="5" pinfunction="R4.2_5" pintype="passive"/>
+      <node ref="U1" pin="19" pinfunction="IO11_19" pintype="bidirectional"/>
+    </net>
+    <net code="39" name="RESET" class="Default">
+      <node ref="C3" pin="2" pintype="passive"/>
+      <node ref="J3" pin="6" pinfunction="Pin_6_6" pintype="passive"/>
+      <node ref="R7" pin="2" pintype="passive"/>
+      <node ref="U1" pin="3" pinfunction="EN_3" pintype="input"/>
+    </net>
+    <net code="40" name="RGB_1" class="Default">
+      <node ref="D2" pin="3" pinfunction="DIN_3" pintype="input"/>
+      <node ref="U1" pin="8" pinfunction="IO15_8" pintype="bidirectional"/>
+    </net>
+    <net code="41" name="SCL" class="Default">
+      <node ref="J5" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
+      <node ref="U1" pin="29" pinfunction="IO36_29" pintype="bidirectional"/>
+      <node ref="U2" pin="13" pinfunction="SCL_13" pintype="input"/>
+    </net>
+    <net code="42" name="SCL0" class="Default">
+      <node ref="J11" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
+      <node ref="R18" pin="2" pintype="passive"/>
+      <node ref="U1" pin="17" pinfunction="IO9_17" pintype="bidirectional"/>
+    </net>
+    <net code="43" name="SDA" class="Default">
+      <node ref="J5" pin="4" pinfunction="Pin_4_4" pintype="passive"/>
+      <node ref="U1" pin="28" pinfunction="IO35_28" pintype="bidirectional"/>
+      <node ref="U2" pin="14" pinfunction="SDA_14" pintype="bidirectional"/>
+    </net>
+    <net code="44" name="SDA0" class="Default">
+      <node ref="J11" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
+      <node ref="R19" pin="1" pintype="passive"/>
+      <node ref="U1" pin="12" pinfunction="IO8_12" pintype="bidirectional"/>
+    </net>
+    <net code="45" name="SDO/TA0" class="Default">
+      <node ref="J5" pin="7" pinfunction="Pin_7_7" pintype="passive"/>
+      <node ref="U1" pin="30" pinfunction="IO37_30" pintype="bidirectional"/>
+      <node ref="U2" pin="1" pinfunction="SDO/TA0_1" pintype="output"/>
+    </net>
+    <net code="46" name="STATUS" class="Default">
+      <node ref="R23" pin="2" pintype="passive"/>
+      <node ref="U1" pin="38" pinfunction="IO2_38" pintype="bidirectional"/>
+    </net>
+    <net code="47" name="UART0RX" class="Default">
+      <node ref="J3" pin="8" pinfunction="Pin_8_8" pintype="passive"/>
+      <node ref="U1" pin="36" pinfunction="RXD0_36" pintype="bidirectional"/>
+    </net>
+    <net code="48" name="UART0TX" class="Default">
+      <node ref="J3" pin="9" pinfunction="Pin_9_9" pintype="passive"/>
+      <node ref="U1" pin="37" pinfunction="TXD0_37" pintype="bidirectional"/>
+    </net>
+    <net code="49" name="UART1RX" class="Default">
+      <node ref="J4" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
+      <node ref="U1" pin="34" pinfunction="IO41_34" pintype="bidirectional"/>
+    </net>
+    <net code="50" name="UART1TX" class="Default">
+      <node ref="J4" pin="1" pinfunction="Pin_1_1" pintype="passive"/>
+      <node ref="U1" pin="35" pinfunction="IO42_35" pintype="bidirectional"/>
+    </net>
+    <net code="51" name="USB_D+" class="Default">
+      <node ref="U1" pin="14" pinfunction="USB_D+_14" pintype="bidirectional"/>
+      <node ref="U7" pin="4" pinfunction="I/O2_4" pintype="passive"/>
+    </net>
+    <net code="52" name="USB_D-" class="Default">
+      <node ref="U1" pin="13" pinfunction="USB_D-_13" pintype="bidirectional"/>
+      <node ref="U7" pin="6" pinfunction="I/O1_6" pintype="passive"/>
+    </net>
+    <net code="53" name="VBUS" class="HV">
+      <node ref="C1" pin="1" pintype="passive"/>
+      <node ref="C2" pin="1" pintype="passive"/>
+      <node ref="D7" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="R1" pin="1" pintype="passive"/>
+      <node ref="U4" pin="2" pinfunction="VIN_2" pintype="power_in"/>
+    </net>
+    <net code="54" name="VIN" class="Default">
+      <node ref="D_TVS1" pin="1" pinfunction="K_1" pintype="passive"/>
+      <node ref="F1" pin="1" pintype="passive"/>
+      <node ref="XT30F1" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="XT30F2" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+      <node ref="XT30M1" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
+    </net>
+  </nets>
+</export>

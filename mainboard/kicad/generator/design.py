@@ -18,8 +18,10 @@ R0402 = 'Resistor_SMD:R_0402_1005Metric'
 R0603 = 'Resistor_SMD:R_0603_1608Metric'
 R1206 = 'Resistor_SMD:R_1206_3216Metric'
 R2010 = 'Resistor_SMD:R_2010_5025Metric'
+R2512 = 'Resistor_SMD:R_2512_6332Metric'
 C0402 = 'Capacitor_SMD:C_0402_1005Metric'
 C0603 = 'Capacitor_SMD:C_0603_1608Metric'
+R0603_HS = 'Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder'
 C0603_HS = 'Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder'
 C0805 = 'Capacitor_SMD:C_0805_2012Metric'
 C1206 = 'Capacitor_SMD:C_1206_3216Metric'
@@ -50,9 +52,9 @@ def vC(ref, val, x, ytop, fp=C0402, top=WR, bot='GND', fields='right'):
                    src=CAN('Device:C_Small'), fields=fields)
 
 
-def vR(ref, val, x, ytop, top=WR, bot=WR, fp=R0402, fields='right'):
+def vR(ref, val, x, ytop, top=WR, bot=WR, fp=R0402, fields='right', extra=None):
     return W.place('Device:R_US', ref, val, x, ytop + 3.81, {'1': top, '2': bot}, footprint=fp,
-                   src=CAN('Device:R_US'), fields=fields)
+                   src=CAN('Device:R_US'), fields=fields, extra=extra)
 
 
 def hR(ref, val, xl, y, left=WR, right=WR, fp=R0402):
@@ -247,18 +249,19 @@ W.region(20, 180)
 W.box(0, 0, 330, 230, 'ESP32')
 U = W.place('RF_Module:ESP32-S3-WROOM-1', 'U3', 'ESP32-S3-WROOM-1-N8', 149.86, 99.06, {
     '1': 'GND', '2': WR, '3': 'S3_EN', '4': 'VBAT_SENSE', '5': 'S3_SCH_SCK', '6': 'S3_SCH_MOSI',
-    '7': 'SCH_MISO', '8': 'RGB_DIN', '9': None, '10': 'START_LED', '11': 'P4_BOOT', '12': 'ENC_SDA',
+    '7': 'SCH_MISO', '8': 'RGB_DIN', '9': 'CAN_D', '10': 'START_LED', '11': 'P4_BOOT', '12': 'ENC_SDA',
     '13': 'S3_USB_DN', '14': 'S3_USB_DP', '15': 'P4_EN', '16': 'START_BTN', '17': 'ENC_SCL', '18': 'SCH_CS',
     '19': 'PWM_ESC', '20': 'PWM_STEER_F', '21': 'PWM_STEER_R', '22': 'PWM_SPARE', '23': 'ISM_CS',
     '24': 'SCH_EXTRESN', '25': 'SYNC', '26': None, '27': 'S3_BOOT', '28': 'S3_ISM_MOSI', '29': 'S3_ISM_SCK',
     '30': 'ISM_MISO', '31': 'ISM_INT1', '32': 'ISM_INT2', '33': 'HEATER_PWM', '34': 'P4_TO_S3',
-    '35': 'S3_TO_P4', '36': 'S3_U0RXD', '37': 'S3_U0TXD', '38': 'STATUS_LED', '39': None},
+    '35': 'S3_TO_P4', '36': 'S3_U0RXD', '37': 'S3_U0TXD', '38': 'STATUS_LED', '39': 'CAN_R'},
     footprint='RF_Module:ESP32-S3-WROOM-1', src=CAN('RF_Module:ESP32-S3-WROOM-1'), fields=(-25.4, -36.83),
     shapes={'SYNC': 'output', 'PWM_ESC': 'output', 'PWM_STEER_F': 'output', 'PWM_STEER_R': 'output',
             'PWM_SPARE': 'output', 'HEATER_PWM': 'output', 'P4_EN': 'output', 'P4_BOOT': 'output',
             'S3_TO_P4': 'output', 'P4_TO_S3': 'input', 'VBAT_SENSE': 'input', 'SCH_MISO': 'input',
             'ISM_MISO': 'input', 'ISM_INT1': 'input', 'ISM_INT2': 'input', 'SCH_CS': 'output',
-            'ISM_CS': 'output', 'SCH_EXTRESN': 'output', 'START_BTN': 'input', 'START_LED': 'output'})
+            'ISM_CS': 'output', 'SCH_EXTRESN': 'output', 'START_BTN': 'input', 'START_LED': 'output',
+            'CAN_D': 'output', 'CAN_R': 'input'})
 p = U['2']
 W.wire(p, (p[0], 63.5), (p[0] + 35.56, 63.5))
 W.pwr('+3.3V', p[0], 63.5)
@@ -398,7 +401,8 @@ ytop, ybot = 20.32, 27.94
 W.pwr('+5V', 17.78, ytop)
 W.wire((17.78, ytop), (25.4 + 3 * 30.48, ytop))
 for i in range(4):
-    vR('R%d' % (16 + i), '39R 0.75W', 25.4 + i * 30.48, ytop, fp=R2010)
+    vR('R%d' % (16 + i), '39R 1W', 25.4 + i * 30.48, ytop, fp=R2512,
+       extra={'Manufacturer': 'Yageo', 'MPN': 'RC2512FK-0739RL'})
 Q = W.place('Transistor_FET:AO3400A', 'Q1', 'AO3400A', 144.78, 45.72, {'1': WR, '2': 'GND', '3': WR},
             footprint=SOT23, fields='right')
 W.wire((25.4, ybot), (Q['3'][0], ybot), Q['3'])
@@ -407,7 +411,7 @@ W.wire(Q['1'], gate)
 vR('R21', '100k', gate[0], gate[1], bot='GND')
 r = hR('R20', '1k', gate[0] - 7.62, gate[1])
 W.glabel('HEATER_PWM', r['1'][0], gate[1], 180, 'input')
-W.note(5.08, 137.16, ['4 x 39R in parallel = 9.75R -> 2.6 W at 5 V (0.64 W each, 2010 = 0.75 W). One per side of U6, bottom side.',
+W.note(5.08, 137.16, ['4 x 39R in parallel = 9.75R -> 2.6 W at 5 V (0.64 W each, 2512 = 1 W). One per side of U6, bottom side.',
                       'No hardware cutoff: R21 holds the heater off whenever the S3 is in reset or not driving HEATER_PWM.',
                       'Firmware: watchdog on, duty cap, SCH16T vs ISM6HG256X temperature cross-check. HEATER_PWM >= 20 kHz or a few Hz.'])
 
@@ -562,6 +566,25 @@ W.note(5.08, 88.9, ['JST-GH 1.25 mm, 3 pins on both: 1 GND, 2 RX (into the chip)
                     'Adapter wiring: adapter TX -> pin 2, adapter RX <- pin 3. No power pin: power the board normally.',
                     'J7 sits on the P4<->S3 UART link: hold the S3 in reset (or tri-state IO41/IO42) before driving it.',
                     'Both DNP: footprints only, place on B.Cu.'])
+
+W.region(391, 726)
+W.box(0, 0, 220, 110, 'CAN (SN65HVD232, copied from the Rolly CAN+IMU board; all DNP, bottom side)')
+W.place('Interface_CAN_LIN:SN65HVD232', 'U9', 'SN65HVD232DR', 45.72, 43.18,
+        {'1': 'CAN_D', '2': 'GND', '3': '+3.3V', '4': 'CAN_R', '6': 'CAN-', '7': 'CAN+'},
+        footprint='Package_SO:SOIC-8_3.9x4.9mm_P1.27mm', dnp=True,
+        shapes={'CAN_D': 'input', 'CAN_R': 'output'}, fields='above')
+C('C43', '100nF', 45.72, 78.74, '+3.3V', 'GND', fp=C0603_HS, dnp=True)
+GH4 = 'Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal'
+W.place('Connector_Generic:Conn_01x04', 'CAN0', 'CAN0', 116.84, 33.02,
+        {'1': None, '2': 'CAN+', '3': 'CAN-', '4': 'GND'}, footprint=GH4, dnp=True, fields='right')
+W.place('Connector_Generic:Conn_01x04', 'CAN1', 'CAN1', 116.84, 66.04,
+        {'1': None, '2': 'CAN+', '3': 'CAN-', '4': 'GND'}, footprint=GH4, dnp=True, fields='right')
+R('R36', '120', 182.88, 30.48, 'CAN-', 'CAN_TERM', fp=R0603_HS, dnp=True)
+W.two_pin('Jumper:SolderJumper_2_Open', 'CAN_TERM', 'CAN 120R', 182.88, 48.26, 'CAN_TERM', 'CAN+',
+          footprint='Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm', dnp=True,
+          src=symlib.from_stock('Jumper:SolderJumper_2_Open'))
+W.note(5.08, 99.06, ['TWAI: CAN_D = IO16 (TX), CAN_R = IO1 (RX). CAN0/CAN1 in parallel, DroneCAN pinout: 1 +5V (left open), 2 CANH, 3 CANL, 4 GND.',
+                     'Bridge CAN_TERM to add the 120R terminator (only at a bus end). Everything here is DNP, on B.Cu.'])
 
 W.region(0, 0)
 W.cur_box = None
